@@ -1,0 +1,77 @@
+@theme inline {
+  /* Tipo de Fuente (Roboto) */
+  --font-sans: var(--font-roboto);
+
+  /* Pesos de Fuente (regular, medium, semibold, bold) */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+@layer utilities {
+  .text-h1 {
+    font-size: var(--heading-1);
+    line-height: var(--heading-lh);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-h1-bold {
+    font-size: var(--heading-1);
+    line-height: var(--heading-lh);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .text-h2 {
+    font-size: var(--heading-2);
+    line-height: var(--heading-lh);
+  }
+
+  .text-h3 {
+    font-size: var(--heading-3);
+    line-height: var(--heading-lh);
+  }
+
+  .text-h4 {
+    font-size: var(--heading-4);
+    line-height: var(--heading-lh);
+  }
+
+  .text-h5 {
+    font-size: var(--heading-5);
+    line-height: var(--heading-lh);
+  }
+
+  .text-body {
+    font-size: var(--body-size);
+    line-height: var(--body-lh);
+  }
+
+  .text-body-sm {
+    font-size: var(--body-size-sm);
+    line-height: var(--body-lh);
+  }
+}
+
+:root {
+  /* Fuente Roboto Base */
+  --font-roboto: "Roboto", sans-serif;
+  /* Fallback temporal, Next.js proveerá la variable correcta */
+
+  /* 
+    Tokens de Headings
+    (h1 76px, h2 60px, h3 54px, h4 40px, h5 28px, lh: 110%)
+  */
+  --heading-1: 76px;
+  --heading-2: 60px;
+  --heading-3: 54px;
+  --heading-4: 40px;
+  --heading-5: 28px;
+
+  --body-size: 18px;
+  --body-size-sm: 16px;
+  --body-lh: 1.5;
+
+  --heading-lh: 1.1;
+  /* 110% line-height */
+}

@@ -1,0 +1,115 @@
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--grey-100);
+
+  --color-input-hover: var(--grey-200);
+  --color-input-focus: var(--primary-orange);
+
+  --color-button-orange: var(--orange-500);
+  --color-button-orange-hover: var(--orange-400);
+  --color-button-orange-active: var(--orange-700);
+  --color-button-orange-disabled: var(--orange-400);
+
+  --color-ring: var(--ring);
+
+  --color-gray-50: rgba(237, 237, 237, 0.800000011920929);
+  --color-gray-100: rgba(222, 222, 222, 1);
+  --color-gray-200: rgba(194, 194, 194, 1);
+  --color-gray-300: rgba(134, 134, 134, 1);
+  --color-gray-400: rgba(110, 110, 110, 1);
+  --color-gray-500: rgba(74, 74, 74, 1);
+  --color-gray-600: rgba(67, 67, 67, 1);
+  --color-gray-700: rgba(53, 53, 53, 1);
+  --color-gray-800: rgba(41, 41, 41, 1);
+  --color-gray-900: rgba(30, 30, 30, 1);
+
+
+  /* Color styles */
+  --color-primary-orange: rgba(255, 108, 16, 1);
+  --color-primary-white: rgba(255, 255, 255, 1);
+  --color-primary-black: rgba(0, 0, 0, 1);
+  --color-primary-light-gray: rgba(200, 200, 199, 1);
+  --color-primary-soft-gray-light: rgba(245, 244, 242, 1);
+  --color-primary-soft-gray-balance: rgba(239, 239, 235, 1);
+  --color-primary-soft-gray-hard: rgba(219, 219, 216, 1);
+  --color-primary-dark-gray: rgba(113, 114, 115, 1);
+}
+
+
+:root {
+  /*
+    Valores por defecto de colores base del ecommerce.
+    A ser reemplazados por los Tokens de Figma.
+  */
+  /* Color styles */
+  --primary-orange: rgba(255, 108, 16, 1);
+  --primary-white: rgba(255, 255, 255, 1);
+  --primary-black: rgba(0, 0, 0, 1);
+  --primary-light-gray: rgba(200, 200, 199, 1);
+  --primary-soft-gray-light: rgba(245, 244, 242, 1);
+  --primary-soft-gray-balance: rgba(239, 239, 235, 1);
+  --primary-soft-gray-hard: rgba(219, 219, 216, 1);
+  --primary-dark-gray: rgba(113, 114, 115, 1);
+  --grey-50: rgba(237, 237, 237, 0.800000011920929);
+  --grey-100: rgba(222, 222, 222, 1);
+  --grey-200: rgba(194, 194, 194, 1);
+  --grey-300: rgba(134, 134, 134, 1);
+  --grey-400: rgba(110, 110, 110, 1);
+  --grey-500: rgba(74, 74, 74, 1);
+  --grey-600: rgba(67, 67, 67, 1);
+  --grey-700: rgba(53, 53, 53, 1);
+  --grey-800: rgba(41, 41, 41, 1);
+  --grey-900: rgba(31, 31, 31, 1);
+  --secondary-red: rgba(245, 67, 110, 1);
+  --secondary-cyan: rgba(28, 202, 212, 1);
+  --secondary-green: rgba(146, 213, 0, 1);
+  --secondary-yellow: rgba(253, 227, 0, 1);
+  --orange-50: rgba(255, 240, 231, 1);
+  --orange-100: rgba(255, 209, 181, 1);
+  --orange-200: rgba(255, 187, 145, 1);
+  --orange-300: rgba(255, 157, 95, 1);
+  --orange-400: rgba(255, 137, 64, 1);
+  --orange-500: rgba(255, 108, 16, 1);
+  --orange-600: rgba(232, 98, 15, 1);
+  --orange-700: rgba(181, 77, 11, 1);
+  --orange-800: rgba(140, 59, 9, 1);
+  --orange-900: rgba(107, 45, 7, 1);
+  --background: #ffffff;
+  --foreground: #09090b;
+
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #18181b;
+}
