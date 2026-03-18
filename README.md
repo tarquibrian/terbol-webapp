@@ -86,3 +86,21 @@ Abre [http://localhost:3000](http://localhost:3000) en el navegador.
 ## 🎨 Estilos
 
 Usamos **Tailwind CSS v4** con un sistema de tokens en CSS puro. Todos los tokens (colores, tipografía, espacios) se deben modificar en la carpeta `src/styles/` (`colors.css`, `typography.css`, etc.) y NO hardcodearse en línea.
+
+## 📝 Convenciones de Git (Conventional Commits)
+
+Este proyecto utiliza el estándar **Conventional Commits** para mantener un historial de control de versiones limpio, legible y automatizable.
+
+Cada mensaje de commit debe seguir esta estructura:
+`<tipo>(<ámbito opcional>): <descripción corta>`
+
+**Tipos válidos:**
+* `feat`: Una nueva característica o funcionalidad (ej. *feat(navbar): añadir menú desplegable*).
+* `fix`: Solución a un error/bug (ej. *fix(cart): resolver cálculo de impuestos*).
+* `refactor`: Cambio de código que no añade features ni arregla bugs (ej. *refactor(architecture): migrar a patrón feature-first*).
+* `style`: Cambios de formato que no afectan la lógica (espacios, punto y coma).
+* `docs`: Cambios en la documentación (ej. *docs: actualizar README con convenciones de git*).
+* `chore`: Tareas de mantenimiento, configuración, instalación de dependencias, etc.
+* `test`: Añadir o modificar pruebas.
+
+**Regla de oro:** Realiza commits lógicos y atómicos (un commit por cada unidad lógica de trabajo) en lugar de un macro-commit gigante.
