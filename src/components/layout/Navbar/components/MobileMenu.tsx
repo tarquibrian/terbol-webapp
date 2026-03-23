@@ -59,7 +59,7 @@ export function MobileMenu({ className }: { className?: string }) {
           />
         </div>
 
-        <nav className="mb-8 flex flex-col gap-2">
+        <nav className="mb-8 flex flex-col gap-2" role="menu">
           {flatItems.map((item) => (
             <Link
               key={item.href}
