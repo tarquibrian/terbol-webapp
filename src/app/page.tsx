@@ -8,8 +8,16 @@
  */
 
 import * as React from "react";
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { HomeView } from "@/features/home";
+
+/** Metadatos SEO de la página de inicio */
+export const metadata: Metadata = {
+  title: "Inicio | Terbol",
+  description:
+    "Descubre la mejor experiencia en ecommerce. Calidad inigualable, envío gratuito y productos cuidadosamente seleccionados para ti.",
+};
 
 export default function HomePage() {
   return (
