@@ -1,0 +1,7 @@
+@theme inline {
+  /* 
+    Breakpoints personalizados.
+    'desk' se usa para pantallas grandes como laptops estándar o un diseño de Figma con lienzo a 1440px.
+  */
+  --breakpoint-desk: 1440px;
+}

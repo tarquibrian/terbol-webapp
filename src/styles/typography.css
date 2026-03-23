@@ -8,7 +8,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --text-h1: 76px;
+  --text-h1: clamp(32px, 6vw, 76px);
   --text-h2: 60px;
   --text-h3: 54px;
   --text-h4: 40px;
@@ -22,11 +22,11 @@
 
 @layer components {
   .heading-h1 {
-    @apply text-h1 font-regular leading-heading;
+    @apply text-h1 font-regular leading-heading tracking-[1px];
   }
 
   .heading-h1-bold {
-    @apply text-h1 font-bold leading-heading;
+    @apply text-h1 font-semibold leading-heading tracking-[-1px];
   }
 
   .heading-h2 {
