@@ -9,7 +9,8 @@
  */
 
 export * from "./Navbar";
-export * from "./NavLink";
-export * from "./NavSubmenu";
-export * from "./NavSubmenuTrigger";
+export * from "./components/NavLink";
+export * from "./components/Submenu/NavSubmenu";
+export * from "./components/Submenu/NavSubmenuTrigger";
+export * from "./components/MobileMenu";
 export type * from "./Navbar.types";

@@ -52,6 +52,8 @@ export interface NavLinkItem {
   label: string;
   /** Ruta de destino — requerida si no tiene submenuItems */
   href?: string;
+  /** Descripción breve opcional que aparece debajo del label en menú móvil */
+  description?: string;
   /** Lista de items del submenú — si se define, el link actúa como trigger */
   submenuItems?: NavSubmenuItem[];
 }

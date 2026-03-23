@@ -25,8 +25,9 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 
-import { NavLink } from "./NavLink";
-import { NavSubmenuTrigger } from "./NavSubmenuTrigger";
+import { NavLink } from "./components/NavLink";
+import { NavSubmenuTrigger } from "./components/Submenu/NavSubmenuTrigger";
+import { MobileMenu } from "./components/MobileMenu";
 import { NAV_LINKS } from "./Navbar.constants";
 
 /**
@@ -42,11 +43,12 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex max-w-[1512px] mx-auto px-16">
-        <div className="border-b border-border flex gap-12 h-[100px] items-center w-full">
+        <div className="border-b border-border flex gap-6 h-[100px] items-center w-full desk:gap-12">
 
           {/* ─── Logo ─── */}
           <Link
             href="/"
+            scroll={false}
             className="min-w-[180px] flex items-center gap-2 text-primary font-bold text-lg"
           >
             <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
@@ -55,7 +57,7 @@ export function Navbar() {
           {/* ─── Buscador ─── */}
           <SearchInput
             placeholder="Buscar productos..."
-            className="w-full max-w-[400px] min-w-[240px]"
+            className="hidden lg:flex w-full min-w-[240px] desk:max-w-[400px]"
             onSearch={(query) => console.log("Buscando:", query)}
           />
 
@@ -64,7 +66,7 @@ export function Navbar() {
 
             {/* Links de Navegación */}
             <nav
-              className="hidden md:flex items-center gap-6 text-body-sm h-full"
+              className="hidden desk:flex items-center gap-6 text-body-sm h-full"
               aria-label="Navegación principal"
             >
               {NAV_LINKS.map((link) =>
@@ -92,9 +94,12 @@ export function Navbar() {
             </nav>
 
             {/* CTA Principal */}
-            <Button variant="default" size="default" icon={<ArrowRight />}>
+            <Button variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex">
               Soy asesor de ventas
             </Button>
+
+            {/* Menú Responsive (< 1440px) */}
+            <MobileMenu className="desk:hidden" />
           </div>
         </div>
       </div>

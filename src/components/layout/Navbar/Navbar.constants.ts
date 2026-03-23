@@ -7,7 +7,7 @@
  * - Facilitar la internacionalización (i18n) futura.
  */
 
-import type { NavLinkItem } from "./Navbar.types";
+import type { NavLinkItem, NavSubmenuItem } from "./Navbar.types";
 
 /**
  * Links principales del Navbar.
@@ -19,38 +19,50 @@ export const NAV_LINKS: NavLinkItem[] = [
   {
     label: "¿Quiénes somos?",
     href: "/about",
+    description: "Conoce nuestra historia y valores corporativos",
   },
   {
     label: "Nuestros Productos",
     href: "/products",
+    description: "Explora nuestro catálogo completo de productos",
   },
   {
     label: "Plan de Éxito",
     href: "/success-plan",
+    description: "Descubre nuestro modelo de negocio y cómo crecer",
   },
   {
     label: "Más",
     submenuItems: [
       {
-        label: "Blog",
+        label: "Aprende",
         href: "/blog",
         description: "Artículos, noticias y novedades",
       },
       {
-        label: "Preguntas Frecuentes",
+        label: "Ayuda y Contacto",
         href: "/faq",
         description: "Respuestas a tus dudas más comunes",
-      },
-      {
-        label: "Trabaja con nosotros",
-        href: "/careers",
-        description: "Únete a nuestro equipo de trabajo",
-      },
-      {
-        label: "Contacto",
-        href: "/contact",
-        description: "Ponte en contacto con nosotros",
       },
     ],
   },
 ];
+
+/**
+ * Función helper que extrae una lista plana de todos los links, 
+ * útil para aplanar menús anidados (e.g. MobileMenu) en una sola lista uniforme.
+ */
+export const getFlatNavLinks = (): NavSubmenuItem[] => {
+  return NAV_LINKS.reduce<NavSubmenuItem[]>((acc, link) => {
+    if (link.submenuItems) {
+      acc.push(...link.submenuItems);
+    } else if (link.href) {
+      acc.push({
+        label: link.label,
+        href: link.href,
+        description: link.description,
+      });
+    }
+    return acc;
+  }, []);
+};
