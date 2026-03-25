@@ -137,7 +137,7 @@ export function Footer() {
           </nav>
         </div>
         <div className="w-full h-px bg-gray-200"></div>
-        <p className="text-body-sm text-gray-400">
+        <p className="text-body-sm text-gray-500">
           © 2026 Térbol Inspira. Todos los derechos reservados.
         </p>
       </div>
