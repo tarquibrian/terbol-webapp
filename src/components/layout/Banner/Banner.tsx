@@ -57,7 +57,8 @@ export function Banner() {
               width={700}
               height={540}
               className="object-contain object-bottom w-full h-auto lg:h-full lg:absolute lg:bottom-0 lg:right-0"
-              priority
+              loading="lazy"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </AnimateOnScroll>
 

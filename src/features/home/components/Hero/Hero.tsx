@@ -11,6 +11,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { ArrowRight } from "lucide-react";
@@ -53,12 +54,13 @@ export function Hero() {
 
           <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end">
             <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-soft-gray-balance sm:aspect-square lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1470&auto=format&fit=crop"
                 alt="Colección de moda"
+                fill
                 className="object-cover w-full h-full rounded-md"
-                loading="lazy"
+                priority
+                sizes="(max-width: 1024px) 100vw, 570px"
               />
             </div>
           </AnimateOnScroll>

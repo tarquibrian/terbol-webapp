@@ -39,7 +39,7 @@ export function FeaturedProducts() {
               id="colageno-premium"
               number="01"
               name="Colágeno Premium Plus"
-              imageSrc="/producthome/Collagen.jpg"
+              imageSrc="/producthome/Collagen.png"
               productImageSrc="/producthome/product1.png"
             />
           </AnimateOnScroll>
@@ -49,7 +49,7 @@ export function FeaturedProducts() {
               id="ovaova-1"
               number="02"
               name="Ovaova Suplemento Base"
-              imageSrc="/producthome/ovaova1.jpg"
+              imageSrc="/producthome/ovaova1.png"
               productImageSrc="/producthome/product2.png"
             />
           </AnimateOnScroll>
@@ -59,7 +59,7 @@ export function FeaturedProducts() {
               id="ovaova-3"
               number="03"
               name="Ovaova Suplemento Avanzado"
-              imageSrc="/producthome/ovaova3.jpg"
+              imageSrc="/producthome/ovaova3.png"
               productImageSrc="/producthome/product3.png"
             />
           </AnimateOnScroll>
