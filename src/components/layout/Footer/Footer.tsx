@@ -74,7 +74,7 @@ export function Footer() {
               </p>
             </div>
 
-            <p className="text-body-sm text-gray-400">
+            <p className="text-body-sm text-gray-500">
               Los productos mencionados son suplementos dietarios. Antes de consumir cualquier suplemento, consulte a su médico o profesional de la salud.
             </p>
 

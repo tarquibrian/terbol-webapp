@@ -19,13 +19,14 @@ export const About = () => {
 
           {/* <div className="rounded-lg overflow-hidden bg-primary-black"> */}
           <AnimateOnScroll variant="fade" delay={0.4} className="aspect-video">
-            <iframe
+            <div className="w-full h-full rounded-lg bg-primary-black"></div>
+            {/* <iframe
               className="w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/VIDEO_ID"
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-            />
+            /> */}
           </AnimateOnScroll>
           {/* </div> */}
         </div>
