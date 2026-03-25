@@ -67,7 +67,7 @@ export function NavLink({ label, href, className }: NavLinkProps) {
         "flex items-center h-full border-b-2",
         // Estado activo: borde naranja visible | inactivo: borde transparente
         isActive
-          ? "border-primary-orange text-foreground font-medium"
+          ? "border-primary-orange text-foreground"
           : "border-transparent",
         className
       )}
