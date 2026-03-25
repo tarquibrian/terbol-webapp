@@ -19,7 +19,7 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
  */
 export function SuccessPlanHero() {
   return (
-    <section className="w-full bg-primary-soft-gray-light">
+    <section className="w-full bg-background">
       <div className="max-w-[1512px] mx-auto px-16 py-24">
         {/* Título — slide-up inmediato */}
         <AnimateOnScroll variant="slide-up">

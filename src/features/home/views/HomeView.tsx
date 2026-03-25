@@ -12,6 +12,10 @@ import { Hero } from "../components/Hero";
 import { FeaturedProducts } from "../components/FeaturedProducts";
 import { Testimonials } from "../components/Testimonials";
 import { Newsletter } from "../components/Newsletter";
+import { About } from "../components/About";
+import { ProductPillars } from "../components/ProductPillars";
+import { DevelopmentSteps } from "../components/DevelopmentSteps";
+import { Banner } from "@/components/layout/Banner";
 
 /**
  * Vista completa de la página Home.
@@ -23,9 +27,13 @@ export function HomeView() {
   return (
     <>
       <Hero />
+      <About />
       <FeaturedProducts />
-      <Testimonials />
-      <Newsletter />
+      <ProductPillars />
+      <DevelopmentSteps />
+      <Banner />
+      {/* NUEVA SECCION AQUI */}
     </>
   );
 }
+
