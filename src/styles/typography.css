@@ -9,15 +9,18 @@
   --font-weight-bold: 700;
 
   --text-h1: clamp(32px, 6vw, 76px);
-  --text-h2: 60px;
-  --text-h3: 54px;
-  --text-h4: 40px;
-  --text-h5: 28px;
+  /* --text-h1: 76px; */
+  --text-h2: clamp(32px, 6vw, 60px);
+  --text-h3: clamp(32px, 5vw, 54px);
+  --text-h4: clamp(24px, 4vw, 40px);
+  --text-h5: clamp(24px, 4vw, 28px);
+  --text-h6: clamp(24px, 4vw, 24px);
+  --text-body-lg: 21px;
   --text-body: 18px;
   --text-body-sm: 16px;
 
   --leading-heading: 1.1;
-  --leading-body: 1.5;
+  --leading-body: 26px;
 }
 
 @layer components {
@@ -34,15 +37,19 @@
   }
 
   .heading-h3 {
-    @apply text-h3 font-regular leading-heading;
+    @apply text-h3 font-semibold leading-heading;
   }
 
   .heading-h4 {
-    @apply text-h4 font-regular leading-heading;
+    @apply text-h4 font-bold leading-heading text-nowrap;
   }
 
   .heading-h5 {
     @apply text-h5 font-regular leading-heading;
+  }
+
+  .heading-h6-bold {
+    @apply text-h6 font-bold leading-heading;
   }
 
   .text-body {
