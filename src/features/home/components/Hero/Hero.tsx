@@ -20,7 +20,7 @@ export function Hero() {
     <section className="w-full">
       <div className="container mx-auto lg:px-16 lg:py-28 max-w-[1512px]">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_570px] items-center">
-          {/* Contenido Izquierdo */}
+
           <div className="flex flex-col justify-center space-y-8 max-w-[760px]" >
             <div className="space-y-4">
               {/* Título — slide-up inmediato */}
@@ -51,7 +51,6 @@ export function Hero() {
             </AnimateOnScroll>
           </div>
 
-          {/* Imagen Derecha — fade suave */}
           <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end">
             <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-soft-gray-balance sm:aspect-square lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
