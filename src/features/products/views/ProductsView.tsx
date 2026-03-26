@@ -25,27 +25,61 @@ export function ProductsView() {
       <ProductsHero />
 
       {/* Sección del catálogo de productos */}
-      <section className="w-full py-16 md:py-24 bg-background">
-        <div className="max-w-[1512px] mx-auto px-16">
-          {/* Cabecera de la sección */}
-          <AnimateOnScroll variant="slide-up" className="mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-2">
-              Catálogo
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Haz click en cualquier producto para ver más detalles.
-            </p>
-          </AnimateOnScroll>
+      <section className="w-full">
+        <div className="wrapper-content">
+          {/* Layout Principal: Filtros + Grid de Productos */}
+          <div className="flex flex-col lg:flex-row gap-x-12 gap-y-10 items-start">
 
-          {/* Grid de productos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PRODUCTS.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                index={index}
-              />
-            ))}
+            {/* Columna Izquierda: Filtros de Búsqueda */}
+            <aside className="w-full lg:w-[280px] lg:sticky lg:top-32 shrink-0">
+              <div className="p-6 bg-primary-soft-gray-light rounded-2xl border border-primary-soft-gray-hard shadow-sm">
+                <h3 className="text-xl font-bold text-foreground mb-6">Filtros</h3>
+
+                {/* Placeholder para los componentes de filtro */}
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                      Categorías
+                    </h4>
+                    <ul className="space-y-3">
+                      {["Analgésicos", "Antibióticos", "Dermatología", "Vitaminas"].map((cat) => (
+                        <li key={cat} className="flex items-center gap-3 text-foreground/80 hover:text-primary-orange cursor-pointer transition-colors">
+                          <div className="w-4 h-4 border border-primary-light-gray rounded-sm shrink-0" />
+                          <span className="text-body-medium">{cat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pt-4 border-t border-primary-soft-gray-hard">
+                    <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                      Laboratorio
+                    </h4>
+                    <ul className="space-y-3">
+                      {["Terbol", "Genéricos", "Importados"].map((lab) => (
+                        <li key={lab} className="flex items-center gap-3 text-foreground/80 hover:text-primary-orange cursor-pointer transition-colors">
+                          <div className="w-4 h-4 border border-primary-light-gray rounded-sm shrink-0" />
+                          <span className="text-body-medium">{lab}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Columna Derecha: Grid de Productos */}
+            <div className="flex-1 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {PRODUCTS.map((product, index) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

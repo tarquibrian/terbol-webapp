@@ -45,8 +45,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Camiseta de algodón orgánico de alta calidad.",
     description:
       "Confeccionada con algodón orgánico 100% certificado, esta camiseta premium ofrece una suavidad incomparable y un ajuste perfecto. Ideal para el uso diario, disponible en múltiples tallas y colores. Su fabricación sostenible garantiza el mínimo impacto ambiental sin comprometer la calidad ni el confort.",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image6.png",
     category: "Ropa",
   },
   {
@@ -56,8 +55,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Zapatillas ligeras con amortiguación avanzada.",
     description:
       "Diseñadas para el rendimiento máximo, estas zapatillas deportivas cuentan con tecnología de amortiguación avanzada y una suela de alto agarre. Su diseño transpirable mantiene tus pies frescos durante los entrenamientos más intensos. Perfectas para correr, entrenar en el gimnasio o usar como calzado casual de estilo urbano.",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image7.png",
     category: "Calzado",
   },
   {
@@ -67,8 +65,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Reloj elegante con caja de acero inoxidable.",
     description:
       "Un reloj que combina elegancia y durabilidad. Su caja de acero inoxidable con cristal resistente a rayones lo convierte en el accesorio perfecto para cualquier ocasión. Mecanismo de cuarzo japonés de alta precisión, resistente al agua hasta 50 metros y con garantía de 2 años.",
-    image:
-      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image8.png",
     category: "Accesorios",
   },
   {
@@ -78,8 +75,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Mochila resistente con compartimento para laptop.",
     description:
       "La compañera ideal para la ciudad o el viaje. Fabricada en nylon resistente al agua con múltiples compartimentos organizadores, incluyendo un compartimento acolchado para laptops de hasta 15 pulgadas. Correas ergonómicas ajustables y panel trasero transpirable para máxima comodidad durante todo el día.",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image6.png",
     category: "Accesorios",
   },
   {
@@ -89,8 +85,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Auriculares Bluetooth con cancelación de ruido.",
     description:
       "Sumérgete en tu música con estos auriculares inalámbricos de última generación. Tecnología de cancelación activa de ruido, batería de larga duración (hasta 30 horas), y conectividad Bluetooth 5.3 para una experiencia de audio sin interrupciones. Incluye estuche de carga portátil y cable USB-C.",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image7.png",
     category: "Electrónica",
   },
   {
@@ -100,8 +95,7 @@ export const PRODUCTS: Product[] = [
     shortDescription: "Chaqueta ligera, transpirable e impermeable.",
     description:
       "Protégete de los elementos con esta chaqueta impermeable de alto rendimiento. Membrana transpirable que repele el agua sin sacrificar la ventilación. Costuras selladas, capucha ajustable y bolsillos con cremallera. Ideal para actividades al aire libre, senderismo o simplemente para los días lluviosos en la ciudad.",
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=600&auto=format&fit=crop",
+    image: "/product/image8.png",
     category: "Ropa",
   },
 ];
