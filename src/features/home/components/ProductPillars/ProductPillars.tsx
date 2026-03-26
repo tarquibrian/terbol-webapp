@@ -32,8 +32,8 @@ const PILLARS_DATA = [
 
 export function ProductPillars() {
   return (
-    <section className="w-full">
-      <div className="container max-w-[1312px] mx-auto py-12 px-6 md:px-16 flex flex-col items-start lg:flex-row justify-between gap-6 lg:gap-12">
+    <section className="wrapper-section">
+      <div className="wrapper-content flex flex-col items-start lg:flex-row justify-between gap-6 lg:gap-12">
         <AnimateOnScroll variant="slide-up">
           <div className="flex flex-col items-start justify-start text-left mx-auto">
             <h2 className="heading-h4 text-primary">
@@ -49,14 +49,14 @@ export function ProductPillars() {
         <div className="grid grid-cols-1 gap-3 lg:gap-3">
           {PILLARS_DATA.map((pillar, index) => (
             <AnimateOnScroll key={pillar.id} delay={index * 0.1} variant="slide-up">
-              <div className="flex items-start gap-8 border-b border-gray-100 py-8">
+              <div className="flex items-start gap-6 md:gap-8 border-b border-gray-100 py-6 md:py-8">
                 <div className="min-w-16 min-h-16 flex items-center justify-center bg-primary-soft-gray-balance rounded-lg text-primary-orange">
                   {pillar.icon}
                 </div>
                 {/* <span className="text-xl font-regular text-gray-300">0{index + 1}</span> */}
                 <div className="flex flex-col max-w-[600px]">
                   <h3 className="heading-h6-bold text-primary mb-3">{pillar.title}</h3>
-                  <p className="text-body text-gray-400">{pillar.description}</p>
+                  <p className="text-body-sm text-gray-400">{pillar.description}</p>
                 </div>
               </div>
               {/* <FeatureCard
