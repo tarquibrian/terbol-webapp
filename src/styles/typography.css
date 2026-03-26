@@ -52,11 +52,11 @@
     @apply text-h6 font-bold leading-heading;
   }
 
-  .text-body-md {
+  .text-body-medium {
     @apply text-body-md font-regular leading-body;
   }
 
-  .text-body-sm {
+  .text-body-small {
     @apply text-body-sm font-regular leading-body;
   }
 }
