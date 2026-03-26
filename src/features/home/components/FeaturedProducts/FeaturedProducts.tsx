@@ -19,12 +19,12 @@ export function FeaturedProducts() {
   const products = [1, 2, 3, 4];
 
   return (
-    <section className="w-full py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-16 max-w-[1512px]">
+    <section className="wrapper-section">
+      <div className="wrapper-content">
         {/* Cabecera de la sección */}
         <div className="flex items-center justify-between gap-4 mb-8">
           <AnimateOnScroll variant="slide-up">
-            <h2 className="text-h4 font-bold text-foreground whitespace-nowrap">
+            <h2 className="heading-h4 font-bold text-foreground whitespace-nowrap">
               Productos Destacados
             </h2>
           </AnimateOnScroll>
@@ -33,7 +33,7 @@ export function FeaturedProducts() {
 
         {/* Grid de Productos con animación escalonada (stagger) */}
         {/* Grid de Productos Interactivos (3 cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4">
           <AnimateOnScroll variant="slide-up" delay={0.1}>
             <FeaturedProductCard
               id="colageno-premium"
@@ -69,14 +69,14 @@ export function FeaturedProducts() {
         <div className="mt-12 md:mt-24">
           <div className="flex items-center justify-between gap-4 mb-8">
             <AnimateOnScroll variant="slide-up">
-              <h3 className="text-h4 font-bold text-foreground whitespace-nowrap">
+              <h3 className="heading-h5 font-bold text-foreground md:whitespace-nowrap">
                 Productos para diferentes enfoques
               </h3>
             </AnimateOnScroll>
-            <div className="w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
+            <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             <AnimateOnScroll variant="slide-up" delay={0.0}>
               <CategoryCard
                 name="Energía y Vitalidad"

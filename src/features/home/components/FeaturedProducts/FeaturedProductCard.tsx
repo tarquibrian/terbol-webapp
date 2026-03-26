@@ -35,7 +35,7 @@ export function FeaturedProductCard({
       prefetch={true}
       scroll={false}
       className={cn(
-        "group relative block w-full aspect-3/6 sm:aspect-5/8 object-cover overflow-hidden rounded-lg bg-primary-soft-gray-balance border border-transparent hover:border-primary-orange transition-colors duration-500",
+        "group relative block w-full aspect-5/8 object-cover overflow-hidden rounded-lg bg-primary-soft-gray-balance border border-transparent hover:border-primary-orange transition-colors duration-500",
         className
       )}
     >
@@ -88,7 +88,7 @@ export function FeaturedProductCard({
         {/* Parte Superior: Número y Flecha */}
         <div className="flex justify-between items-start w-full">
           {/* Número (blanco -> negro) */}
-          <span className="text-body font-bold text-primary-orange">
+          <span className="text-body-md font-bold text-primary-orange">
             {number}
           </span>
 
@@ -98,7 +98,7 @@ export function FeaturedProductCard({
 
         {/* Parte Inferior: Nombre del Producto */}
         <div className="mt-auto">
-          <h3 className="text-h5 font-bold text-white group-hover:text-black transition-colors duration-500 tracking-tight leading-tight max-w-[90%]">
+          <h3 className="heading-h5 text-white group-hover:text-black transition-colors duration-500 text-wrap">
             {name}
           </h3>
         </div>
