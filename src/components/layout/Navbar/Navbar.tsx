@@ -43,7 +43,7 @@ export function Navbar() {
   return (
     // <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <header className="fixed top-0 z-50 w-full bg-white h-[100px]">
-      <div className="container flex max-w-[1512px] mx-auto px-16 h-[100px]">
+      <div className="container wrapper-content h-[100px]">
         <div className="border-b border-border flex gap-6 h-full items-center w-full desk:gap-12">
 
           {/* ─── Logo ─── */}
