@@ -18,8 +18,8 @@ import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="w-full">
-      <div className="container mx-auto lg:px-16 lg:py-28 max-w-[1512px]">
+    <section className="wrapper-section">
+      <div className="wrapper-content">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_570px] items-center">
 
           <div className="flex flex-col justify-center space-y-8 max-w-[760px]" >
@@ -33,7 +33,7 @@ export function Hero() {
 
               {/* Descripción — slide-up con delay para efecto stagger */}
               <AnimateOnScroll variant="slide-up" delay={0.15}>
-                <p className="text-gray-500 text-body">
+                <p className="text-gray-500 text-body-md">
                   Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica.
                 </p>
               </AnimateOnScroll>
@@ -42,7 +42,12 @@ export function Hero() {
             {/* Botones — slide-up con delay mayor */}
             <AnimateOnScroll variant="slide-up" delay={0.3}>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button size="default" className="w-full max-w-[440px] justify-between" icon={<ArrowRight />} iconPosition="right">
+                <Button
+                  size="default"
+                  className="w-full md:max-w-[440px] justify-between"
+                  icon={<ArrowRight />}
+                  iconPosition="right"
+                >
                   ÚNETE AL EQUIPO AHORA
                 </Button>
                 {/* <Button size="default" variant="outline" className="w-full sm:w-auto" icon={<ArrowRight />} iconPosition="right">
@@ -53,7 +58,7 @@ export function Hero() {
           </div>
 
           <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end">
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-soft-gray-balance sm:aspect-square lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-soft-gray-balance  lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
               <Image
                 src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1470&auto=format&fit=crop"
                 alt="Colección de moda"
