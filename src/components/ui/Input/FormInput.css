@@ -1,0 +1,444 @@
+/* ─── FormInput / FormTextarea shared styles ─────────────────────────────────── */
+
+/* Transitions shared */
+:root {
+  --fi-transition: 200ms ease;
+  --fi-border-idle: var(--grey-100);
+  --fi-border-hover: var(--grey-200);
+  --fi-border-focus: var(--primary-orange);
+  --fi-border-error: var(--secondary-red);
+  --fi-border-success: var(--secondary-green);
+
+  --fi-bg: var(--primary-soft-gray-light);
+  --fi-text: var(--grey-900);
+  --fi-placeholder: var(--grey-300);
+  --fi-label: var(--grey-700);
+  --fi-hint: var(--grey-400);
+  --fi-error: var(--secondary-red);
+  --fi-success: var(--secondary-green);
+  --fi-icon-stroke: var(--grey-400);
+  --fi-radius: var(--rad-8);
+  --fi-height: 48px;
+}
+
+/* ── Root container ─────────────────────────────────────────────────────────── */
+
+.form-input__root {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+/* ── Label ──────────────────────────────────────────────────────────────────── */
+
+.form-input__label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--fi-label);
+  letter-spacing: 0.01em;
+  transition: color var(--fi-transition);
+  user-select: none;
+  font-size: 16px;
+  color: var(--color-gray-900);
+}
+
+.form-input__required {
+  color: var(--fi-error);
+  font-size: 14px;
+  line-height: 1;
+  margin-left: 1px;
+}
+
+.form-input__hint-label {
+  font-size: 12px;
+  color: var(--fi-hint);
+  line-height: 1.4;
+  margin-top: -2px;
+}
+
+/* ── Wrapper (border + bg) ──────────────────────────────────────────────────── */
+
+.form-input__wrapper {
+  display: flex;
+  align-items: center;
+  height: var(--fi-height);
+  background-color: var(--color-primary-white);
+  border: 1.5px solid var(--fi-border-idle);
+  border-radius: 6px;
+  transition:
+    border-color var(--fi-transition),
+    box-shadow var(--fi-transition);
+  position: relative;
+  overflow: visible;
+}
+
+.form-input__wrapper:hover:not(:focus-within) {
+  border-color: var(--fi-border-hover);
+}
+
+.form-input__wrapper:focus-within {
+  border-color: var(--fi-border-focus);
+  box-shadow: 0 0 0 3px rgba(255, 108, 16, 0.12);
+}
+
+.form-input__wrapper--error {
+  border-color: var(--fi-border-error) !important;
+  box-shadow: 0 0 0 3px rgba(245, 67, 110, 0.10) !important;
+}
+
+.form-input__wrapper--success {
+  border-color: var(--fi-border-success) !important;
+  box-shadow: 0 0 0 3px rgba(146, 213, 0, 0.12) !important;
+}
+
+/* Textarea variant: variable height */
+.form-input__wrapper--textarea {
+  height: auto;
+  align-items: flex-start;
+  padding: 0;
+}
+
+/* ── Field (native input) ───────────────────────────────────────────────────── */
+
+.form-input__field {
+  flex: 1;
+  height: 100%;
+  padding: 0 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--fi-text);
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 0;
+  line-height: 1.5;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-input__field::placeholder {
+  color: var(--fi-placeholder);
+  font-weight: 400;
+}
+
+/* hide number spinners */
+.form-input__field[type="number"]::-webkit-inner-spin-button,
+.form-input__field[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.form-input__field[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.form-input__field--has-prefix {
+  padding-left: 4px;
+}
+
+.form-input__field--phone {
+  padding-left: 8px;
+}
+
+/* ── Prefix / Suffix ────────────────────────────────────────────────────────── */
+
+.form-input__prefix,
+.form-input__suffix {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--fi-icon-stroke);
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+/* ── Trailing container (icons, password btn) ───────────────────────────────── */
+
+.form-input__trailing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 12px;
+  flex-shrink: 0;
+}
+
+/* ── Password toggle ────────────────────────────────────────────────────────── */
+
+.form-input__password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--fi-icon-stroke);
+  transition: color var(--fi-transition), background-color var(--fi-transition);
+}
+
+.form-input__password-toggle:hover {
+  color: var(--fi-text);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ── Validation icons ───────────────────────────────────────────────────────── */
+
+.form-input__icon {
+  flex-shrink: 0;
+  animation: fi-icon-pop 180ms ease both;
+}
+
+.form-input__icon--error {
+  color: var(--fi-error);
+}
+
+.form-input__icon--success {
+  color: var(--fi-success);
+}
+
+@keyframes fi-icon-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Textarea ───────────────────────────────────────────────────────────────── */
+
+.form-input__textarea {
+  flex: 1;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--fi-text);
+  background: transparent;
+  border: none;
+  outline: none;
+  line-height: 1.6;
+  min-height: 96px;
+}
+
+.form-input__textarea::placeholder {
+  color: var(--fi-placeholder);
+  font-weight: 400;
+}
+
+.form-input__textarea-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* ── Bottom row (error / helper + counter) ──────────────────────────────────── */
+
+.form-input__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 18px;
+  gap: 8px;
+}
+
+.form-input__error-text {
+  font-size: 12px;
+  color: var(--fi-error);
+  font-weight: 500;
+  line-height: 1.4;
+  animation: fi-slide-in 160ms ease both;
+}
+
+.form-input__helper-text {
+  font-size: 12px;
+  color: var(--fi-hint);
+  line-height: 1.4;
+}
+
+@keyframes fi-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Character counter ──────────────────────────────────────────────────────── */
+
+.form-input__char-counter {
+  font-size: 11px;
+  color: var(--fi-hint);
+  white-space: nowrap;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--fi-transition);
+}
+
+.form-input__char-counter--warning {
+  color: #e8a000;
+}
+
+.form-input__char-counter--limit {
+  color: var(--fi-error);
+  font-weight: 600;
+}
+
+/* ── Phone dial selector ────────────────────────────────────────────────────── */
+
+.form-input__dial-root {
+  position: relative;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.form-input__dial-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0 10px 0 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--fi-text);
+  white-space: nowrap;
+  transition: background-color var(--fi-transition);
+  border-radius: calc(var(--fi-radius) - 2px) 0 0 calc(var(--fi-radius) - 2px);
+}
+
+.form-input__dial-trigger:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.form-input__dial-trigger--disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.form-input__dial-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.form-input__dial-code {
+  font-size: 13px;
+  color: var(--fi-text);
+  font-weight: 500;
+}
+
+.form-input__dial-chevron {
+  color: var(--fi-icon-stroke);
+  transition: transform var(--fi-transition);
+}
+
+.form-input__dial-chevron--open {
+  transform: rotate(180deg);
+}
+
+.form-input__dial-lock {
+  color: var(--fi-hint);
+}
+
+.form-input__phone-divider {
+  width: 1px;
+  height: 100%;
+  background-color: var(--grey-100);
+  flex-shrink: 0;
+}
+
+/* Dropdown */
+.form-input__dial-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 100;
+  min-width: 220px;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1.5px solid var(--grey-100);
+  border-radius: var(--fi-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  animation: fi-dropdown-in 150ms ease both;
+
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-200) transparent;
+}
+
+.form-input__dial-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.form-input__dial-dropdown::-webkit-scrollbar-thumb {
+  background: var(--grey-200);
+  border-radius: 4px;
+}
+
+@keyframes fi-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-input__dial-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--fi-text);
+  transition: background-color var(--fi-transition);
+  user-select: none;
+}
+
+.form-input__dial-option:hover {
+  background-color: var(--primary-soft-gray-light);
+}
+
+.form-input__dial-option--active {
+  background-color: var(--orange-50);
+  color: var(--orange-700);
+  font-weight: 500;
+}
+
+.form-input__dial-option-name {
+  flex: 1;
+}
+
+.form-input__dial-option-code {
+  color: var(--fi-hint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
