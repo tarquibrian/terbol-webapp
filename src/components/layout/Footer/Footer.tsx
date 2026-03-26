@@ -69,12 +69,12 @@ export function Footer() {
                 />
               </Link>
 
-              <p className="text-body text-gray-500 font-semibold">
+              <p className="text-body-medium text-gray-900 font-semibold">
                 Una iniciativa de Térbol
               </p>
             </div>
 
-            <p className="text-body-sm text-gray-500">
+            <p className="text-body-small text-gray-500">
               Los productos mencionados son suplementos dietarios. Antes de consumir cualquier suplemento, consulte a su médico o profesional de la salud.
             </p>
 
@@ -138,7 +138,7 @@ export function Footer() {
           </nav>
         </div>
         <div className="w-full h-px bg-gray-200"></div>
-        <p className="text-body-sm text-gray-500">
+        <p className="text-body-small text-gray-500">
           © 2026 Térbol Inspira. Todos los derechos reservados.
         </p>
       </div>
