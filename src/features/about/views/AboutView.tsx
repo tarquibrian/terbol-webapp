@@ -7,17 +7,17 @@
 
 import * as React from "react";
 import { AboutHero } from "../components/AboutHero";
+import { WhoWeAre } from "../components/WhoWeAre";
+import { ContactForm } from "../components/ContactForm";
+import { Banner } from "@/components/layout/Banner";
 
-/**
- * Vista completa de la página About.
- *
- * Secciones futuras: equipo, valores, timeline, partners, etc.
- */
 export function AboutView() {
   return (
     <>
       <AboutHero />
-      {/* Futuras secciones: Team, Values, Timeline, Partners, etc. */}
+      <WhoWeAre />
+      <ContactForm />
+      <Banner />
     </>
   );
 }
