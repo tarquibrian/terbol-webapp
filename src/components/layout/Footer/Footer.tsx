@@ -130,6 +130,7 @@ export function Footer() {
                 size="default"
                 icon={<ArrowRight />}
                 iconPosition="right"
+                className="w-full sm:w-auto justify-between"
               >
                 SOY ASESOR DE VENTAS
               </Button>
