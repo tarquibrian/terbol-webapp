@@ -16,10 +16,10 @@ export function Banner() {
                 <h4 className="heading-h3 text-primary">
                   Comienza tu camino hacia el bienestar
                 </h4>
-                <p className="text-body-md text-gray-500">
+                <p className="text-body-medium text-gray-500">
                   Súmate a una comunidad que cree en tu potencial y forma parte de la red de Asesores de Venta Independiente de térbol Inspira donde tu crecimiento personal y profesional van de la mano.
                 </p>
-                <p className="text-body-md text-gray-500">
+                <p className="text-body-medium text-gray-500">
                   Este es tu momento para inspirar, crecer y transformar tu vida.
                 </p>
               </div>
@@ -43,12 +43,12 @@ export function Banner() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-2 text-nowrap flex-wrap">
                 <div className="flex items-center gap-3 text-gray-500">
                   <Phone size={20} />
-                  <p className="text-body">+591 6789 1234</p>
+                  <p className="text-body-medium">+591 6789 1234</p>
                 </div>
                 <div className="hidden sm:block h-3 w-[2px] bg-gray-400"></div>
                 <div className="flex items-center gap-3 text-gray-500">
                   <Mail size={20} />
-                  <p className="text-body">contacto@terbolinspira.com</p>
+                  <p className="text-body-medium">contacto@terbolinspira.com</p>
                 </div>
               </div>
             </AnimateOnScroll>

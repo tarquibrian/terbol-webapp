@@ -23,19 +23,19 @@ const BASE_CLASSES =
 const VARIANT_CLASSES = {
   default:
     "bg-button-orange text-primary-black hover:bg-button-orange-hover",
+  secondary: "bg-primary-black !text-primary-white hover:bg-gray-800",
   destructive:
     "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   outline:
     "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-  secondary: "bg-primary-black text-white",
   ghost: "hover:bg-accent hover:text-accent-foreground",
   link: "text-primary underline-offset-4 hover:underline",
 };
 
 // Mapeo de tamaños
 const SIZE_CLASSES = {
-  default: "h-[48px] px-4 text-body gap-2",
-  sm: "h-[36px] px-3 text-body-sm gap-1.5",
+  default: "h-[48px] px-4 text-body-medium gap-2",
+  sm: "h-[36px] px-3 text-body-small gap-1.5",
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
