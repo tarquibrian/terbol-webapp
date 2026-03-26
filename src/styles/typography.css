@@ -48,6 +48,10 @@
     @apply text-h5 font-semibold leading-heading;
   }
 
+  .heading-h6-light {
+    @apply text-h6 font-light leading-heading;
+  }
+
   .heading-h6-bold {
     @apply text-h6 font-bold leading-heading;
   }

@@ -8,7 +8,7 @@ import "./globals.css";
 // Configuración de Roboto con las variantes solicitadas: regular(400), medium(500), semibold(600), bold(700)
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-roboto",
 });
 

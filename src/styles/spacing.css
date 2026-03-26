@@ -23,7 +23,7 @@
 
 @layer {
   .wrapper-content {
-    @apply px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1512px] mx-auto;
+    @apply px-4 md:px-8 lg:px-12 xl:px-16 max-w-[1512px] mx-auto;
   }
 
   .wrapper-section {
