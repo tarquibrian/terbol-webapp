@@ -11,8 +11,10 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import type { Product } from "../../data/products";
+import { Button } from "@/components/ui/Button";
 
 /** Props del componente ProductCard */
 interface ProductCardProps {
@@ -36,34 +38,50 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       <Link
         href={`/products/${product.id}`}
-        className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+        className="group flex flex-col overflow-hidden rounded-lg transition-all duration-300 bg-primary-soft-gray-balance border border-primary-soft-gray-balance hover:border-primary-orange"
       >
-        {/* Imagen del producto */}
-        <div className="relative w-full aspect-square overflow-hidden bg-muted/30">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
-          {/* Badge de categoría */}
-          <span className="absolute top-3 left-3 bg-primary-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
+        {/* Badge de categoría */}
+        <div className="flex justify-start p-6 pb-0">
+          <span className="bg-primary-white text-gray-500 text-sm font-semibold px-3 py-1 rounded-md uppercase">
             {product.category}
           </span>
         </div>
+        {/* Imagen del producto */}
+        <div className="relative w-full aspect-square overflow-hidden bg-muted/30 p-8">
+          <div className="relative w-full h-full">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-contain transition-transform duration-500 group-hover:scale-105"
+              priority={index < 3}
+            />
+          </div>
+
+        </div>
 
         {/* Info del producto */}
-        <div className="flex flex-col gap-2 p-5">
-          <h3 className="font-semibold text-lg text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
-            {product.name}
-          </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {product.shortDescription}
-          </p>
-          <p className="text-xl font-bold text-primary-orange mt-1">
-            ${product.price.toFixed(2)}
-          </p>
+        <div className="flex flex-col gap-6 p-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="font-semibold heading-h6-bold text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
+              {product.name}
+            </h3>
+            <p className="text-body-small text-muted-foreground line-clamp-2">
+              {product.shortDescription}
+            </p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-xl font-bold text-gray-900 mt-1">
+              Bs. {product.price.toFixed(2)}
+            </p>
+            <Button
+              variant="default"
+              size="sm"
+            >
+              Comprar
+            </Button>
+          </div>
         </div>
       </Link>
     </AnimateOnScroll>

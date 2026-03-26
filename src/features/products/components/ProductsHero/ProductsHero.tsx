@@ -12,6 +12,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
 /**
@@ -19,22 +20,25 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
  */
 export function ProductsHero() {
   return (
-    <section className="w-full bg-background">
-      <div className="max-w-[1512px] mx-auto px-16 py-24">
+    <section className="wrapper-section pb-0">
+      <div className="wrapper-content">
+        {/* Breadcrumb - Índice de navegación */}
+        <nav className="flex items-center gap-2 text-body-medium text-foreground/60 mb-6">
+          <Link
+            href="/"
+            className="hover:text-primary-orange transition-colors duration-200"
+          >
+            Inicio
+          </Link>
+          <span className="text-foreground/40">/</span>
+          <span className="text-foreground font-medium">Productos</span>
+        </nav>
+
         {/* Título — slide-up inmediato */}
         <AnimateOnScroll variant="slide-up">
-          <h1 className="text-h2 font-bold text-foreground mb-4">
+          <h1 className="heading-h4 font-bold mb-4">
             Nuestros Productos
           </h1>
-        </AnimateOnScroll>
-
-        {/* Descripción — slide-up con delay */}
-        <AnimateOnScroll variant="slide-up" delay={0.15}>
-          <p className="text-body text-gray-400 max-w-[640px]">
-            Descubre nuestra amplia gama de productos de alta calidad.
-            Desde soluciones industriales hasta productos de consumo,
-            tenemos lo que necesitas.
-          </p>
         </AnimateOnScroll>
       </div>
     </section>
