@@ -6,10 +6,10 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
 export function DevelopmentSteps() {
   return (
-    <section className="w-full bg-white">
-      <div className="container max-w-[1512px] mx-auto py-16 px-6 md:px-16">
-        <AnimateOnScroll variant="slide-up" className="mb-12">
-          <h2 className="heading-h4 text-primary mb-4">
+    <section className="wrapper-section">
+      <div className="wrapper-content">
+        <AnimateOnScroll variant="slide-up" className="mb-8 sm:mb-10">
+          <h2 className="heading-h4  mb-0 text-wrap">
             ¿Cómo desarrollamos cada producto?
           </h2>
         </AnimateOnScroll>
@@ -32,11 +32,16 @@ export function DevelopmentSteps() {
 
             <div className="mt-8 mb-8 relative z-10 flex-1">
               <h3 className="heading-h6-bold text-primary mb-3">Investigación</h3>
-              <p className="text-body text-gray-600 mb-6">
+              <p className="text-body-sm text-gray-600 mb-6">
                 Iniciamos con investigación científica rigurosa para comprender las necesidades y formular soluciones innovadoras.
               </p>
-              <Button variant="default" size="sm" icon={<ArrowRight />} iconPosition="right">
-                Ver Laboratorios
+              <Button
+                size="sm"
+                className="w-full sm:w-[250px] justify-between"
+                icon={<ArrowRight />}
+                iconPosition="right"
+              >
+                Ver productos
               </Button>
             </div>
 
@@ -63,7 +68,7 @@ export function DevelopmentSteps() {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">Selección Activa</h3>
-              <p className="text-body text-gray-400">
+              <p className="text-body-sm text-gray-400">
                 Seleccionamos materias primas e ingredientes de pureza certificada y calidad internacional.
               </p>
             </div>
@@ -80,7 +85,7 @@ export function DevelopmentSteps() {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">Pruebas Clínicas</h3>
-              <p className="text-body text-gray-400">
+              <p className="text-body-sm text-gray-400">
                 Testeamos la eficacia y seguridad de cada fórmula en nuestros laboratorios de alta tecnología antes de ser aprobada.
               </p>
             </div>
@@ -99,7 +104,7 @@ export function DevelopmentSteps() {
 
               <div className="mt-8 max-w-md">
                 <h3 className="heading-h6-bold text-primary mb-3">Producción Controlada</h3>
-                <p className="text-body text-gray-400">
+                <p className="text-body-sm text-gray-400">
                   Fabricamos bajo estrictos estándares de control de calidad, asegurando que cada producto final sea completamente idóneo y seguro.
                 </p>
               </div>
