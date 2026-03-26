@@ -13,7 +13,7 @@ export const About = () => {
                 <div className="w-[20px] h-px bg-gray-200"></div>
                 <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
               </header>
-              <p className="text-center text-body-md text-gray-500">Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud.</p>
+              <p className="text-center text-body-medium text-gray-500">Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud.</p>
             </div>
           </AnimateOnScroll>
 

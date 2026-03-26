@@ -33,7 +33,7 @@ export function Hero() {
 
               {/* Descripción — slide-up con delay para efecto stagger */}
               <AnimateOnScroll variant="slide-up" delay={0.15}>
-                <p className="text-gray-500 text-body-md">
+                <p className="text-gray-500 text-body-medium">
                   Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica.
                 </p>
               </AnimateOnScroll>

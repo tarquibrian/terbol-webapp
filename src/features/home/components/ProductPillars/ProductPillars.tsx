@@ -56,7 +56,7 @@ export function ProductPillars() {
                 {/* <span className="text-xl font-regular text-gray-300">0{index + 1}</span> */}
                 <div className="flex flex-col max-w-[600px]">
                   <h3 className="heading-h6-bold text-primary mb-3">{pillar.title}</h3>
-                  <p className="text-body-sm text-gray-400">{pillar.description}</p>
+                  <p className="text-body-medium text-gray-400">{pillar.description}</p>
                 </div>
               </div>
               {/* <FeatureCard

@@ -32,7 +32,7 @@ export function DevelopmentSteps() {
 
             <div className="mt-8 mb-8 relative z-10 flex-1">
               <h3 className="heading-h6-bold text-primary mb-3">Investigación</h3>
-              <p className="text-body-sm text-gray-600 mb-6">
+              <p className="text-body-medium text-gray-600 mb-6">
                 Iniciamos con investigación científica rigurosa para comprender las necesidades y formular soluciones innovadoras.
               </p>
               <Button
@@ -68,7 +68,7 @@ export function DevelopmentSteps() {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">Selección Activa</h3>
-              <p className="text-body-sm text-gray-400">
+              <p className="text-body-medium text-gray-400">
                 Seleccionamos materias primas e ingredientes de pureza certificada y calidad internacional.
               </p>
             </div>
@@ -85,7 +85,7 @@ export function DevelopmentSteps() {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">Pruebas Clínicas</h3>
-              <p className="text-body-sm text-gray-400">
+              <p className="text-body-medium text-gray-400">
                 Testeamos la eficacia y seguridad de cada fórmula en nuestros laboratorios de alta tecnología antes de ser aprobada.
               </p>
             </div>
@@ -104,7 +104,7 @@ export function DevelopmentSteps() {
 
               <div className="mt-8 max-w-md">
                 <h3 className="heading-h6-bold text-primary mb-3">Producción Controlada</h3>
-                <p className="text-body-sm text-gray-400">
+                <p className="text-body-medium text-gray-400">
                   Fabricamos bajo estrictos estándares de control de calidad, asegurando que cada producto final sea completamente idóneo y seguro.
                 </p>
               </div>
