@@ -115,7 +115,7 @@ export function FeaturedProducts() {
           <Button
             variant="secondary"
             size="sm"
-            className="mt-8 md:mt-16 mx-auto text-primary-white"
+            className="mt-8 md:mt-16 mx-auto text-primary-white w-full sm:w-fit"
             icon={<ArrowRight className="w-5 h-5 text-primary-white" />}
             iconPosition="right"
             onClick={() => console.log("Ver todos los productos")}
