@@ -37,68 +37,72 @@ export interface Product {
  * Usa imágenes de Unsplash (gratuitas) como placeholder.
  * En producción estos datos vendrán de la API.
  */
-export const PRODUCTS: Product[] = [
+export const BASE_PRODUCTS: Product[] = [
   {
     id: "1",
-    name: "Camiseta Premium Algodón",
-    price: 29.99,
-    shortDescription: "Camiseta de algodón orgánico de alta calidad.",
-    description:
-      "Confeccionada con algodón orgánico 100% certificado, esta camiseta premium ofrece una suavidad incomparable y un ajuste perfecto. Ideal para el uso diario, disponible en múltiples tallas y colores. Su fabricación sostenible garantiza el mínimo impacto ambiental sin comprometer la calidad ni el confort.",
+    name: "Paracetamol 500mg",
+    price: 3.50,
+    shortDescription: "Analgésico y antipirético eficaz para el alivio del dolor y la fiebre.",
+    description: "El Paracetamol de 500mg es un medicamento indispensable en el botiquín del hogar. Proporciona un alivio rápido y eficaz de los dolores de cabeza, dolores musculares, molestias menstruales y reduce significativamente la fiebre. Su formato en tabletas es fácil de tragar y es suave con el estómago cuando se toma según las indicaciones.",
     image: "/product/image6.png",
-    category: "Ropa",
+    category: "Medicamentos",
   },
   {
     id: "2",
-    name: "Zapatillas Deportivas Pro",
-    price: 89.99,
-    shortDescription: "Zapatillas ligeras con amortiguación avanzada.",
-    description:
-      "Diseñadas para el rendimiento máximo, estas zapatillas deportivas cuentan con tecnología de amortiguación avanzada y una suela de alto agarre. Su diseño transpirable mantiene tus pies frescos durante los entrenamientos más intensos. Perfectas para correr, entrenar en el gimnasio o usar como calzado casual de estilo urbano.",
+    name: "Vitamina C + Zinc",
+    price: 12.99,
+    shortDescription: "Comprimidos efervescentes para fortalecer el sistema inmunológico.",
+    description: "Refuerza tus defensas naturales con esta potente combinación de Vitamina C y Zinc. Elaborado en un conveniente formato efervescente con agradable sabor a naranja, ayuda a prevenir resfriados y acelera la recuperación. Ideal para uso diario, especialmente durante los cambios de estación.",
     image: "/product/image7.png",
-    category: "Calzado",
+    category: "Vitaminas",
   },
   {
     id: "3",
-    name: "Reloj Clásico Acero",
-    price: 149.99,
-    shortDescription: "Reloj elegante con caja de acero inoxidable.",
-    description:
-      "Un reloj que combina elegancia y durabilidad. Su caja de acero inoxidable con cristal resistente a rayones lo convierte en el accesorio perfecto para cualquier ocasión. Mecanismo de cuarzo japonés de alta precisión, resistente al agua hasta 50 metros y con garantía de 2 años.",
+    name: "Omega 3 Cápsulas Blandas",
+    price: 18.50,
+    shortDescription: "Suplemento de aceite de pescado para la salud cardiovascular.",
+    description: "Suplemento alimenticio de alta pureza extraído de peces de aguas profundas. Cada cápsula blanda proporciona los ácidos grasos esenciales EPA y DHA que tu cuerpo necesita para mantener un corazón sano, mejorar la función cerebral y apoyar la salud de las articulaciones. Libre de metales pesados y sabor a pescado.",
     image: "/product/image8.png",
-    category: "Accesorios",
+    category: "Suplementos",
   },
   {
     id: "4",
-    name: "Mochila Urban Explorer",
-    price: 59.99,
-    shortDescription: "Mochila resistente con compartimento para laptop.",
-    description:
-      "La compañera ideal para la ciudad o el viaje. Fabricada en nylon resistente al agua con múltiples compartimentos organizadores, incluyendo un compartimento acolchado para laptops de hasta 15 pulgadas. Correas ergonómicas ajustables y panel trasero transpirable para máxima comodidad durante todo el día.",
+    name: "Ibuprofeno 400mg",
+    price: 5.20,
+    shortDescription: "Antiinflamatorio no esteroideo para dolores moderados.",
+    description: "Alivio rápido y duradero para el dolor y la inflamación. El Ibuprofeno de 400mg es altamente efectivo para tratar dolores musculares, articulares, dolor de espalda y molestias dentales. Actúa inhibiendo las sustancias en el cuerpo que causan la inflamación, proporcionando confort para que puedas continuar con tu día.",
     image: "/product/image6.png",
-    category: "Accesorios",
+    category: "Medicamentos",
   },
   {
     id: "5",
-    name: "Auriculares Inalámbricos",
-    price: 79.99,
-    shortDescription: "Auriculares Bluetooth con cancelación de ruido.",
-    description:
-      "Sumérgete en tu música con estos auriculares inalámbricos de última generación. Tecnología de cancelación activa de ruido, batería de larga duración (hasta 30 horas), y conectividad Bluetooth 5.3 para una experiencia de audio sin interrupciones. Incluye estuche de carga portátil y cable USB-C.",
+    name: "Multivitamínico Adulto Activo",
+    price: 22.00,
+    shortDescription: "Fórmula completa con 24 vitaminas y minerales esenciales.",
+    description: "Suplemento vitamínico integral diseñado específicamente para adultos con un estilo de vida exigente. Contiene vitaminas del complejo B para la energía, calcio y vitamina D para los huesos, y antioxidantes para combatir el estrés oxidativo. Una sola tableta al día cubre tus requerimientos nutricionales para mantenerte al máximo nivel.",
     image: "/product/image7.png",
-    category: "Electrónica",
+    category: "Vitaminas",
   },
   {
     id: "6",
-    name: "Chaqueta Impermeable",
-    price: 119.99,
-    shortDescription: "Chaqueta ligera, transpirable e impermeable.",
-    description:
-      "Protégete de los elementos con esta chaqueta impermeable de alto rendimiento. Membrana transpirable que repele el agua sin sacrificar la ventilación. Costuras selladas, capucha ajustable y bolsillos con cremallera. Ideal para actividades al aire libre, senderismo o simplemente para los días lluviosos en la ciudad.",
+    name: "Colágeno Hidrolizado",
+    price: 28.90,
+    shortDescription: "Polvo sin sabor para la salud de piel, cabello y articulaciones.",
+    description: "Péptidos de colágeno de alta absorción que estimulan la regeneración celular. Este suplemento en polvo se disuelve fácilmente en cualquier bebida fría o caliente sin alterar su sabor. Ayuda a reducir las arrugas, fortalece el cabello y las uñas, y mejora la movilidad articular, combatiendo los signos del envejecimiento desde el interior.",
     image: "/product/image8.png",
-    category: "Ropa",
+    category: "Suplementos",
   },
 ];
+
+// Generamos 30 productos para poder probar la paginación de forma local.
+export const PRODUCTS: Product[] = Array.from({ length: 30 }).map((_, index) => {
+  const base = BASE_PRODUCTS[index % 6];
+  return {
+    ...base,
+    id: `${index + 1}`,
+    name: `${base.name} - Variante ${index + 1}`
+  };
+});
 
 // ─── Helpers ───
 
