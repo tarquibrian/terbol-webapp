@@ -38,6 +38,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       <Link
         href={`/products/${product.id}`}
+        scroll={false}
         className="relative group flex flex-col overflow-hidden rounded-lg transition-all duration-300 bg-primary-soft-gray-balance border border-primary-soft-gray-balance hover:border-primary-orange"
       >
         {/* Badge de categoría */}
@@ -48,13 +49,13 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         </div>
         {/* Imagen del producto */}
         <div className="relative w-full aspect-square overflow-hidden bg-muted/30 px-8 py-4">
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full flex items-center justify-center">
             <Image
               src={product.image}
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain transition-transform duration-500 group-hover:scale-105"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
               priority={index < 3}
             />
           </div>
@@ -64,10 +65,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         {/* Info del producto */}
         <div className="flex flex-col gap-6 p-6">
           <div className="flex flex-col gap-2">
-            <h2 className="font-semibold heading-h6-bold text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
+            <h2 className="font-semibold text-body-lg text-foreground group-hover:text-primary-orange transition-colors truncate">
               {product.name}
             </h2>
-            <p className="text-body-small text-gray-500 line-clamp-2">
+            <p className="text-body-small text-gray-500 truncate">
               {product.shortDescription}
             </p>
           </div>
