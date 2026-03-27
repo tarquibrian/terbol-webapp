@@ -14,6 +14,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { SearchInput } from "@/components/ui/SearchInput";
 
 /**
  * Hero de la sección Productos con descripción del catálogo Terbol.
@@ -35,10 +36,15 @@ export function ProductsHero() {
         </nav>
 
         {/* Título — slide-up inmediato */}
-        <AnimateOnScroll variant="slide-up">
+        <AnimateOnScroll variant="slide-up" className="flex justify-between">
           <h1 className="heading-h4 font-bold mb-4">
             Nuestros Productos
           </h1>
+          <SearchInput
+            placeholder="Buscar productos..."
+            className="hidden lg:flex w-full min-w-[240px] desk:max-w-[400px]"
+            onSearch={(query) => console.log("Buscando:", query)}
+          />
         </AnimateOnScroll>
       </div>
     </section>
