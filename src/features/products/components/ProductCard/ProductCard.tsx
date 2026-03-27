@@ -33,21 +33,21 @@ interface ProductCardProps {
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
   return (
     <AnimateOnScroll
-      variant="slide-up"
+      variant="fade"
       delay={0.1 * (index % 3)} // Stagger sincronizado para grid-cols-3
     >
       <Link
         href={`/products/${product.id}`}
-        className="group flex flex-col overflow-hidden rounded-lg transition-all duration-300 bg-primary-soft-gray-balance border border-primary-soft-gray-balance hover:border-primary-orange"
+        className="relative group flex flex-col overflow-hidden rounded-lg transition-all duration-300 bg-primary-soft-gray-balance border border-primary-soft-gray-balance hover:border-primary-orange"
       >
         {/* Badge de categoría */}
-        <div className="flex justify-start p-6 pb-0">
-          <span className="bg-primary-white text-gray-500 text-sm font-semibold px-3 py-1 rounded-md uppercase">
+        <div className="absolute top-6 left-6 z-11">
+          <span className="bg-primary-white text-gray-500 text-sm uppercase font-semibold px-2 py-[4px] rounded-md uppercase">
             {product.category}
           </span>
         </div>
         {/* Imagen del producto */}
-        <div className="relative w-full aspect-square overflow-hidden bg-muted/30 p-8">
+        <div className="relative w-full aspect-square overflow-hidden bg-muted/30 px-8 py-4">
           <div className="relative w-full h-full">
             <Image
               src={product.image}
