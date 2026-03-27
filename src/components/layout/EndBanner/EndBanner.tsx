@@ -18,7 +18,7 @@ export function EndBanner() {
                 <GraduationCap size={40} strokeWidth={1.3} />
               </div>
               <div className="flex flex-col gap-2">
-                <h4 className="heading-h5">¿Querés aprender con nosotros?</h4>
+                <h3 className="heading-h5">¿Querés aprender con nosotros?</h3>
                 <p className="text-body-medium text-gray-500">Contenido educativo, guías especializadas y publicaciones para profundizar tus conocimientos.</p>
               </div>
               <Button size="sm" variant="secondary" icon={<ArrowRight size={20} />}>VER PUBLICACIONES</Button>
@@ -31,7 +31,7 @@ export function EndBanner() {
                 <GraduationCap size={40} strokeWidth={1.3} />
               </div>
               <div className="flex flex-col gap-2">
-                <h4 className="heading-h5">¿Querés aprender con nosotros?</h4>
+                <h3 className="heading-h5">¿Querés aprender con nosotros?</h3>
                 <p className="text-body-medium text-gray-500">Contenido educativo, guías especializadas y publicaciones para profundizar tus conocimientos.</p>
               </div>
               <Button size="sm" variant="outline" icon={<ArrowRight size={20} className="w-full" />}>VER PUBLICACIONES</Button>

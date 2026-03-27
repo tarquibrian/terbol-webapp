@@ -67,7 +67,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             <h2 className="font-semibold heading-h6-bold text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
               {product.name}
             </h2>
-            <p className="text-body-small text-gray-400 line-clamp-2">
+            <p className="text-body-small text-gray-500 line-clamp-2">
               {product.shortDescription}
             </p>
           </div>
