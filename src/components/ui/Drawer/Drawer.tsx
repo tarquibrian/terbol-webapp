@@ -19,6 +19,8 @@ export interface DrawerProps {
   className?: string;
   /** Si es true, cancela la animación y cierra instantáneamente */
   instantClose?: boolean;
+  /** Lado desde el cual se desliza el panel (por defecto "right") */
+  side?: "left" | "right";
 }
 
 /**
@@ -26,7 +28,7 @@ export interface DrawerProps {
  * Escapa el árbol de React y previene problemas de Stacking Context renderizando
  * con `createPortal` hacia `document.body`.
  */
-export function Drawer({ isOpen, onClose, title, children, className, instantClose }: DrawerProps) {
+export function Drawer({ isOpen, onClose, title, children, className, instantClose, side = "right" }: DrawerProps) {
   const [mounted, setMounted] = React.useState(false);
 
   // Evitar error de hidratación renderizando el Portal solo en el cliente
@@ -66,9 +68,10 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
         {/* Panel lateral deslizable */}
         <div
           className={cn(
-            "absolute inset-y-0 right-0 w-full bg-background shadow-2xl flex flex-col pointer-events-auto",
+            "absolute inset-y-0 w-full bg-background shadow-2xl flex flex-col pointer-events-auto",
+            side === "left" ? "left-0" : "right-0",
             instantClose ? "transition-none duration-0" : "transition-transform duration-600 ease-in-out",
-            isOpen ? "translate-x-0" : "translate-x-full",
+            isOpen ? "translate-x-0" : side === "left" ? "-translate-x-full" : "translate-x-full",
             className
           )}
         >
