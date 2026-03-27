@@ -123,3 +123,25 @@ export function getProductById(id: string): Product | undefined {
 export function getAllProductIds(): string[] {
   return PRODUCTS.map((product) => product.id);
 }
+
+/**
+ * Obtiene productos paginados simulando un API backend.
+ */
+export async function getPaginatedProducts(page: number, limit: number) {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 900));
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedProducts = PRODUCTS.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedProducts,
+    meta: {
+      total: PRODUCTS.length,
+      page,
+      limit,
+      totalPages: Math.ceil(PRODUCTS.length / limit)
+    }
+  };
+}
