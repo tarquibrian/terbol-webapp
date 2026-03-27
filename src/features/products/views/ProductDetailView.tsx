@@ -57,14 +57,24 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
   return (
     <section className="w-full py-12 md:py-20">
       <div className="max-w-[1512px] mx-auto px-16">
-        {/* Breadcrumb */}
+        {/* Breadcrumb - Índice de navegación */}
         <AnimateOnScroll variant="fade">
-          <nav className="mb-8 text-sm text-muted-foreground">
-            <Link href="/products" className="hover:text-primary-orange transition-colors">
+          <nav className="flex items-center gap-2 text-body-medium text-foreground/60 mb-6">
+            <Link
+              href="/"
+              className="hover:text-primary-orange transition-colors duration-200"
+            >
+              Inicio
+            </Link>
+            <span className="text-foreground/40">/</span>
+            <Link
+              href="/products"
+              className="hover:text-primary-orange transition-colors duration-200"
+            >
               Productos
             </Link>
-            <span className="mx-2">/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground/40">/</span>
+            <span className="text-foreground font-medium line-clamp-1">{product.name}</span>
           </nav>
         </AnimateOnScroll>
 
