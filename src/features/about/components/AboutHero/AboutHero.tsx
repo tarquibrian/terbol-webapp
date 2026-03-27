@@ -25,7 +25,7 @@ export function AboutHero() {
         <div className="flex flex-col items-center gap-6">
 
           {/* Título — slide-up inmediato */}
-          <div className="text-body-small font-medium text-gray-400 bg-primary-soft-gray-balance px-3 py-1 rounded-full flex items-center gap-2">
+          <div className="text-body-small font-medium text-gray-500 bg-primary-soft-gray-balance px-3 py-1 rounded-full flex items-center gap-2">
             <div className="h-2 w-2 bg-gray-300 rounded-full"></div>
             NUESTRA IDENTIDAD
           </div>
@@ -47,7 +47,7 @@ export function AboutHero() {
             {/* LOGO */}
             <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
             <div className="flex flex-col gap-2">
-              <h3 className="heading-h5">Nacida de Térbol</h3>
+              <h2 className="heading-h5">Nacida de Térbol</h2>
               <p className="text-gray-500 text-body-small">Térbol Inspira es la evolución premium de Térbol, respaldada por su trayectoria en salud.</p>
             </div>
           </AnimateOnScroll>
@@ -55,7 +55,7 @@ export function AboutHero() {
             {/* LOGO */}
             <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
             <div className="flex flex-col gap-2">
-              <h3 className="heading-h5">Un enfoque diferente</h3>
+              <h2 className="heading-h5">Un enfoque diferente</h2>
               <p className="text-gray-500 text-body-small">
                 A diferencia del portafolio tradicional, Inspira se especializa exclusivamente en productos de alta gama con evidencia científica.
               </p>

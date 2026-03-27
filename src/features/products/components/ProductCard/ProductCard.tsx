@@ -42,7 +42,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       >
         {/* Badge de categoría */}
         <div className="absolute top-6 left-6 z-11">
-          <span className="bg-primary-white text-gray-500 text-sm uppercase font-semibold px-2 py-[4px] rounded-md uppercase">
+          <span className="bg-primary-white text-gray-500 text-sm font-semibold px-2 py-1 rounded-md uppercase">
             {product.category}
           </span>
         </div>
@@ -64,10 +64,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         {/* Info del producto */}
         <div className="flex flex-col gap-6 p-6">
           <div className="flex flex-col gap-2">
-            <h3 className="font-semibold heading-h6-bold text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
+            <h2 className="font-semibold heading-h6-bold text-foreground group-hover:text-primary-orange transition-colors line-clamp-1">
               {product.name}
-            </h3>
-            <p className="text-body-small text-muted-foreground line-clamp-2">
+            </h2>
+            <p className="text-body-small text-gray-400 line-clamp-2">
               {product.shortDescription}
             </p>
           </div>
