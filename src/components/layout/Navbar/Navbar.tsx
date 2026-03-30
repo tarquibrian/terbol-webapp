@@ -20,6 +20,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
@@ -40,6 +41,8 @@ import { NAV_LINKS } from "./Navbar.constants";
  * 4. CTA de "Soy asesor de ventas".
  */
 export function Navbar() {
+  const router = useRouter();
+
   return (
     // <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <header className="fixed top-0 z-50 w-full bg-white h-[100px]">
@@ -59,7 +62,13 @@ export function Navbar() {
           <SearchInput
             placeholder="Buscar productos..."
             className="hidden lg:flex w-full min-w-[240px] desk:max-w-[400px]"
-            onSearch={(query) => console.log("Buscando:", query)}
+            onSearch={(query) => {
+              if (query.trim()) {
+                router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+              } else {
+                router.push(`/products`);
+              }
+            }}
           />
 
           {/* ─── Navegación + CTA ─── */}
