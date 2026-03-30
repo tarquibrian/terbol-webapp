@@ -10,7 +10,8 @@
 import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { FeaturedProductCard } from "./FeaturedProductCard";
-import { CategoryCard } from "./CategoryCard";
+import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
+import { CONSUMPTION_CATEGORIES } from "@/features/products/data/products";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "lucide-react";
 
@@ -77,37 +78,15 @@ export function FeaturedProducts() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            <AnimateOnScroll variant="slide-up" delay={0.0}>
-              <CategoryCard
-                name="Energía y Vitalidad"
-                imageSrc="/categories/img1.png"
-                href="/products?category=energia"
-              />
-            </AnimateOnScroll>
-
-            <AnimateOnScroll variant="slide-up" delay={0.1}>
-              <CategoryCard
-                name="Sistema Inmunológico"
-                imageSrc="/categories/img2.png"
-                href="/products?category=inmunologico"
-              />
-            </AnimateOnScroll>
-
-            <AnimateOnScroll variant="slide-up" delay={0.2}>
-              <CategoryCard
-                name="Belleza y Piel"
-                imageSrc="/categories/img3.png"
-                href="/products?category=belleza"
-              />
-            </AnimateOnScroll>
-
-            <AnimateOnScroll variant="slide-up" delay={0.3}>
-              <CategoryCard
-                name="Rendimiento Deportivo"
-                imageSrc="/categories/img4.png"
-                href="/products?category=deporte"
-              />
-            </AnimateOnScroll>
+            {CONSUMPTION_CATEGORIES.slice(0, 4).map((category, index) => (
+              <AnimateOnScroll key={category.id} variant="slide-up" delay={index * 0.1}>
+                <CategoryCard
+                  name={category.name}
+                  imageSrc={category.imageSrc}
+                  href={category.href}
+                />
+              </AnimateOnScroll>
+            ))}
           </div>
         </div>
 
