@@ -53,6 +53,10 @@
     color: inherit;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   /* Evitar el text overflow */
   p,
   h1,
