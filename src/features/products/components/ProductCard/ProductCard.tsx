@@ -22,6 +22,8 @@ interface ProductCardProps {
   product: Product;
   /** Índice de la tarjeta en el grid (para calcular delay del stagger) */
   index?: number;
+  /** Delay customizado para sobreescribir el cálculo del grid (útil en carousels) */
+  animationDelay?: number;
 }
 
 /**
@@ -30,11 +32,14 @@ interface ProductCardProps {
  * @param props.product - Datos del producto
  * @param props.index - Posición en el grid (para delay de animación)
  */
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
+export function ProductCard({ product, index = 0, animationDelay }: ProductCardProps) {
+  // Si se provee, usamos el delay custom; sino, el por defecto para grid-cols-3
+  const delay = animationDelay !== undefined ? animationDelay : 0.1 * (index % 3);
+
   return (
     <AnimateOnScroll
       variant="fade"
-      delay={0.1 * (index % 3)} // Stagger sincronizado para grid-cols-3
+      delay={delay}
     >
       <Link
         href={`/products/${product.id}`}
