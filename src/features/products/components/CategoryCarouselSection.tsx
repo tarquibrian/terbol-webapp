@@ -80,14 +80,14 @@ export function CategoryCarouselSection({
             <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
               <button
                 onClick={handlePrev}
-                className="w-12 h-12 flex justify-center items-center rounded-full border border-gray-200 text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300 focus:outline-none"
+                className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                 aria-label="Anterior"
               >
                 <ChevronLeft size={24} strokeWidth={1.5} />
               </button>
               <button
                 onClick={handleNext}
-                className="w-12 h-12 flex justify-center items-center rounded-full border border-gray-200 text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300 focus:outline-none"
+                className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                 aria-label="Siguiente"
               >
                 <ChevronRight size={24} strokeWidth={1.5} />
@@ -123,14 +123,14 @@ export function CategoryCarouselSection({
               <div className="flex md:hidden justify-center gap-4 mt-8">
                 <button
                   onClick={handlePrev}
-                  className="w-10 h-10 flex justify-center items-center rounded-full border border-gray-200 text-gray-900"
+                  className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                   aria-label="Anterior"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
                   onClick={handleNext}
-                  className="w-10 h-10 flex justify-center items-center rounded-full border border-gray-200 text-gray-900"
+                  className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                   aria-label="Siguiente"
                 >
                   <ChevronRight size={20} />

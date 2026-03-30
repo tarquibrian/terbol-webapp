@@ -1,5 +1,5 @@
 /**
- * @fileoverview Datos de productos genéricos (mock data).
+ * @fileoverview Datos de productos (mock data).
  *
  * Este archivo simula la respuesta de una API de productos.
  * Cuando se integre un backend real, este archivo se reemplazará
@@ -9,221 +9,281 @@
  * del dominio de productos.
  */
 
-// ─── Tipos ───
+// ─── Tipos ───────────────────────────────────────────────────────────────────
 
-/** Representa un producto en el catálogo */
+/** Represent un producto en el catálogo */
 export interface Product {
+  // ── Identificación ──
   /** Identificador único del producto */
   id: string;
-  /** Nombre comercial del producto */
+  /** Nombre completo del producto — se usa en product/[id] */
   name: string;
+  /** Nombre corto — se usa en la card de FeaturedProducts del Home */
+  shortName?: string;
+
+  // ── Precios & Disponibilidad ──
   /** Precio en USD */
   price: number;
-  /** Descripción corta para cards */
+  /** Estado de disponibilidad */
+  stockStatus?: string;
+
+  // ── Textos ──
+  /** Descripción corta para cards del catálogo */
   shortDescription: string;
   /** Descripción larga para la página de detalle */
   description: string;
-  /** URL de la imagen principal */
-  image: string;
-  /** Categoría del producto */
-  category: string;
-  /** Tipo de consumo */
-  consumptionType: string;
-  /** Imágenes adicionales para la galería */
-  images?: string[];
-  /** Etiquetas destacadas (ej. ULTRAPURIFICADO, certificado ifos) */
-  tags?: string[];
-  /** Nombre extendido para el detalle */
-  longName?: string;
   /** Subtítulo para la sección de detalle principal */
   detailsSubtitle?: string;
   /** Lista de viñetas para la sección de detalle principal */
   detailsList?: string[];
-  /** Estado de disponibilidad */
-  stockStatus?: string;
   /** Instrucciones / Modo de uso */
   usageInstructions?: string;
   /** Lista de beneficios */
   benefits?: string[];
+  /** Etiquetas destacadas (ej. ULTRAPURIFICADO, certificado ifos) */
+  tags?: string[];
+
+  // ── Imágenes ──
+  /**
+   * [FeaturedProductCard — Capa 1]
+   * Imagen de portada con fondo. Se muestra en el estado inicial de la card
+   * (telón frontal con gradiente oscuro encima).
+   */
+  featuredCoverImage?: string;
+  /**
+   * [FeaturedProductCard — Capa 2]
+   * Imagen del envase del producto sobre fondo claro. Se revela al hacer hover
+   * (capa trasera fija).
+   */
+  featuredBgImage?: string;
+  /**
+   * [ProductCard — Catálogo]
+   * Imagen principal que aparece en la card del catálogo de productos.
+   */
+  cardImage: string;
+  /**
+   * Imágenes extra para la galería en la página de detalle product/[id].
+   */
+  extraImages?: string[];
+
+  // ── Clasificación ──
+  /** Categoría del producto */
+  category: string;
+  /** Tipo de consumo */
+  consumptionType: string;
+  /** Si es true, el producto aparece en la sección de Destacados del Home */
+  featuredProduct?: boolean;
 }
 
-// ─── Mock Data ───
+// ─── Mock Data ────────────────────────────────────────────────────────────────
 
 /**
  * Categorías basadas en el "Tipo de Consumo"
  */
 export const CONSUMPTION_CATEGORIES = [
-  { id: "c1", name: "Longevidad y Prevención", imageSrc: "/categories/img1.png", href: "/products?consumptionType=Longevidad%20y%20Prevenci%C3%B3n" },
-  { id: "c2", name: "Rendimiento y Energía", imageSrc: "/categories/img2.png", href: "/products?consumptionType=Rendimiento%20y%20Energ%C3%ADa" },
-  { id: "c3", name: "Foco y Antiestrés", imageSrc: "/categories/img3.png", href: "/products?consumptionType=Foco%20y%20Antiestr%C3%A9s" },
-  { id: "c4", name: "Belleza y Piel", imageSrc: "/categories/img4.png", href: "/products?consumptionType=Belleza%20y%20Piel" },
-  { id: "c5", name: "Salud Inmunológica", imageSrc: "/categories/img1.png", href: "/products?consumptionType=Salud%20Inmunol%C3%B3gica" },
-  { id: "c6", name: "Descanso y Reparación", imageSrc: "/categories/img2.png", href: "/products?consumptionType=Descanso%20y%20Reparaci%C3%B3n" },
+  { id: "c1", name: "Longevidad y Prevención",  imageSrc: "/categories/img1.png", href: "/products?consumptionType=Longevidad%20y%20Prevenci%C3%B3n" },
+  { id: "c2", name: "Rendimiento y Energía",    imageSrc: "/categories/img2.png", href: "/products?consumptionType=Rendimiento%20y%20Energ%C3%ADa" },
+  { id: "c3", name: "Foco y Antiestrés",         imageSrc: "/categories/img3.png", href: "/products?consumptionType=Foco%20y%20Antiestr%C3%A9s" },
+  { id: "c4", name: "Belleza y Piel",            imageSrc: "/categories/img4.png", href: "/products?consumptionType=Belleza%20y%20Piel" },
+  { id: "c5", name: "Salud Inmunológica",        imageSrc: "/categories/img1.png", href: "/products?consumptionType=Salud%20Inmunol%C3%B3gica" },
+  { id: "c6", name: "Descanso y Reparación",     imageSrc: "/categories/img2.png", href: "/products?consumptionType=Descanso%20y%20Reparaci%C3%B3n" },
 ];
 
 /**
- * Array de productos genéricos para desarrollo.
- *
- * Usa imágenes de Unsplash (gratuitas) como placeholder.
+ * Array de productos base para desarrollo.
  * En producción estos datos vendrán de la API.
  */
 export const BASE_PRODUCTS: Product[] = [
+  // ── Producto 1 — COLLAGEN CREAM (Featured) ──────────────────────────────
   {
     id: "1",
-    name: "Paracetamol 500mg",
-    price: 3.50,
-    shortDescription: "Analgésico y antipirético eficaz para el alivio del dolor y la fiebre.",
-    description: "El Paracetamol de 500mg es un medicamento indispensable en el botiquín del hogar. Proporciona un alivio rápido y eficaz de los dolores de cabeza, dolores musculares, molestias menstruales y reduce significativamente la fiebre. Su formato en tabletas es fácil de tragar y es suave con el estómago cuando se toma según las indicaciones.",
-    image: "/product/image6.png",
-    category: "Medicamentos",
-    consumptionType: "Longevidad y Prevención",
-    images: ["/product/image6.png", "/product/image7.png", "/product/image8.png", "/product/image6.png", "/product/image7.png"],
-    tags: ["ULTRAPURIFICADO", "sin sabor a pescado", "certificado ifos"],
-    longName: "Omega 3 Aceite Ultrapurificado (Ejemplo largo)",
-    detailsSubtitle: "Salud cardiovascular y cerebral",
-    detailsList: [
-      "Mantenimiento de los huesos en condiciones normales",
-      "Nutre el tejido muscular",
-      "Mantenimiento de cartílagos, tendones y ligamentos."
-    ],
+    name: "Collagen Cream Premium Plus",
+    shortName: "COLLAGEN CREAM",
+    price: 34.90,
     stockStatus: "En stock",
-    usageInstructions: "Tomar 2 cápsulas diarias con las comidas principales. Puede dividirse en una por la mañana y otra por la noche.",
+    shortDescription: "Crema de colágeno premium para la regeneración y elasticidad de la piel.",
+    description: "Nuestra Collagen Cream está formulada con péptidos de colágeno de alta absorción que penetran profundamente en la dermis estimulando la regeneración celular. Su textura ligera se funde con la piel sin dejar residuo, aportando hidratación intensa y elasticidad visible desde la primera semana de uso.",
+    detailsSubtitle: "Regeneración y elasticidad dérmica",
+    detailsList: [
+      "Estimula la producción natural de colágeno",
+      "Reduce visiblemente arrugas y líneas finas",
+      "Hidratación profunda de 24 horas",
+    ],
+    usageInstructions: "Aplicar una cantidad generosa sobre el rostro y cuello limpios, con suaves movimientos circulares, mañana y noche.",
     benefits: [
-      "Apoya la salud del corazón y arterias",
-      "Mejora la función cognitiva y memoria",
-      "Reduce la inflamación sistémica",
-      "Contribuye a la salud de piel y articulaciones"
-    ]
+      "Piel más firme y luminosa",
+      "Atenúa manchas de expresión",
+      "Textura ligera de rápida absorción",
+      "Apta para todo tipo de piel",
+    ],
+    tags: ["PÉPTIDOS", "colágeno marino", "hyalurónico"],
+    // Imágenes
+    featuredCoverImage: "/producthome/Collagen.png",
+    featuredBgImage: "/producthome/product1.png",
+    cardImage: "/product/image6.png",
+    extraImages: ["/product/image6.png", "/product/image7.png", "/product/image8.png"],
+    // Clasificación
+    category: "Cuidado de Piel",
+    consumptionType: "Belleza y Piel",
+    featuredProduct: true,
   },
+
+  // ── Producto 2 — OVA OVA ACTIVE (Featured) ──────────────────────────────
   {
     id: "2",
-    name: "Vitamina C + Zinc",
-    price: 12.99,
-    shortDescription: "Comprimidos efervescentes para fortalecer el sistema inmunológico.",
-    description: "Refuerza tus defensas naturales con esta potente combinación de Vitamina C y Zinc. Elaborado en un conveniente formato efervescente con agradable sabor a naranja, ayuda a prevenir resfriados y acelera la recuperación. Ideal para uso diario, especialmente durante los cambios de estación.",
-    image: "/product/image7.png",
-    category: "Vitaminas",
-    consumptionType: "Rendimiento y Energía",
-    images: ["/product/image7.png", "/product/image8.png", "/product/image6.png"],
-    tags: ["ALTA ABSORCIÓN", "sabor naranja", "vitamina c"],
-    longName: "Vitamina C + Zinc Efervescente",
-    detailsSubtitle: "Inmunidad y recuperación rápida",
+    name: "Ova Ova Active Suplemento Base",
+    shortName: "OVA OVA ACTIVE",
+    price: 28.50,
+    stockStatus: "En stock",
+    shortDescription: "Suplemento base de alta energía para potenciar tu rendimiento diario.",
+    description: "Ova Ova Active es un suplemento nutricional de base diseñado para quienes buscan mantener su energía en niveles óptimos durante todo el día. Su fórmula exclusiva combina vitaminas del complejo B, electrolitos naturales y adaptógenos que apoyan la función cognitiva y reducen la fatiga física y mental.",
+    detailsSubtitle: "Energía sostenida y rendimiento óptimo",
     detailsList: [
-      "Ayuda a prevenir resfriados comunes",
-      "Protege contra el daño celular",
-      "Mantiene la piel saludable y radiante"
+      "Aumenta los niveles de energía sin estimulantes",
+      "Mejora el enfoque y la concentración",
+      "Reduce la fatiga física y mental",
     ],
-    stockStatus: "Pocas unidades",
-    usageInstructions: "Disolver 1 pastilla efervescente en un vaso de agua al día, preferentemente por la mañana.",
+    usageInstructions: "Tomar 2 cápsulas al día con el desayuno. Para máximos beneficios, mantener un ciclo de 30 días.",
     benefits: [
-      "Refuerza el sistema inmunitario",
-      "Potente acción antioxidante",
-      "Favorece la producción de colágeno"
-    ]
+      "Energía sostenida sin picos ni bajones",
+      "Apoyo al sistema nervioso",
+      "Mejora el rendimiento deportivo",
+      "100% ingredientes naturales",
+    ],
+    tags: ["ADAPTÓGENOS", "complejo B", "sin estimulantes"],
+    // Imágenes
+    featuredCoverImage: "/producthome/ovaova1.png",
+    featuredBgImage: "/producthome/product2.png",
+    cardImage: "/product/image7.png",
+    extraImages: ["/product/image7.png", "/product/image8.png", "/product/image6.png"],
+    // Clasificación
+    category: "Suplementos",
+    consumptionType: "Rendimiento y Energía",
+    featuredProduct: true,
   },
+
+  // ── Producto 3 — OVA OVA FLEX (Featured) ────────────────────────────────
   {
     id: "3",
-    name: "Omega 3 Cápsulas Blandas",
-    price: 18.50,
-    shortDescription: "Suplemento de aceite de pescado para la salud cardiovascular.",
-    description: "Suplemento alimenticio de alta pureza extraído de peces de aguas profundas. Cada cápsula blanda proporciona los ácidos grasos esenciales EPA y DHA que tu cuerpo necesita para mantener un corazón sano, mejorar la función cerebral y apoyar la salud de las articulaciones. Libre de metales pesados y sabor a pescado.",
-    image: "/product/image8.png",
+    name: "Ova Ova Flex Suplemento Avanzado",
+    shortName: "OVA OVA FLEX",
+    price: 36.00,
+    stockStatus: "En stock",
+    shortDescription: "Fórmula avanzada para la salud articular, movilidad y recuperación muscular.",
+    description: "Ova Ova Flex es la versión avanzada de nuestra línea Ova Ova, especialmente formulada para deportistas y personas activas que desean proteger sus articulaciones y acelerar la recuperación muscular. Con una sinergia de colágeno tipo II, glucosamina, condroitina y MSM, ofrece soporte completo al tejido conectivo.",
+    detailsSubtitle: "Soporte articular y recuperación avanzada",
+    detailsList: [
+      "Protege cartílagos y articulaciones",
+      "Acelera la recuperación post-esfuerzo",
+      "Mejora la flexibilidad y rango de movimiento",
+    ],
+    usageInstructions: "Disolver 1 sobre en 250ml de agua fría una vez al día, preferiblemente después del entrenamiento.",
+    benefits: [
+      "Articulaciones más fuertes y ágiles",
+      "Menos dolor post-entrenamiento",
+      "Soporte al tejido conectivo",
+      "Sin gluten ni lactosa",
+    ],
+    tags: ["COLÁGENO TIPO II", "glucosamina", "MSM"],
+    // Imágenes
+    featuredCoverImage: "/producthome/ovaova3.png",
+    featuredBgImage: "/producthome/product3.png",
+    cardImage: "/product/image8.png",
+    extraImages: ["/product/image8.png", "/product/image6.png", "/product/image7.png"],
+    // Clasificación
     category: "Suplementos",
     consumptionType: "Foco y Antiestrés",
-    images: ["/product/image8.png", "/product/image6.png", "/product/image7.png", "/product/image8.png"],
-    tags: ["PURO", "sin metales pesados", "con epa y dha"],
-    longName: "Cápsulas Blandas de Omega 3 Premium",
-    detailsSubtitle: "Funcionamiento cerebral óptimo",
-    detailsList: [
-      "Mejora la circulación de la sangre",
-      "Protege el corazón",
-      "Mantiene la función ocular normal"
-    ],
-    stockStatus: "En stock",
-    usageInstructions: "Tomar de 1 a 2 cápsulas blandas al día junto a las comidas principales.",
-    benefits: [
-      "Reduce triglicéridos",
-      "Mejora dolores articulares",
-      "Apoyo esencial para la función cerebral"
-    ]
+    featuredProduct: true,
   },
+
+  // ── Producto 4 ───────────────────────────────────────────────────────────
   {
     id: "4",
-    name: "Ibuprofeno 400mg",
+    name: "Ibuprofeno 400mg Rápido Alivio",
+    shortName: "Ibuprofeno",
     price: 5.20,
+    stockStatus: "En stock",
     shortDescription: "Antiinflamatorio no esteroideo para dolores moderados.",
-    description: "Alivio rápido y duradero para el dolor y la inflamación. El Ibuprofeno de 400mg es altamente efectivo para tratar dolores musculares, articulares, dolor de espalda y molestias dentales. Actúa inhibiendo las sustancias en el cuerpo que causan la inflamación, proporcionando confort para que puedas continuar con tu día.",
-    image: "/product/image6.png",
-    category: "Medicamentos",
-    consumptionType: "Belleza y Piel",
-    images: ["/product/image6.png", "/product/image8.png"],
-    tags: ["RÁPIDA ACCIÓN", "para el dolor"],
-    longName: "Ibuprofeno 400mg Rápido Alivio",
+    description: "Alivio rápido y duradero para el dolor y la inflamación. El Ibuprofeno de 400mg es altamente efectivo para tratar dolores musculares, articulares, dolor de espalda y molestias dentales. Actúa inhibiendo las sustancias en el cuerpo que causan la inflamación.",
     detailsSubtitle: "Alivio del dolor e inflamación",
     detailsList: [
       "Alivia dolores de cabeza intensos",
       "Ideal para dolores musculares",
-      "Reduce la fiebre rápidamente"
+      "Reduce la fiebre rápidamente",
     ],
-    stockStatus: "En stock",
     usageInstructions: "Tomar 1 tableta cada 8 horas si el dolor persiste. No exceder la dosis recomendada.",
     benefits: [
       "Acción antiinflamatoria directa",
       "Duradero efecto analgésico",
-      "Eficaz tras el ejercicio físico"
-    ]
+      "Eficaz tras el ejercicio físico",
+    ],
+    tags: ["RÁPIDA ACCIÓN", "para el dolor"],
+    // Imágenes
+    cardImage: "/product/image6.png",
+    extraImages: ["/product/image6.png", "/product/image8.png"],
+    // Clasificación
+    category: "Medicamentos",
+    consumptionType: "Belleza y Piel",
   },
+
+  // ── Producto 5 ───────────────────────────────────────────────────────────
   {
     id: "5",
-    name: "Multivitamínico Adulto Activo",
+    name: "Multivitamínico Adulto Activo Integral",
+    shortName: "Multivitamínico",
     price: 22.00,
+    stockStatus: "En stock",
     shortDescription: "Fórmula completa con 24 vitaminas y minerales esenciales.",
-    description: "Suplemento vitamínico integral diseñado específicamente para adultos con un estilo de vida exigente. Contiene vitaminas del complejo B para la energía, calcio y vitamina D para los huesos, y antioxidantes para combatir el estrés oxidativo. Una sola tableta al día cubre tus requerimientos nutricionales para mantenerte al máximo nivel.",
-    image: "/product/image7.png",
-    category: "Vitaminas",
-    consumptionType: "Salud Inmunológica",
-    images: ["/product/image7.png", "/product/image6.png", "/product/image8.png", "/product/image7.png"],
-    tags: ["COMPLEJO B", "24 vitaminas", "diario"],
-    longName: "Multivitamínico Adulto Activo Integral",
+    description: "Suplemento vitamínico integral diseñado específicamente para adultos con un estilo de vida exigente. Contiene vitaminas del complejo B para la energía, calcio y vitamina D para los huesos, y antioxidantes para combatir el estrés oxidativo.",
     detailsSubtitle: "Energía y vitalidad diaria",
     detailsList: [
       "Aporta energía sostenida",
       "Reduce el cansancio y la fatiga",
-      "Contribuye a la función psicológica normal"
+      "Contribuye a la función psicológica normal",
     ],
-    stockStatus: "En stock",
     usageInstructions: "Tomar 1 cápsula diaria por la mañana con el desayuno.",
     benefits: [
       "Mejora el rendimiento físico",
       "Aporta antioxidantes diarios",
-      "Optimiza el metabolismo energético"
-    ]
+      "Optimiza el metabolismo energético",
+    ],
+    tags: ["COMPLEJO B", "24 vitaminas", "diario"],
+    // Imágenes
+    cardImage: "/product/image7.png",
+    extraImages: ["/product/image7.png", "/product/image6.png", "/product/image8.png"],
+    // Clasificación
+    category: "Vitaminas",
+    consumptionType: "Salud Inmunológica",
   },
+
+  // ── Producto 6 ───────────────────────────────────────────────────────────
   {
     id: "6",
-    name: "Colágeno Hidrolizado",
+    name: "Péptidos de Colágeno Hidrolizado Articular",
+    shortName: "Colágeno",
     price: 28.90,
+    stockStatus: "Agotado",
     shortDescription: "Polvo sin sabor para la salud de piel, cabello y articulaciones.",
-    description: "Péptidos de colágeno de alta absorción que estimulan la regeneración celular. Este suplemento en polvo se disuelve fácilmente en cualquier bebida fría o caliente sin alterar su sabor. Ayuda a reducir las arrugas, fortalece el cabello y las uñas, y mejora la movilidad articular, combatiendo los signos del envejecimiento desde el interior.",
-    image: "/product/image8.png",
-    category: "Suplementos",
-    consumptionType: "Descanso y Reparación",
-    images: ["/product/image8.png", "/product/image7.png"],
-    tags: ["PÉPTIDOS", "salud articular", "sin sabor"],
-    longName: "Péptidos de Colágeno Hidrolizado Articular",
+    description: "Péptidos de colágeno de alta absorción que estimulan la regeneración celular. Este suplemento en polvo se disuelve fácilmente en cualquier bebida fría o caliente sin alterar su sabor. Ayuda a reducir las arrugas, fortalece el cabello y las uñas, y mejora la movilidad articular.",
     detailsSubtitle: "Regeneración y movilidad",
     detailsList: [
       "Promueve la salud ósea",
       "Aumenta la elasticidad de la piel",
-      "Retrasa signos del envejecimiento"
+      "Retrasa signos del envejecimiento",
     ],
-    stockStatus: "Agotado",
     usageInstructions: "Diluir 1 cucharada medidora en 200ml de agua o jugo, una vez al día.",
     benefits: [
       "Atenúa las arrugas finas",
       "Fortalece cabellos y uñas",
-      "Mejora la motricidad articular"
-    ]
+      "Mejora la motricidad articular",
+    ],
+    tags: ["PÉPTIDOS", "salud articular", "sin sabor"],
+    // Imágenes
+    cardImage: "/product/image8.png",
+    extraImages: ["/product/image8.png", "/product/image7.png"],
+    // Clasificación
+    category: "Suplementos",
+    consumptionType: "Descanso y Reparación",
   },
 ];
 
@@ -233,17 +293,22 @@ export const PRODUCTS: Product[] = Array.from({ length: 30 }).map((_, index) => 
   return {
     ...base,
     id: `${index + 1}`,
-    name: `${base.name} - Variante ${index + 1}`
+    name: `${base.name} - Variante ${index + 1}`,
   };
 });
 
-// ─── Helpers ───
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Productos marcados como destacados para mostrar en el Home.
+ * Solo se tomarán los primeros 3 con featuredProduct: true.
+ */
+export const FEATURED_PRODUCTS: Product[] = BASE_PRODUCTS
+  .filter((p) => p.featuredProduct)
+  .slice(0, 3);
 
 /**
  * Busca un producto por su ID.
- *
- * @param id - Identificador del producto
- * @returns El producto encontrado o `undefined`
  */
 export function getProductById(id: string): Product | undefined {
   return PRODUCTS.find((product) => product.id === id);
@@ -274,7 +339,7 @@ export async function getPaginatedProducts(page: number, limit: number) {
       total: PRODUCTS.length,
       page,
       limit,
-      totalPages: Math.ceil(PRODUCTS.length / limit)
-    }
+      totalPages: Math.ceil(PRODUCTS.length / limit),
+    },
   };
 }

@@ -44,7 +44,7 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
             <AnimateOnScroll variant="fade" delay={0.1}>
               <div className="w-full aspect-4/3 sm:aspect-square rounded-lg overflow-hidden bg-primary-soft-gray-light">
                 <Image
-                  src={selectedImage ?? product.image}
+                  src={selectedImage ?? product.cardImage}
                   alt={product.name}
                   width={800}
                   height={800}
@@ -55,12 +55,12 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
             </AnimateOnScroll>
 
             {/* Galería de imágenes adicionales */}
-            {product.images && product.images.length > 0 && (
+            {product.extraImages && product.extraImages.length > 0 && (
               <AnimateOnScroll variant="fade" delay={0.2}>
                 <div className="flex gap-4 overflow-x-auto pb-4 snap-x no-scrollbar">
-                  {[product.image, ...product.images.filter((img) => img !== product.image)].map(
+                  {[product.cardImage, ...product.extraImages.filter((img) => img !== product.cardImage)].map(
                     (img, idx) => {
-                      const isSelected = (selectedImage ?? product.image) === img;
+                      const isSelected = (selectedImage ?? product.cardImage) === img;
                       return (
                         <button
                           key={idx}
@@ -105,7 +105,7 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
 
               <AnimateOnScroll variant="slide-up" delay={0.1}>
                 <h1 className="heading-h3 text-gray-900 text-wrap">
-                  {product.longName || product.name}
+                  {product.name}
                 </h1>
               </AnimateOnScroll>
 
