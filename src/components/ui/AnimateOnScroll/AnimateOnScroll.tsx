@@ -134,7 +134,7 @@ interface AnimateOnScrollProps {
    * Elemento HTML a renderizar.
    * @default "div"
    */
-  as?: "div" | "section" | "article" | "span" | "header" | "footer";
+  as?: "div" | "section" | "article" | "span" | "header" | "footer" | "li" | "ul";
 }
 
 /**
