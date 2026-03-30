@@ -10,8 +10,14 @@ export interface SearchInputProps
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, placeholder = "Buscar...", onSearch, ...props }, ref) => {
-    const [value, setValue] = React.useState("");
+  ({ className, placeholder = "Buscar...", onSearch, defaultValue, value: externalValue, onChange, ...props }, ref) => {
+    const [value, setValue] = React.useState(defaultValue?.toString() || externalValue?.toString() || "");
+
+    React.useEffect(() => {
+      if (defaultValue !== undefined) {
+        setValue(defaultValue.toString());
+      }
+    }, [defaultValue]);
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     // Merge de refs (externo + interno)
@@ -33,6 +39,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 
     const handleClear = () => {
       setValue("");
+      onSearch?.("");
       inputRef.current?.focus();
     };
 
@@ -55,7 +62,10 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           ref={setRefs}
           type="text"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            onChange?.(e);
+          }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="flex-1 bg-transparent px-4 py-0 text-body-sm h-full text-foreground placeholder:text-(--grey-300) outline-none w-full"
