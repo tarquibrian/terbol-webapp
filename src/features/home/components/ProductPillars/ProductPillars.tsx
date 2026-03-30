@@ -33,7 +33,7 @@ const PILLARS_DATA = [
 export function ProductPillars() {
   return (
     <section className="wrapper-section">
-      <div className="wrapper-content flex flex-col items-start lg:flex-row justify-between gap-6 lg:gap-12">
+      <div className="wrapper-content flex flex-col items-start lg:flex-row justify-between gap-10 lg:gap-12">
         <AnimateOnScroll variant="slide-up">
           <div className="flex flex-col items-start justify-start text-left mx-auto">
             <h2 className="heading-h4 text-primary">
@@ -49,7 +49,8 @@ export function ProductPillars() {
         <div className="grid grid-cols-1 gap-3 lg:gap-3">
           {PILLARS_DATA.map((pillar, index) => (
             <AnimateOnScroll key={pillar.id} delay={index * 0.1} variant="slide-up">
-              <div className="flex items-start gap-6 md:gap-8 border-b border-gray-100 py-6 md:py-8">
+              <div className={`flex items-start gap-6 md:gap-8 border-b border-gray-100 pb-6 md:pb-8 ${index === 0 ? "pt-0" : "pt-6 md:pt-8"}`}>
+                {/* <div className={`flex items-start gap-6 md:gap-8 border-b border-gray-100 py-6 md:py-8 ${index === 0 ? "pt-0" : "pt-6 md:pt-8"}`}> */}
                 <div className="min-w-16 min-h-16 flex items-center justify-center bg-primary-soft-gray-balance rounded-lg text-primary-orange">
                   {pillar.icon}
                 </div>

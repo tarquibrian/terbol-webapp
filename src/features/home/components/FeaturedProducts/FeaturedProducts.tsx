@@ -11,13 +11,28 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { FeaturedProductCard } from "./FeaturedProductCard";
 import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
-import { CONSUMPTION_CATEGORIES } from "@/features/products/data/products";
+import { CONSUMPTION_CATEGORIES, FEATURED_PRODUCTS } from "@/features/products/data/products";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, Autoplay } from "@/components/ui/Carousel/Carousel";
 
 export function FeaturedProducts() {
-  // Simulamos algunos productos para rellenar el grid
-  const products = [1, 2, 3, 4];
+  const plugin = React.useMemo(() => {
+    return [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })];
+  }, []);
+
+  const [api, setApi] = React.useState<any>();
+
+  const handlePrev = React.useCallback(() => {
+    api?.scrollPrev();
+    api?.plugins()?.autoplay?.reset();
+  }, [api]);
+
+  const handleNext = React.useCallback(() => {
+    api?.scrollNext();
+    api?.plugins()?.autoplay?.reset();
+  }, [api]);
+
 
   return (
     <section className="wrapper-section">
@@ -32,62 +47,100 @@ export function FeaturedProducts() {
           <div className="w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
         </div>
 
-        {/* Grid de Productos con animación escalonada (stagger) */}
-        {/* Grid de Productos Interactivos (3 cards) */}
+        {/* Grid de Productos Interactivos (máx. 3 products con featuredProduct: true) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4">
-          <AnimateOnScroll variant="slide-up" delay={0.1}>
-            <FeaturedProductCard
-              id="colageno-premium"
-              number="01"
-              name="Colágeno Premium Plus"
-              imageSrc="/producthome/Collagen.png"
-              productImageSrc="/producthome/product1.png"
-            />
-          </AnimateOnScroll>
-
-          <AnimateOnScroll variant="slide-up" delay={0.2}>
-            <FeaturedProductCard
-              id="ovaova-1"
-              number="02"
-              name="Ovaova Suplemento Base"
-              imageSrc="/producthome/ovaova1.png"
-              productImageSrc="/producthome/product2.png"
-            />
-          </AnimateOnScroll>
-
-          <AnimateOnScroll variant="slide-up" delay={0.3}>
-            <FeaturedProductCard
-              id="ovaova-3"
-              number="03"
-              name="Ovaova Suplemento Avanzado"
-              imageSrc="/producthome/ovaova3.png"
-              productImageSrc="/producthome/product3.png"
-            />
-          </AnimateOnScroll>
+          {FEATURED_PRODUCTS.map((product, index) => (
+            <AnimateOnScroll key={product.id} variant="slide-up" delay={(index + 1) * 0.1}>
+              <FeaturedProductCard
+                id={product.id}
+                number={String(index + 1).padStart(2, "0")}
+                name={product.shortName ?? product.name}
+                imageSrc={product.featuredCoverImage ?? product.cardImage}
+                productImageSrc={product.featuredBgImage ?? product.cardImage}
+              />
+            </AnimateOnScroll>
+          ))}
         </div>
 
         {/* Sección de Categorías */}
         <div className="mt-12 md:mt-24">
-          <div className="flex items-center justify-between gap-4 mb-8">
-            <AnimateOnScroll variant="slide-up">
-              <h3 className="heading-h5 font-bold text-foreground md:whitespace-nowrap">
-                Productos para diferentes enfoques
-              </h3>
-            </AnimateOnScroll>
-            <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {CONSUMPTION_CATEGORIES.slice(0, 4).map((category, index) => (
-              <AnimateOnScroll key={category.id} variant="slide-up" delay={index * 0.1}>
-                <CategoryCard
-                  name={category.name}
-                  imageSrc={category.imageSrc}
-                  href={category.href}
-                />
+          <Carousel
+            opts={{ loop: true, align: "start" }}
+            plugins={plugin}
+            setApi={setApi}
+            className="flex flex-col gap-8"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <AnimateOnScroll variant="slide-up">
+                <h3 className="heading-h5 font-bold text-foreground md:whitespace-nowrap">
+                  Productos para diferentes enfoques
+                </h3>
               </AnimateOnScroll>
-            ))}
-          </div>
+              <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
+
+              {CONSUMPTION_CATEGORIES.length > 3 && (
+                <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
+                  <button
+                    onClick={handlePrev}
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    aria-label="Anterior"
+                  >
+                    <ChevronLeft size={24} strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    aria-label="Siguiente"
+                  >
+                    <ChevronRight size={24} strokeWidth={1.5} />
+                  </button>
+                </AnimateOnScroll>
+              )}
+            </div>
+
+            <AnimateOnScroll variant="slide-up" delay={0.2}>
+              <div className="relative w-full">
+                <div className="px-0 md:px-0">
+                  <CarouselContent>
+                    {CONSUMPTION_CATEGORIES.map((category, index) => (
+                      <CarouselItem
+                        key={category.id}
+                        className="w-full sm:basis-1/2 lg:basis-1/4"
+                      >
+                        <CategoryCard
+                          name={category.name}
+                          imageSrc={category.imageSrc}
+                          href={category.href}
+                          index={index}
+                          disableAnimation={true}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </div>
+
+                {/* Controles para Mobile */}
+                {CONSUMPTION_CATEGORIES.length > 1 && (
+                  <div className="flex md:hidden justify-center gap-4 mt-4">
+                    <button
+                      onClick={handlePrev}
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      aria-label="Anterior"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      aria-label="Siguiente"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </AnimateOnScroll>
+          </Carousel>
         </div>
 
         <div className="w-full flex items-center justify-center">
@@ -98,6 +151,8 @@ export function FeaturedProducts() {
             icon={<ArrowRight className="w-5 h-5 text-primary-white" />}
             iconPosition="right"
             onClick={() => console.log("Ver todos los productos")}
+            href="/products"
+            scroll={false}
           >
             Ver todos los productos
           </Button>
