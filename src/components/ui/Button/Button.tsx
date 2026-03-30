@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
-  | "default"
-  | "destructive"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | "link";
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   size?: "default" | "sm";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
@@ -21,8 +21,7 @@ const BASE_CLASSES =
 
 // Mapeo de variantes
 const VARIANT_CLASSES = {
-  default:
-    "bg-button-orange text-primary-black hover:bg-button-orange-hover",
+  default: "bg-button-orange text-primary-black hover:bg-button-orange-hover",
   secondary: "bg-primary-black !text-primary-white hover:bg-gray-800",
   destructive:
     "bg-destructive text-destructive-foreground hover:bg-destructive/90",
@@ -49,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <button
@@ -59,7 +58,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           VARIANT_CLASSES[variant],
           SIZE_CLASSES[size],
           iconPosition === "right" && "flex-row-reverse",
-          className
+          className,
         )}
         {...props}
       >
@@ -67,9 +66,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 Button.displayName = "Button";
 
 export { Button };
-
