@@ -30,7 +30,7 @@ export function CategoryCard({ name, imageSrc, href, animationDelay, index = 0, 
           src={imageSrc}
           alt={`Categoría ${name}`}
           fill
-          className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+          className="object-cover transition-transform duration-300 ease-out"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />

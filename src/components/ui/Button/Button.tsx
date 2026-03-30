@@ -1,4 +1,5 @@
 import * as React from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps
@@ -13,6 +14,8 @@ export interface ButtonProps
   size?: "default" | "sm";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  href?: string;
+  scroll?: boolean;
 }
 
 // Clases base para todos los botones
@@ -45,25 +48,49 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size = "default",
       icon,
       iconPosition = "right",
+      href,
+      scroll,
       children,
       ...props
     },
     ref,
   ) => {
+    const combinedClassName = cn(
+      BASE_CLASSES,
+      VARIANT_CLASSES[variant],
+      SIZE_CLASSES[size],
+      iconPosition === "right" && "flex-row-reverse",
+      className,
+    );
+
+    const content = (
+      <>
+        {icon && <span className="shrink-0">{icon}</span>}
+        {children}
+      </>
+    );
+
+    if (href) {
+      return (
+        <Link
+          href={href}
+          scroll={scroll}
+          ref={ref as any}
+          className={combinedClassName}
+          {...(props as any)}
+        >
+          {content}
+        </Link>
+      );
+    }
+
     return (
       <button
         ref={ref}
-        className={cn(
-          BASE_CLASSES,
-          VARIANT_CLASSES[variant],
-          SIZE_CLASSES[size],
-          iconPosition === "right" && "flex-row-reverse",
-          className,
-        )}
+        className={combinedClassName}
         {...props}
       >
-        {icon && <span className="shrink-0">{icon}</span>}
-        {children}
+        {content}
       </button>
     );
   },
