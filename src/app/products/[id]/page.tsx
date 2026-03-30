@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       description: product.shortDescription,
       images: [
         {
-          url: product.image,
+          url: product.cardImage,
           width: 1200,
           height: 630,
           alt: product.name,
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       card: "summary_large_image",
       title: `${product.name} | Terbol`,
       description: product.shortDescription,
-      images: [product.image],
+      images: [product.cardImage],
     },
   };
 }
