@@ -72,11 +72,11 @@ export function Navbar() {
           />
 
           {/* ─── Navegación + CTA ─── */}
-          <div className="flex flex-1 items-center justify-end gap-6 min-w-fit">
+          <div className="flex flex-1 items-center justify-end gap-6 min-w-fit h-12">
 
             {/* Links de Navegación */}
             <nav
-              className="hidden desk:flex items-center gap-6 text-body-sm h-full"
+              className="hidden desk:flex items-center gap-6 text-body-sm h-full leading-none"
               aria-label="Navegación principal"
             >
               {NAV_LINKS.map((link) =>
