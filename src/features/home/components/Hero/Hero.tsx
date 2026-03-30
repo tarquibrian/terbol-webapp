@@ -50,20 +50,17 @@ export function Hero() {
                 >
                   ÚNETE AL EQUIPO AHORA
                 </Button>
-                {/* <Button size="default" variant="outline" className="w-full sm:w-auto" icon={<ArrowRight />} iconPosition="right">
-                  Explorar Catálogo
-                </Button> */}
               </div>
             </AnimateOnScroll>
           </div>
 
-          <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end">
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-soft-gray-balance  lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
+          <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end p-3 bg-primary-soft-gray-balance rounded-lg">
+            <div className="relative w-full aspect-video rounded-md overflow-hidden bg-primary-soft-gray-balance lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
               <Image
-                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1470&auto=format&fit=crop"
-                alt="Colección de moda"
+                src={"/images/productextra2.png"}
+                alt="Térbol Inspira"
                 fill
-                className="object-cover w-full h-full rounded-md"
+                className="object-cover w-full h-full"
                 priority
                 sizes="(max-width: 1024px) 100vw, 570px"
               />
