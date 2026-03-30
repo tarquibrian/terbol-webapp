@@ -21,7 +21,9 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <PageLayout>
-      <ProductsView />
+      <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando productos...</div>}>
+        <ProductsView />
+      </React.Suspense>
     </PageLayout>
   );
 }
