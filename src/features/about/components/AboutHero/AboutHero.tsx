@@ -45,7 +45,7 @@ export function AboutHero() {
         <div className="flex gap-4 max-w-[1024px] flex-col md:flex-row">
           <AnimateOnScroll variant="slide-up" delay={0.3} className="w-full p-6 bg-primary-soft-gray-balance rounded-lg h-fit md:h-[230px] flex flex-col gap-6 justify-between">
             {/* LOGO */}
-            <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
+            <Image src="/logo-terbol-main.svg" alt="Terbol" width={200} height={33} />
             <div className="flex flex-col gap-2">
               <h2 className="heading-h5">Nacida de Térbol</h2>
               <p className="text-gray-500 text-body-small">Térbol Inspira es la evolución premium de Térbol, respaldada por su trayectoria en salud.</p>
