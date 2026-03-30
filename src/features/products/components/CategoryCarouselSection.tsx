@@ -40,11 +40,23 @@ export function CategoryCarouselSection({
 
   const plugin = React.useMemo(() => {
     return autoplayIntervalMs > 0
-      ? [Autoplay({ delay: autoplayIntervalMs, stopOnInteraction: true })]
+      ? [Autoplay({ delay: autoplayIntervalMs, stopOnInteraction: false, stopOnMouseEnter: true })]
       : [];
   }, [autoplayIntervalMs]);
 
   const [api, setApi] = React.useState<any>();
+
+  /** Navega al slide anterior y resetea el timer de autoplay */
+  const handlePrev = React.useCallback(() => {
+    api?.scrollPrev();
+    api?.plugins()?.autoplay?.reset();
+  }, [api]);
+
+  /** Navega al slide siguiente y resetea el timer de autoplay */
+  const handleNext = React.useCallback(() => {
+    api?.scrollNext();
+    api?.plugins()?.autoplay?.reset();
+  }, [api]);
 
   if (!categories || categories.length === 0) return null;
 
@@ -67,14 +79,14 @@ export function CategoryCarouselSection({
           {categories.length > 3 && (
             <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
               <button
-                onClick={() => api?.scrollPrev()}
+                onClick={handlePrev}
                 className="w-12 h-12 flex justify-center items-center rounded-full border border-gray-200 text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300 focus:outline-none"
                 aria-label="Anterior"
               >
                 <ChevronLeft size={24} strokeWidth={1.5} />
               </button>
               <button
-                onClick={() => api?.scrollNext()}
+                onClick={handleNext}
                 className="w-12 h-12 flex justify-center items-center rounded-full border border-gray-200 text-gray-900 transition-colors hover:bg-gray-50 hover:border-gray-300 focus:outline-none"
                 aria-label="Siguiente"
               >
@@ -99,7 +111,7 @@ export function CategoryCarouselSection({
                       imageSrc={category.imageSrc}
                       href={category.href}
                       index={idx}
-                      animationDelay={0.1 + (idx * 0.2)}
+                      disableAnimation={true}
                     />
                   </CarouselItem>
                 ))}
@@ -110,14 +122,14 @@ export function CategoryCarouselSection({
             {categories.length > 1 && (
               <div className="flex md:hidden justify-center gap-4 mt-8">
                 <button
-                  onClick={() => api?.scrollPrev()}
+                  onClick={handlePrev}
                   className="w-10 h-10 flex justify-center items-center rounded-full border border-gray-200 text-gray-900"
                   aria-label="Anterior"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
-                  onClick={() => api?.scrollNext()}
+                  onClick={handleNext}
                   className="w-10 h-10 flex justify-center items-center rounded-full border border-gray-200 text-gray-900"
                   aria-label="Siguiente"
                 >

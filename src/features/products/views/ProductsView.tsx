@@ -27,12 +27,12 @@ import { EndBanner } from "@/components/layout/EndBanner";
 const PRODUCTS_PER_PAGE = 9;
 
 // ─── Filtros (Desktop & Mobile reutilizable) ───
-const FilterContent = ({ 
+const FilterContent = ({
   onApply,
   selectedCategories,
   selectedConsumptionTypes,
   onFilterChange
-}: { 
+}: {
   onApply: () => void;
   selectedCategories: string[];
   selectedConsumptionTypes: string[];
@@ -50,8 +50,8 @@ const FilterContent = ({
         {["Medicamentos", "Suplementos", "Vitaminas"].map((cat) => {
           const isSelected = selectedCategories.includes(cat);
           return (
-            <li 
-              key={cat} 
+            <li
+              key={cat}
               className={`flex items-center gap-3 cursor-pointer transition-colors ${isSelected ? 'text-primary-orange font-medium' : 'text-foreground/80 hover:text-primary-orange'}`}
               onClick={() => onFilterChange("category", cat)}
             >
@@ -77,8 +77,8 @@ const FilterContent = ({
           const lab = categoryObj.name;
           const isSelected = selectedConsumptionTypes.includes(lab);
           return (
-            <li 
-              key={lab} 
+            <li
+              key={lab}
               className={`flex items-center gap-3 cursor-pointer transition-colors ${isSelected ? 'text-primary-orange font-medium' : 'text-foreground/80 hover:text-primary-orange'}`}
               onClick={() => onFilterChange("consumptionType", lab)}
             >
@@ -180,14 +180,14 @@ export function ProductsView() {
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     // Clear old filters and set new ones
     params.delete("category");
     pendingCategories.forEach((cat) => params.append("category", cat));
-    
+
     params.delete("consumptionType");
     pendingConsumptionTypes.forEach((type) => params.append("consumptionType", type));
-    
+
     // Reset page to 1 on filter application
     params.set("page", "1");
     updateParams(params);
@@ -210,7 +210,7 @@ export function ProductsView() {
             side="left"
             className="max-w-[320px]"
           >
-            <FilterContent 
+            <FilterContent
               onApply={applyFilters}
               selectedCategories={pendingCategories}
               selectedConsumptionTypes={pendingConsumptionTypes}
@@ -237,7 +237,7 @@ export function ProductsView() {
             {/* Columna Izquierda: Filtros de Búsqueda (Desktop) */}
             <aside className="hidden lg:block w-[300px] sticky top-32 pb-[78px] shrink-0">
               <AnimateOnScroll variant="slide-up">
-                <FilterContent 
+                <FilterContent
                   onApply={applyFilters}
                   selectedCategories={pendingCategories}
                   selectedConsumptionTypes={pendingConsumptionTypes}
@@ -290,18 +290,19 @@ export function ProductsView() {
                   )}
                 </>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl bg-gray-50/50 border border-gray-100">
-                  <div className="w-16 h-16 mb-4 rounded-full bg-primary-light-gray flex items-center justify-center text-primary-orange">
-                    <Filter size={32} />
+                <div className="w-full h-full flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl bg-primary-soft-gray-light border border-primary-soft-gray-balance">
+                  <div className="w-16 h-16 mb-4 rounded-full flex items-center justify-center text-primary-orange">
+                    <Filter size={48} strokeWidth={1.2} />
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
+                  <h3 className="heading-h4 font-bold text-gray-900 mb-4">
                     No encontramos productos
                   </h3>
-                  <p className="text-foreground/70 max-w-sm mb-8">
+                  <p className="text-body-medium text-gray-500 max-w-xl mb-8">
                     Lo sentimos, no hay resultados que coincidan con los filtros seleccionados. Intenta buscar con otro tipo de producto o consumo.
                   </p>
                   <Button
-                    variant="default"
+                    variant="secondary"
+                    size="sm"
                     onClick={() => {
                       setPendingCategories([]);
                       setPendingConsumptionTypes([]);

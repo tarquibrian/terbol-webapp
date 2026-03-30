@@ -95,7 +95,7 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
                   {product.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="inline-block bg-gray-50 uppercase text-primary-orange text-body-sm font-medium px-3 py-1 rounded-full w-fit"
+                      className="inline-block bg-gray-50 uppercase text-orange-500 text-body-sm font-medium px-3 py-1 rounded-full w-fit"
                     >
                       {tag}
                     </span>
