@@ -15,7 +15,7 @@
   --text-h4: clamp(24px, 4vw, 40px);
   --text-h5: clamp(20px, 3vw, 28px);
   --text-h6: clamp(20px, 3vw, 24px);
-  --text-body-lg: 21px;
+  --text-body-lg: clamp(18px, 1.5vw, 21px);
   --text-body-md: clamp(16px, 1.5vw, 18px);
   --text-body-sm: clamp(14px, 1.5vw, 16px);
 
@@ -50,6 +50,10 @@
 
   .heading-h6-light {
     @apply text-h6 font-light leading-heading;
+  }
+
+  .heading-h6 {
+    @apply text-h6 font-bold leading-heading;
   }
 
   .heading-h6-bold {
