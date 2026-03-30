@@ -38,18 +38,32 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product) {
     return {
-      title: "Producto no encontrado | Terbol",
+      title: "Producto no encontrado",
       description: "El producto que buscas no existe en nuestro catálogo.",
     };
   }
 
   return {
-    title: `${product.name} | Terbol`,
+    // El template del layout.tsx añade " | Terbol" automáticamente
+    title: product.name,
     description: product.shortDescription,
     openGraph: {
       title: `${product.name} | Terbol`,
       description: product.shortDescription,
-      images: [{ url: product.image }],
+      images: [
+        {
+          url: product.image,
+          width: 1200,
+          height: 630,
+          alt: product.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} | Terbol`,
+      description: product.shortDescription,
+      images: [product.image],
     },
   };
 }

@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   // Simulated delay to mimic real network request
   await new Promise(resolve => setTimeout(resolve, 900));
 
-            let filteredProducts = PRODUCTS;
+  let filteredProducts = PRODUCTS;
 
   if (search) {
     const searchLower = search.toLowerCase();

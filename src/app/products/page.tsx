@@ -13,9 +13,16 @@ import { ProductsView } from "@/features/products";
 
 /** Metadatos SEO de la página de productos */
 export const metadata: Metadata = {
-  title: "Nuestros Productos | Terbol",
+  title: "Nuestros Productos",
   description:
-    "Descubre nuestra amplia gama de productos de alta calidad. Desde soluciones industriales hasta productos de consumo.",
+    "Explora el catálogo completo de Terbol: medicamentos, suplementos y vitaminas de alta calidad para el cuidado de tu salud.",
+  openGraph: {
+    title: "Catálogo de Productos — Terbol",
+    description:
+      "Explora el catálogo completo de Terbol: medicamentos, suplementos y vitaminas para el cuidado de tu salud.",
+    // TODO: Reemplazar con imagen OG del catálogo cuando esté disponible
+    // images: [{ url: "/images/og-products.jpg", width: 1200, height: 630, alt: "Productos Terbol" }],
+  },
 };
 
 export default function ProductsPage() {
