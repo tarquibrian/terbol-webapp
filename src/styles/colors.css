@@ -50,6 +50,17 @@
   --color-primary-soft-gray-balance: rgba(239, 239, 235, 1);
   --color-primary-soft-gray-hard: rgba(219, 219, 216, 1);
   --color-primary-dark-gray: rgba(113, 114, 115, 1);
+
+  --color-orange-50: rgba(255, 240, 231, 1);
+  --color-orange-100: rgba(255, 209, 181, 1);
+  --color-orange-200: rgba(255, 187, 145, 1);
+  --color-orange-300: rgba(255, 157, 95, 1);
+  --color-orange-400: rgba(255, 137, 64, 1);
+  --color-orange-500: rgba(255, 108, 16, 1);
+  --color-orange-600: rgba(232, 98, 15, 1);
+  --color-orange-700: rgba(181, 77, 11, 1);
+  --color-orange-800: rgba(140, 59, 9, 1);
+  --color-orange-900: rgba(107, 45, 7, 1);
 }
 
 
