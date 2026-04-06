@@ -69,6 +69,10 @@
     line-height: 1.1;
   }
 
+  b {
+    color: var(--color-gray-900);
+  }
+
   ul,
   ol {
     list-style: none;
