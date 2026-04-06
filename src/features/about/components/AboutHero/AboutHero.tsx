@@ -30,7 +30,7 @@ export function AboutHero() {
             NUESTRA IDENTIDAD
           </div>
           <AnimateOnScroll variant="slide-up">
-            <h1 className="heading-h1-bold text-foreground text-center">
+            <h1 className="heading-h2 font-semibold text-foreground text-center">
               ¿Qué es Térbol Inspira?
             </h1>
           </AnimateOnScroll>
