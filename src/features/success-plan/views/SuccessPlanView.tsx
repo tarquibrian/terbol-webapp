@@ -7,17 +7,19 @@
 
 import * as React from "react";
 import { SuccessPlanHero } from "../components/SuccessPlanHero";
+import { About } from "@/features/home/components/About";
+import { SuccessPlanFeaturesSection } from "../components/SuccessPlanFeaturesSection/SuccessPlanFeaturesSection";
+import { SuccessPlanStepsSection } from "../components/SuccessPlanStepsSection/SuccessPlanStepsSection";
+import { Banner } from "@/components/layout/Banner";
 
-/**
- * Vista completa de la página Plan de Éxito.
- *
- * Secciones futuras: Steps, Benefits, Testimonials, CTA, etc.
- */
 export function SuccessPlanView() {
   return (
     <>
       <SuccessPlanHero />
-      {/* Futuras secciones: Steps, Benefits, Testimonials, CTA, etc. */}
+      <About />
+      <SuccessPlanFeaturesSection />
+      <SuccessPlanStepsSection />
+      <Banner />
     </>
   );
 }
