@@ -21,7 +21,7 @@ export function SuccessPlanStep({ number, title, description, image, reverse, im
           {number}
           <div className="w-[80%] h-[1px] bg-gray-200"></div>
         </div>
-        <h4 className="heading-h5 font-bold text-wrap" dangerouslySetInnerHTML={{ __html: title }} />
+        <h3 className="heading-h5 font-bold text-wrap" dangerouslySetInnerHTML={{ __html: title }} />
         <p className="text-body-medium text-gray-500" dangerouslySetInnerHTML={{ __html: description }} />
       </div>
       <div className={clsx(
