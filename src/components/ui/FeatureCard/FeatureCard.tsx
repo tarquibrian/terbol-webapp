@@ -23,7 +23,7 @@ export interface FeatureCardProps {
  */
 const VARIANT_CLASSES = {
   default: "p-6 rounded-lg bg-primary-soft-gray-balance gap-10",
-  ghost: "p-0 bg-transparent gap-6",
+  ghost: "p-0 bg-transparent gap-8",
 };
 
 export function FeatureCard({
@@ -40,17 +40,19 @@ export function FeatureCard({
         "flex flex-col",
         align === "left" ? "items-start text-left" : "items-end text-right",
         VARIANT_CLASSES[variant],
-        className
+        className,
       )}
     >
       <div className="flex items-center justify-center text-primary-orange">
         {icon}
       </div>
-      <div className={cn("flex flex-col gap-2", align === "right" && "items-end")}>
+      <div
+        className={cn("flex flex-col gap-2", align === "right" && "items-end")}
+      >
         <h3
           className={cn(
             "text-primary",
-            variant === "default" ? "heading-h6-bold" : "heading-h5"
+            variant === "default" ? "heading-h6-bold" : "heading-h6-bold",
           )}
         >
           {title}

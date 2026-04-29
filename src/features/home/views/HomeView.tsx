@@ -17,23 +17,26 @@ import { ProductPillars } from "../components/ProductPillars";
 import { DevelopmentSteps } from "../components/DevelopmentSteps";
 import { Banner } from "@/components/layout/Banner";
 
+interface HomeViewProps {
+  data?: any;
+}
+
 /**
  * Vista completa de la página Home.
  *
  * Organiza la composición de las secciones de la landing.
  * A medida que crezca el home, se agregan más secciones aquí.
  */
-export function HomeView() {
+export function HomeView({ data }: HomeViewProps) {
   return (
     <>
-      <Hero />
-      <About />
+      <Hero data={data?.hero_section} />
+      <About data={data?.video_section} />
       <FeaturedProducts />
-      <ProductPillars />
-      <DevelopmentSteps />
-      <Banner />
+      <ProductPillars data={data?.pillars} />
+      <DevelopmentSteps data={data?.development_products} />
+      <Banner data={data?.advisor_registration} />
       {/* NUEVA SECCION AQUI */}
     </>
   );
 }
-

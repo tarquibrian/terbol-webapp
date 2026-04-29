@@ -2,19 +2,19 @@
 
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import Image from "next/image";
-import { TrendingUp, User, Star, Lightbulb } from 'lucide-react'
+import { TrendingUp, User, Star, Lightbulb } from 'lucide-react';
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { env } from "@/config/env";
 import * as React from "react";
 
-interface AboutUsDetail {
+interface EvidenceDetail {
   id: number | string;
   title: string;
   description: string;
   icon?: string;
 }
 
-interface WhoWeAreProps {
+interface ScienceAboutProps {
   data?: {
     header?: {
       label?: string;
@@ -23,11 +23,11 @@ interface WhoWeAreProps {
       legend?: string;
       image?: string;
     };
-    details?: AboutUsDetail[];
+    details?: EvidenceDetail[];
   };
 }
 
-export const WhoWeAre = ({ data }: WhoWeAreProps) => {
+export const ScienceAbout = ({ data }: ScienceAboutProps) => {
   const getImageUrl = (path?: string) => {
     if (!path) return null;
     if (path.startsWith("http")) return path;
@@ -37,27 +37,26 @@ export const WhoWeAre = ({ data }: WhoWeAreProps) => {
   };
 
   const header = data?.header || {
-    label: "QUIÉNES SOMOS",
-    title: "¿Por qué nace Térbol Inspira?",
-    description: "Inspira nace para captar al consumidor informado con una propuesta nueva basada en confianza, calidad y evidencia.",
+    label: "EVIDENCIA Y RESPALDO",
+    title: "Productos basados en ciencia, no en tendencias",
+    description: "Nuestros productos se apoyan en evidencia científica, documentación rigurosa y un compromiso constante con la calidad: lo que ves en cada fórmula tiene respaldo, no moda pasajera.",
     legend: '"Más que un producto, una relación de confianza."',
-    image: "/about/aboutproduct.png"
+    image: "/science/evidence/evidence.png" // fallback
   };
 
-  const defaultDetails: AboutUsDetail[] = [
-    { id: 1, title: "Evolución del mercado", description: "Térbol Inspira ofrece calidad, ciencia y transparencia para el consumidor exigente." },
-    { id: 2, title: "Modelo cercano", description: "Térbol Inspira emplea un modelo B2C con asesoría personalizada de promotoras para crear una conexión directa." },
-    { id: 3, title: "Innovación en formulación", description: "En lugar de revender genéricos, crean fórmulas únicas basadas en investigación científica." },
-    { id: 4, title: "Segmento premium", description: "Se enfocan en consumidores de gama alta que invierten in salud con resultados probados." }
+  const defaultDetails: EvidenceDetail[] = [
+    { id: 1, title: "Estudios clínicos", description: "Nuestros ingredientes principales cuentan con estudios que respaldan su eficacia en las dosis utilizadas." },
+    { id: 2, title: "Documentación técnica", description: "Cada producto tiene una ficha técnica detallada con información sobre composición, origen y propiedades." },
+    { id: 3, title: "Ingredientes patentados", description: "Utilizamos formas patentadas de ciertos nutrientes que garantizan mayor absorción y pureza." },
+    { id: 4, title: "Actualización continua", description: "Seguimos la literatura científica para incorporar nuevos hallazgos y mejorar nuestras fórmulas." }
   ];
 
   const details = data?.details && data.details.length === 4 ? data.details : defaultDetails;
   
   const mainImgUrl = data?.header?.image && !data.header.image.startsWith("/") 
     ? getImageUrl(data.header.image) 
-    : (data?.header?.image || "/about/aboutproduct.png");
+    : (data?.header?.image || "/images/image15.png");
 
-  // Helper para renderizar los iconos o los SVGs del CMS
   const renderIcon = (path: string | undefined, FallbackIcon: any) => {
     if (!path) return <FallbackIcon strokeWidth={1.2} size={40} />;
     
@@ -105,7 +104,7 @@ export const WhoWeAre = ({ data }: WhoWeAreProps) => {
               {mainImgUrl && (
                 <Image
                   src={mainImgUrl}
-                  alt={header.title || "Who we are"}
+                  alt={header.title || "Science About"}
                   fill
                   className="w-full h-full object-cover"
                   sizes="(max-width: 1024px) 100vw, 33vw"

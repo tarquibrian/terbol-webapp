@@ -12,14 +12,18 @@ import { SuccessPlanFeaturesSection } from "../components/SuccessPlanFeaturesSec
 import { SuccessPlanStepsSection } from "../components/SuccessPlanStepsSection/SuccessPlanStepsSection";
 import { Banner } from "@/components/layout/Banner";
 
-export function SuccessPlanView() {
+interface SuccessPlanViewProps {
+  data?: any;
+}
+
+export function SuccessPlanView({ data }: SuccessPlanViewProps) {
   return (
     <>
-      <SuccessPlanHero />
-      <About />
-      <SuccessPlanFeaturesSection />
-      <SuccessPlanStepsSection />
-      <Banner />
+      <SuccessPlanHero data={data?.plan} />
+      <About data={data?.video_section} />
+      <SuccessPlanFeaturesSection data={data?.our_proposal} />
+      <SuccessPlanStepsSection data={data?.how_it_works} />
+      <Banner data={data?.advisor_registration} />
     </>
   );
 }

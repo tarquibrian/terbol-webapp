@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -11,10 +11,18 @@ import { getFlatNavLinks } from "../Navbar.constants";
 
 export function MobileMenu({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isInstant, setIsInstant] = React.useState(false);
+  const router = useRouter();
 
   // Usa la función de aplanado extraída a la capa de constantes/data
   const flatItems = React.useMemo(() => getFlatNavLinks(), []);
+
+  const handleNavigation = (href: string) => {
+    setIsOpen(false);
+    // Esperamos a que la animación de cierre (600ms en Drawer.tsx) termine o esté avanzada
+    setTimeout(() => {
+      router.push(href);
+    }, 400); 
+  };
 
   return (
     <div className={className}>
@@ -22,7 +30,6 @@ export function MobileMenu({ className }: { className?: string }) {
       <button
         type="button"
         onClick={() => {
-          setIsInstant(false);
           setIsOpen(true);
         }}
         aria-expanded={isOpen}
@@ -39,9 +46,7 @@ export function MobileMenu({ className }: { className?: string }) {
       {/* Drawer centralizado en `ui/Drawer` */}
       <Drawer
         isOpen={isOpen}
-        instantClose={isInstant}
         onClose={() => {
-          setIsInstant(false);
           setIsOpen(false);
         }}
         title="Menú"
@@ -61,18 +66,12 @@ export function MobileMenu({ className }: { className?: string }) {
 
         <nav className="mb-8 flex flex-col gap-2" role="menu">
           {flatItems.map((item) => (
-            <Link
+            <button
               key={item.href}
-              href={item.href!} // el flat garantiza href
-              prefetch={true}
-              scroll={false}
-              onClick={() => {
-                setIsInstant(true);
-                setIsOpen(false);
-              }}
+              onClick={() => handleNavigation(item.href!)}
               role="menuitem"
               className={cn(
-                "flex flex-col gap-1 px-3 py-3 rounded-xl transition-colors duration-150",
+                "flex flex-col gap-1 px-3 py-3 rounded-xl transition-colors duration-150 text-left w-full",
                 "hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
               )}
             >
@@ -84,7 +83,7 @@ export function MobileMenu({ className }: { className?: string }) {
                   {item.description}
                 </span>
               )}
-            </Link>
+            </button>
           ))}
         </nav>
 
@@ -94,7 +93,8 @@ export function MobileMenu({ className }: { className?: string }) {
             variant="default"
             size="default"
             icon={<ArrowRight />}
-            className="w-full justify-center"
+            className="w-full justify-between"
+            onClick={() => handleNavigation("/promoter")}
           >
             Soy asesor de ventas
           </Button>

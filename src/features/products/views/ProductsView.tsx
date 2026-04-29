@@ -219,12 +219,12 @@ export function ProductsView() {
           </Drawer>
 
           {/* Botón Mostrar Filtros (Mobile) */}
-          <div className="w-full lg:hidden mb-6 flex justify-end">
+          <div className="w-full lg:hidden mb-6 flex justify-start">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsFiltersOpen(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 px-0"
             >
               <Filter size={18} />
               Mostrar Filtros

@@ -2,8 +2,40 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight, Phone, Mail } from "lucide-react";
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { env } from "@/config/env";
 
-export function Banner() {
+export interface BannerData {
+  title?: string;
+  description?: string;
+  button_label?: string;
+  button_url?: string;
+  email?: string;
+  country_code?: string;
+  phone_number?: string;
+  image?: string;
+}
+
+interface BannerProps {
+  data?: BannerData;
+}
+
+export function Banner({ data }: BannerProps) {
+  // Función para resolver la URL de la imagen del CMS
+  const getImageUrl = (path?: string) => {
+    if (!path) return "/banner/productbanner.png";
+    if (path.startsWith("http")) return path;
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
+    return `${baseStorage}${cleanPath}`;
+  };
+
+  const imageUrl = getImageUrl(data?.image);
+
+  // Separar la descripción si tiene varias oraciones (opcional, para mantener el diseño original de dos párrafos si es necesario)
+  // Aquí usaremos la descripción completa si viene del CMS.
+  const description = data?.description || 
+    "Súmate a una comunidad que cree en tu potencial y forma parte de la red de Asesores de Venta Independiente de térbol Inspira donde tu crecimiento personal y profesional van de la mano. Este es tu momento para inspirar, crecer y transformar tu vida.";
+
   return (
     <section className="wrapper-section">
       <div className="wrapper-content">
@@ -14,13 +46,10 @@ export function Banner() {
             <AnimateOnScroll variant="slide-up" className="flex flex-col gap-8 lg:gap-10">
               <div className="flex flex-col gap-4">
                 <h4 className="heading-h3 text-primary">
-                  Comienza tu camino hacia el bienestar
+                  {data?.title || "Comienza tu camino hacia el bienestar"}
                 </h4>
-                <p className="text-body-medium text-gray-500">
-                  Súmate a una comunidad que cree en tu potencial y forma parte de la red de Asesores de Venta Independiente de térbol Inspira donde tu crecimiento personal y profesional van de la mano.
-                </p>
-                <p className="text-body-medium text-gray-500">
-                  Este es tu momento para inspirar, crecer y transformar tu vida.
+                <p className="text-body-medium text-gray-500 whitespace-pre-line">
+                  {description}
                 </p>
               </div>
 
@@ -30,12 +59,13 @@ export function Banner() {
                 icon={<ArrowRight />}
                 iconPosition="right"
                 className="w-full sm:w-auto justify-between"
+                href={data?.button_url || "#"}
               >
-                <span className="hidden sm:block">
-                  REGISTRARSE COMO ASESOR DE VENTAS
+                <span className="hidden sm:block uppercase">
+                  {data?.button_label || "REGISTRARSE COMO ASESOR DE VENTAS"}
                 </span>
-                <span className="block sm:hidden">
-                  REGISTRARSE AHORA
+                <span className="block sm:hidden uppercase">
+                  {data?.button_label || "REGISTRARSE AHORA"}
                 </span>
               </Button>
 
@@ -43,12 +73,18 @@ export function Banner() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-2 text-nowrap flex-wrap">
                 <div className="flex items-center gap-3 text-gray-500">
                   <Phone size={20} />
-                  <p className="text-body-medium">+591 6789 1234</p>
+                  <p className="text-body-medium">
+                    {data?.country_code && data?.phone_number 
+                      ? `${data.country_code} ${data.phone_number}`
+                      : "+591 6789 1234"}
+                  </p>
                 </div>
                 <div className="hidden sm:block h-3 w-[2px] bg-gray-400"></div>
                 <div className="flex items-center gap-3 text-gray-500">
                   <Mail size={20} />
-                  <p className="text-body-medium">contacto@terbolinspira.com</p>
+                  <p className="text-body-medium">
+                    {data?.email || "contacto@terbolinspira.com"}
+                  </p>
                 </div>
               </div>
             </AnimateOnScroll>
@@ -57,8 +93,8 @@ export function Banner() {
           {/* Imagen (Derecha en desktop, Abajo en mobile) */}
           <AnimateOnScroll variant="slide-up" delay={0.2} className="w-full flex items-end justify-center lg:justify-end min-h-[200px] lg:min-h-0 relative">
             <Image
-              src="/banner/productbanner.png"
-              alt="Comienza tu camino hacia el bienestar"
+              src={imageUrl}
+              alt={data?.title || "Comienza tu camino hacia el bienestar"}
               width={700}
               height={540}
               className="object-contain object-bottom w-full h-auto lg:h-full lg:absolute lg:bottom-0 lg:right-0"

@@ -15,8 +15,34 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { ArrowRight } from "lucide-react";
+import { env } from "@/config/env"; // <-- Para construir URL de la imagen del CMS si fuera necesario
 
-export function Hero() {
+interface HeroProps {
+  data?: {
+    label?: string;
+    title?: string;
+    description?: string;
+    button_label?: string;
+    button_url?: string;
+    image?: string;
+  };
+}
+
+export function Hero({ data }: HeroProps) {
+  // Construir la URL completa de la imagen si viene del CMS, o usar el fallback
+  const getImageUrl = (path?: string) => {
+    if (!path) return "/images/productextra2.png";
+    if (path.startsWith("http")) return path;
+    
+    // Remover slash inicial si existe para evitar dobles slashes al unir
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
+    
+    return `${baseStorage}${cleanPath}`;
+  };
+
+  const imageUrl = getImageUrl(data?.image);
+
   return (
     <section className="wrapper-section">
       <div className="wrapper-content">
@@ -26,15 +52,20 @@ export function Hero() {
             <div className="space-y-4">
               {/* Título — slide-up inmediato */}
               <AnimateOnScroll variant="slide-up">
+                {data?.label && (
+                   <span className="text-sm font-semibold text-primary uppercase tracking-wider block mb-2">
+                     {data.label}
+                   </span>
+                )}
                 <h1 className="heading-h1-bold">
-                  Inspiramos bienestar,<br /> transformamos vidas
+                  {data?.title || "Inspiramos bienestar, transformamos vidas"}
                 </h1>
               </AnimateOnScroll>
 
               {/* Descripción — slide-up con delay para efecto stagger */}
               <AnimateOnScroll variant="slide-up" delay={0.15}>
                 <p className="text-gray-500 text-body-medium">
-                  Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica.
+                  {data?.description || "Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica."}
                 </p>
               </AnimateOnScroll>
             </div>
@@ -47,8 +78,9 @@ export function Hero() {
                   className="w-full md:max-w-[440px] justify-between"
                   icon={<ArrowRight />}
                   iconPosition="right"
+                  href={data?.button_url || "#"}
                 >
-                  ÚNETE AL EQUIPO AHORA
+                  {data?.button_label || "ÚNETE AL EQUIPO AHORA"}
                 </Button>
               </div>
             </AnimateOnScroll>
@@ -57,8 +89,8 @@ export function Hero() {
           <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end p-3 bg-primary-soft-gray-balance rounded-lg">
             <div className="relative w-full aspect-video rounded-md overflow-hidden bg-primary-soft-gray-balance lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
               <Image
-                src={"/images/productextra2.png"}
-                alt="Térbol Inspira"
+                src={imageUrl}
+                alt={data?.title || "Térbol Inspira"}
                 fill
                 className="object-cover w-full h-full"
                 priority

@@ -52,12 +52,15 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
         </nav>
 
         {/* Título y Buscador — slide-up inmediato */}
-        <AnimateOnScroll variant="slide-up" className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-10">
-          <h1 className="heading-h4 font-bold">
-            Nuestros Productos
-          </h1>
-          <div className="flex items-center gap-4 w-full lg:max-w-[500px] justify-end">
-            <span className="text-body-sm text-foreground/60 whitespace-nowrap min-w-[90px] text-right">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6 lg:gap-10">
+          <AnimateOnScroll variant="slide-up">
+            <h1 className="heading-h4 font-bold">
+              Nuestros Productos
+            </h1>
+          </AnimateOnScroll>
+
+          <AnimateOnScroll variant="slide-up" delay={0.1} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:max-w-[600px] lg:justify-end">
+            <span className="text-body-sm text-foreground/60 whitespace-nowrap order-2 sm:order-1">
               {loading || totalResults === undefined ? (
                 "..."
               ) : (
@@ -67,11 +70,11 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
             <SearchInput
               placeholder="Buscar productos..."
               defaultValue={currentSearch}
-              className="w-full"
+              className="w-full order-1 sm:order-2"
               onSearch={handleSearch}
             />
-          </div>
-        </AnimateOnScroll>
+          </AnimateOnScroll>
+        </div>
       </div>
     </section>
   );

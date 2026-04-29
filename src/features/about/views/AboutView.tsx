@@ -11,13 +11,17 @@ import { WhoWeAre } from "../components/WhoWeAre";
 import { ContactForm } from "../components/ContactForm";
 import { Banner } from "@/components/layout/Banner";
 
-export function AboutView() {
+interface AboutViewProps {
+  data?: any;
+}
+
+export function AboutView({ data }: AboutViewProps) {
   return (
     <>
-      <AboutHero />
-      <WhoWeAre />
+      <AboutHero data={data?.identity} />
+      <WhoWeAre data={data?.about_us} />
       <ContactForm />
-      <Banner />
+      <Banner data={data?.advisor_registration} />
     </>
   );
 }

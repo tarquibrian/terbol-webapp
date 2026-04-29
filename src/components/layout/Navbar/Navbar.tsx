@@ -55,7 +55,7 @@ export function Navbar() {
             scroll={false}
             className="min-w-[180px] flex items-center gap-2 text-primary font-bold text-lg"
           >
-            <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
+            <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} priority style={{ width: 'auto', height: 'auto' }} />
           </Link>
 
           {/* ─── Buscador ─── */}
@@ -104,9 +104,11 @@ export function Navbar() {
             </nav>
 
             {/* CTA Principal */}
-            <Button variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex">
-              Soy asesor de ventas
-            </Button>
+            <Link href="/promoter">
+              <Button variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex">
+                Soy asesor de ventas
+              </Button>
+            </Link>
 
             {/* Menú Responsive (< 1440px) */}
             <MobileMenu className="desk:hidden" />

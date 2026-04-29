@@ -12,11 +12,11 @@ interface DevelopmentStepData {
   icon?: string;
 }
 
-interface DevelopmentStepsProps {
+interface ScienceDevelopmentStepsProps {
   data?: DevelopmentStepData[];
 }
 
-export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
+export function ScienceDevelopmentSteps({ data }: ScienceDevelopmentStepsProps) {
   // Función para resolver la URL del icono o imagen proveniente del CMS
   const getIconUrl = (path?: string) => {
     if (!path) return null;
@@ -30,22 +30,22 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
   const step1: DevelopmentStepData = data?.[0] || {
     id: "investigacion",
     title: "Investigación",
-    description: "Iniciamos con investigación científica rigurosa para comprender las necesidades y formular soluciones innovadoras."
+    description: "Revisamos la evidencia científica disponible sobre ingredientes, interacciones y dosis efectivas."
   };
   const step2: DevelopmentStepData = data?.[1] || {
-    id: "seleccion-activa",
-    title: "Selección Activa",
-    description: "Seleccionamos materias primas e ingredientes de pureza certificada y calidad internacional."
+    id: "proposito-claro",
+    title: "Propósito claro",
+    description: "Definimos un objetivo específico para cada producto, evitando fórmulas genéricas sin foco."
   };
   const step3: DevelopmentStepData = data?.[2] || {
-    id: "pruebas-clinicas",
-    title: "Pruebas Clínicas",
-    description: "Testeamos la eficacia y seguridad de cada fórmula en nuestros laboratorios de alta tecnología antes de ser aprobada."
+    id: "formulacion",
+    title: "Formulación",
+    description: "Seleccionamos ingredientes de alta biodisponibilidad y combinaciones que potencian su efecto."
   };
   const step4: DevelopmentStepData = data?.[3] || {
-    id: "produccion-controlada",
-    title: "Producción Controlada",
-    description: "Fabricamos bajo estrictos estándares de control de calidad, asegurando que cada producto final sea completamente idóneo y seguro."
+    id: "validacion",
+    title: "Validación",
+    description: "Verificamos la calidad final del producto mediante controles y pruebas de laboratorio."
   };
 
   return (
@@ -57,14 +57,8 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
           </h2>
         </AnimateOnScroll>
 
-        {/* 
-          Grid Layout Responsive:
-          Móvil: grid-cols-1
-          Tablet (md): grid-cols-2 (para 2x2 donde el item 4 y 1 varíen)
-          Escritorio (xl): grid-cols-3
-        */}
         <AnimateOnScroll variant="slide-up" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-auto xl:h-[650px]">
-          {/* Card 1 - Ocupa 2 filas, 1 columna */}
+          {/* Card 1 */}
           <div className="md:row-span-2 xl:row-span-2 rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative overflow-hidden group h-[600px] md:h-[650px]">
             <div className="flex justify-between items-start w-full relative z-10">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
@@ -93,7 +87,6 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               </Button>
             </div>
 
-            {/* Contenedor inferior para Imagen */}
             <div className="absolute bottom-0 left-0 w-full h-80 md:h-90 overflow-hidden xl:h-96">
               <Image
                 src="/homegrid/bgcard1.png"
@@ -105,7 +98,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
           </div>
 
-          {/* Card 2 - Estándar */}
+          {/* Card 2 */}
           <div className="rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative group">
             <div className="flex justify-between items-start w-full">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
@@ -126,7 +119,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
           </div>
 
-          {/* Card 3 - Estándar */}
+          {/* Card 3 */}
           <div className="rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative group">
             <div className="flex justify-between items-start w-full">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
@@ -147,9 +140,8 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
           </div>
 
-          {/* Card 4 - Ocupa 2 espacios horizontales */}
+          {/* Card 4 */}
           <div className="md:col-span-2 xl:col-span-2 rounded-lg bg-primary-soft-gray-balance flex flex-col justify-between sm:flex-row relative group overflow-hidden p-3">
-            {/* Contenido Izquierdo */}
             <div className="p-4 flex max-w-[400px] flex-col flex-1 relative z-10 sm:w-1/2 lg:w-3/5 xl:w-1/2 justify-center">
               <div className="flex justify-between items-start w-full">
                 <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
@@ -170,7 +162,6 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               </div>
             </div>
 
-            {/* Imagen Derecha */}
             <div className="relative flex border border-primary-orange rounded-lg p-6 h-64 sm:h-full sm:w-1/2 lg:w-2/5  overflow-hidden">
               <Image
                 src="/homegrid/bgcard4.png"

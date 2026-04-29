@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
@@ -61,7 +62,11 @@ export function ProductFeaturesSection() {
               </ul>
             </div>
             <AnimateOnScroll variant="fade" delay={0.8} className="flex justify-start md:justify-end mt-4 md:mt-0">
-              <Button variant="secondary" className="w-full sm:w-auto" icon={<ArrowRight />} iconPosition="right">CONOCE NUESTRA CIENCIA</Button>
+              <Link href="/science-and-quality" className="w-full sm:w-auto">
+                <Button variant="secondary" className="w-full" icon={<ArrowRight />} iconPosition="right">
+                  CONOCE NUESTRA CIENCIA
+                </Button>
+              </Link>
             </AnimateOnScroll>
           </div>
         </div>

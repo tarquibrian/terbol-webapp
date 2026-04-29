@@ -1,7 +1,16 @@
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
-export const About = () => {
+interface AboutProps {
+  data?: {
+    description?: string;
+    video_url?: string;
+    video_id?: string;
+    embed_url?: string;
+  };
+}
+
+export const About = ({ data }: AboutProps) => {
   return (
     <section className="wrapper-section">
       <div className="wrapper-content">
@@ -11,26 +20,29 @@ export const About = () => {
               <header className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
                 <span className="text-body font-medium text-primary-orange">NUESTRA MARCA</span>
                 <div className="w-[20px] h-px bg-gray-200"></div>
-                <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} />
+                <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} style={{ width: 'auto', height: 'auto' }} />
               </header>
-              <p className="text-center text-body-medium text-gray-500">Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud.</p>
+              <p className="text-center text-body-medium text-gray-500">
+                {data?.description || "Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud."}
+              </p>
             </div>
           </AnimateOnScroll>
 
-          {/* <div className="rounded-lg overflow-hidden bg-primary-black"> */}
-          <AnimateOnScroll variant="fade" delay={0.4} className="aspect-video">
-            <div className="w-full h-full rounded-lg bg-primary-black"></div>
-            {/* <iframe
-              className="w-full h-full rounded-lg"
-              src="https://www.youtube.com/embed/VIDEO_ID"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            /> */}
+          <AnimateOnScroll variant="fade" delay={0.4} className="aspect-video relative rounded-lg overflow-hidden bg-primary-black">
+            {data?.embed_url ? (
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={data.embed_url}
+                title="Térbol Inspira Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-500">Video no disponible</div>
+            )}
           </AnimateOnScroll>
-          {/* </div> */}
         </div>
       </div>
     </section>
   );
-}
+};

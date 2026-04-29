@@ -10,6 +10,7 @@ import * as React from "react";
 import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { AboutView } from "@/features/about";
+import { cmsApi } from "@/lib/cms-api";
 
 /** Metadatos SEO de la página ¿Quiénes somos? */
 export const metadata: Metadata = {
@@ -25,10 +26,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const aboutDataResponse = await cmsApi.getAbout();
+  const aboutData = aboutDataResponse?.data;
+
   return (
     <PageLayout>
-      <AboutView />
+      <AboutView data={aboutData} />
     </PageLayout>
   );
 }

@@ -11,6 +11,7 @@ import * as React from "react";
 import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { HomeView } from "@/features/home";
+import { cmsApi } from "@/lib/cms-api";
 
 /** Metadatos SEO de la página de inicio */
 export const metadata: Metadata = {
@@ -26,10 +27,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const homeDataResponse = await cmsApi.getHome();
+  const homeData = homeDataResponse?.data;
+
   return (
     <PageLayout>
-      <HomeView />
+      <HomeView data={homeData} />
     </PageLayout>
   );
 }

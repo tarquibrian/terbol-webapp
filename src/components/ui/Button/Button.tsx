@@ -2,8 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "default"
     | "destructive"
@@ -16,6 +15,8 @@ export interface ButtonProps
   iconPosition?: "left" | "right";
   href?: string;
   scroll?: boolean;
+  target?: string;
+  rel?: string;
 }
 
 // Clases base para todos los botones
@@ -25,7 +26,8 @@ const BASE_CLASSES =
 // Mapeo de variantes
 const VARIANT_CLASSES = {
   default: "bg-button-orange text-primary-black hover:bg-button-orange-hover",
-  secondary: "bg-primary-black !text-primary-white hover:bg-gray-800",
+  secondary:
+    "border border-primary-black bg-primary-black !text-primary-white hover:bg-gray-800",
   destructive:
     "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   outline:
@@ -85,11 +87,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <button
-        ref={ref}
-        className={combinedClassName}
-        {...props}
-      >
+      <button ref={ref} className={combinedClassName} {...props}>
         {content}
       </button>
     );

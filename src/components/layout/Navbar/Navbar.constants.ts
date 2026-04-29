@@ -35,6 +35,11 @@ export const NAV_LINKS: NavLinkItem[] = [
     label: "Más",
     submenuItems: [
       {
+        label: "Ciencia y Calidad",
+        href: "/science-and-quality",
+        description: "Nuestro respaldo científico y estándares de calidad",
+      },
+      {
         label: "Aprende",
         href: "/blog",
         description: "Artículos, noticias y novedades",
@@ -49,7 +54,7 @@ export const NAV_LINKS: NavLinkItem[] = [
 ];
 
 /**
- * Función helper que extrae una lista plana de todos los links, 
+ * Función helper que extrae una lista plana de todos los links,
  * útil para aplanar menús anidados (e.g. MobileMenu) en una sola lista uniforme.
  */
 export const getFlatNavLinks = (): NavSubmenuItem[] => {

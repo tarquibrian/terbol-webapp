@@ -38,7 +38,7 @@ import { cn } from "@/lib/utils";
 // ─── Variantes de Animación ───
 
 /** Animación de tipo disponibles para el componente */
-export type AnimationVariant = "fade" | "slide-up";
+export type AnimationVariant = "fade" | "slide-up" | "slide-left" | "slide-right";
 
 /**
  * Mapa de variantes de Framer Motion.
@@ -73,6 +73,34 @@ const ANIMATION_VARIANTS: Record<AnimationVariant, Variants> = {
     visible: {
       opacity: 1,
       y: 0,
+    },
+  },
+
+  /**
+   * Slide Left: aparece desde 20px a la derecha moviéndose hacia la izquierda.
+   */
+  "slide-left": {
+    hidden: {
+      opacity: 0,
+      x: 20,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+    },
+  },
+  
+  /**
+   * Slide Right: aparece desde 20px a la izquierda moviéndose hacia la derecha.
+   */
+  "slide-right": {
+    hidden: {
+      opacity: 0,
+      x: -20,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
     },
   },
 };
@@ -166,7 +194,7 @@ export function AnimateOnScroll({
    * Creamos el componente motion dinámico según el tag `as`.
    * Esto permite renderizar <motion.section>, <motion.div>, etc.
    */
-  const MotionComponent = motion.create(as);
+  const MotionComponent = React.useMemo(() => motion.create(as), [as]);
 
   return (
     <MotionComponent

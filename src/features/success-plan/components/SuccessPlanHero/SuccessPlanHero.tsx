@@ -17,27 +17,35 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 
+interface SuccessPlanHeroProps {
+  data?: {
+    label?: string;
+    title?: string;
+    description?: string;
+  };
+}
+
 /**
  * Hero de la sección Plan de Éxito con descripción del programa Terbol.
  */
-export function SuccessPlanHero() {
+export function SuccessPlanHero({ data }: SuccessPlanHeroProps) {
   return (
     <section className="wrapper-section">
       <div className="wrapper-content flex flex-col items-center gap-6 min-h-[400px] justify-center">
         {/* Título — slide-up inmediato */}
         <div className="text-body-small font-medium text-gray-500 bg-primary-soft-gray-balance px-3 py-1 rounded-full flex items-center gap-2 uppercase">
           <div className="h-2 w-2 bg-gray-300 rounded-full"></div>
-          Una iniciativa de Térbol
+          {data?.label || "Una iniciativa de Térbol"}
         </div>
         <AnimateOnScroll variant="slide-up">
           <h1 className="heading-h2 font-semibold text-foreground text-center">
-            Bienestar respaldado por la ciencia
+            {data?.title || "Bienestar respaldado por la ciencia"}
           </h1>
         </AnimateOnScroll>
         {/* Descripción — slide-up con delay */}
         <AnimateOnScroll variant="slide-up" delay={0.15}>
-          <p className="text-body-medium text-center text-gray-500 max-w-[800px] mb-2">
-            Térbol Inspira es nuestra línea de vitaminas y nutracéuticos de alta gama, con formulaciones desarrolladas con evidencia científica para quienes buscan productos confiables para su salud.
+          <p className="text-body-medium text-center text-gray-500 max-w-[800px] mb-2 whitespace-pre-line">
+            {data?.description || "Térbol Inspira es nuestra línea de vitaminas y nutracéuticos de alta gama, con formulaciones desarrolladas con evidencia científica para quienes buscan productos confiables para su salud."}
           </p>
         </AnimateOnScroll>
         <AnimateOnScroll variant="slide-up" delay={0.3} className="flex gap-4 md:flex-row flex-col w-full items-center justify-center">
