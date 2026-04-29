@@ -4,6 +4,8 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { env } from "@/config/env";
+import { cmsApi } from "@/lib/cms-api";
+import type { CmsSocialNetwork } from "@/lib/cms-social";
 import "./globals.css";
 
 // Configuración de Roboto con las variantes solicitadas: regular(400), medium(500), semibold(600), bold(700)
@@ -60,11 +62,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+interface HomeFallbackData {
+  social_networks?: CmsSocialNetwork[];
+}
+
+async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined> {
+  try {
+    const homeDataResponse = await cmsApi.getHome();
+    const homeData = homeDataResponse?.data as HomeFallbackData | undefined;
+
+    return homeData?.social_networks;
+  } catch (error) {
+    console.error("[Footer] No se pudieron cargar las redes sociales:", error);
+    return undefined;
+  }
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const socialNetworks = await getFooterSocialNetworks();
+
   return (
     <html lang="es">
       <body className={`${roboto.variable} antialiased flex min-h-screen flex-col overflow-y-scroll`}>
@@ -76,7 +96,7 @@ export default function RootLayout({
         </PageTransition>
 
         {/* Footer Global */}
-        <Footer />
+        <Footer socialNetworks={socialNetworks} />
       </body>
     </html>
   );

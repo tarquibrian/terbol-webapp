@@ -2,6 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Facebook, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import {
+  isSvgAsset,
+  normalizeSocialNetworks,
+  resolveCmsAsset,
+  type CmsSocialNetwork,
+} from "@/lib/cms-social";
 
 // ─── Datos ────────────────────────────────────────────────────────────────────
 
@@ -13,7 +19,7 @@ const FOOTER_NAV_COL_1 = [
 
 const FOOTER_NAV_COL_2 = [
   { label: "Aprende", href: "/blog" },
-  { label: "Ciencia y Calidad", href: "/about#science" },
+  { label: "Ciencia y Calidad", href: "/science-and-quality" },
   { label: "Ayuda y Contacto", href: "/faq" },
 ];
 
@@ -49,7 +55,13 @@ const SOCIAL_LINKS = [
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
-export function Footer() {
+interface FooterProps {
+  socialNetworks?: CmsSocialNetwork[];
+}
+
+export function Footer({ socialNetworks }: FooterProps) {
+  const cmsSocialLinks = normalizeSocialNetworks(socialNetworks);
+
   return (
     <footer className="w-full mt-20">
       {/* Contenido Principal */}
@@ -66,6 +78,7 @@ export function Footer() {
                   width={230}
                   height={30}
                   priority
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </Link>
 
@@ -82,21 +95,48 @@ export function Footer() {
 
             {/* Redes Sociales */}
             <div className="flex items-center gap-5">
-              {SOCIAL_LINKS.map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-bodyd-sm text-gray-500 hover:text-primary transition-colors duration-200 group"
-                  aria-label={social.label}
-                >
-                  <span className="text-gray-500 group-hover:text-primary transition-colors duration-200">
-                    {social.icon}
-                  </span>
-                  <span>{social.label}</span>
-                </Link>
-              ))}
+              {cmsSocialLinks.length > 0
+                ? cmsSocialLinks.map((social) => {
+                    const iconUrl = resolveCmsAsset(social.icon);
+
+                    return (
+                      <Link
+                        key={social.id ?? social.name}
+                        href={social.url ?? "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-bodyd-sm text-gray-500 hover:text-primary transition-colors duration-200 group"
+                        aria-label={social.name}
+                      >
+                        {iconUrl && (
+                          <Image
+                            src={iconUrl}
+                            alt=""
+                            width={20}
+                            height={20}
+                            unoptimized={isSvgAsset(iconUrl)}
+                            className="h-5 w-5 object-contain"
+                          />
+                        )}
+                        <span>{social.name}</span>
+                      </Link>
+                    );
+                  })
+                : SOCIAL_LINKS.map((social) => (
+                    <Link
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-bodyd-sm text-gray-500 hover:text-primary transition-colors duration-200 group"
+                      aria-label={social.label}
+                    >
+                      <span className="text-gray-500 group-hover:text-primary transition-colors duration-200">
+                        {social.icon}
+                      </span>
+                      <span>{social.label}</span>
+                    </Link>
+                  ))}
             </div>
           </div>
 
@@ -125,15 +165,17 @@ export function Footer() {
               </Link>
             ))}
             <div className="flex items-start">
-              <Button
-                variant="default"
-                size="default"
-                icon={<ArrowRight />}
-                iconPosition="right"
-                className="w-full sm:w-auto justify-between"
-              >
-                SOY ASESOR DE VENTAS
-              </Button>
+              <Link href="/promoter" className="w-full sm:w-auto">
+                <Button
+                  variant="default"
+                  size="default"
+                  icon={<ArrowRight />}
+                  iconPosition="right"
+                  className="w-full justify-between"
+                >
+                  SOY ASESOR DE VENTAS
+                </Button>
+              </Link>
             </div>
           </nav>
         </div>
