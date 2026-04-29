@@ -7,7 +7,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { ArrowRight, CheckCircle2, PackageCheck, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  PackageCheck,
+  TrendingUp,
+} from "lucide-react";
 import {
   isSvgAsset,
   resolvePromoterAsset,
@@ -62,16 +67,14 @@ export function AsesorHero({ data }: AsesorHeroProps) {
     <section className="wrapper-section">
       <div className="wrapper-content">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_570px] items-center">
-
-          <div className="flex flex-col justify-center space-y-8 max-w-[760px]" >
+          <div className="flex flex-col justify-center space-y-8 max-w-[760px]">
             <div className="space-y-4">
+              <div className="text-body-small font-medium text-gray-500 bg-primary-soft-gray-balance px-3 py-1 rounded-full flex items-center gap-2 w-fit">
+                <div className="h-2 w-2 bg-gray-300 rounded-full"></div>
+                {label}
+              </div>
               <AnimateOnScroll variant="slide-up">
-                <span className="text-body-small font-medium text-gray-500 uppercase block mb-3">
-                  {label}
-                </span>
-                <h1 className="heading-h1-bold text-balance">
-                  {title}
-                </h1>
+                <h1 className="heading-h1-bold text-balance">{title}</h1>
               </AnimateOnScroll>
 
               <AnimateOnScroll variant="slide-up" delay={0.15}>
@@ -109,12 +112,12 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   {details.map((detail, index) => (
                     <div
                       key={detail.id ?? detail.title}
-                      className="flex items-center gap-3 rounded-md bg-primary-soft-gray-balance px-4 py-3 text-primary"
+                      className="flex items-center gap-1 text-primary"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-primary-orange">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary-orange">
                         {renderDetailIcon(detail, index)}
                       </span>
-                      <p className="text-body-small font-medium text-gray-700">
+                      <p className="text-body-small font-medium text-gray-400">
                         {detail.title}
                       </p>
                     </div>
@@ -124,7 +127,11 @@ export function AsesorHero({ data }: AsesorHeroProps) {
             )}
           </div>
 
-          <AnimateOnScroll variant="fade" delay={0.2} className="w-full lg:justify-end p-2 sm:p-3 bg-primary-soft-gray-balance rounded-2xl">
+          <AnimateOnScroll
+            variant="fade"
+            delay={0.2}
+            className="w-full lg:justify-end p-2 sm:p-3 bg-primary-soft-gray-balance rounded-2xl"
+          >
             <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-primary-soft-gray-balance lg:h-[500px] flex items-center justify-center">
               <Image
                 src={imageUrl}
@@ -136,7 +143,6 @@ export function AsesorHero({ data }: AsesorHeroProps) {
               />
             </div>
           </AnimateOnScroll>
-
         </div>
       </div>
     </section>

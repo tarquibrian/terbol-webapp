@@ -33,7 +33,7 @@ function BenefitCard({
 }: BenefitItemProps) {
   return (
     <AnimateOnScroll variant="slide-up" delay={index * 0.1} className="h-full">
-      <div className="bg-primary-soft-gray-balance p-6 rounded-md h-full flex flex-col gap-8 group hover:bg-primary-soft-gray-light transition-colors duration-300 border border-transparent hover:border-gray-200">
+      <div className="bg-primary-soft-gray-balance p-6 rounded-md h-full flex flex-col gap-8 group transition-colors duration-300 border border-transparent">
         {/* Header: Icono + Etiqueta interna */}
         <div className="flex items-start justify-between w-full">
           <div className="text-primary-orange">{icon}</div>
@@ -90,52 +90,64 @@ function getBenefitIcon(item: PromoterDetail, index: number): ReactNode {
 
 export function AsesorBenefits({ data }: AsesorBenefitsProps) {
   const header = data?.header;
-  const rawDetails = data?.details && data.details.length > 0 ? sortByOrder(data.details) : null;
+  const rawDetails =
+    data?.details && data.details.length > 0 ? sortByOrder(data.details) : null;
 
   const defaultBenefits: PromoterDetail[] = [
     {
       label: "Ganancias",
       title: "Ingresos Competitivos",
-      description: "Obtén comisiones atractivas por cada venta realizada y bonos por cumplimiento de metas.",
+      description:
+        "Obtén comisiones atractivas por cada venta realizada y bonos por cumplimiento de metas.",
     },
     {
       label: "Tiempo",
       title: "Flexibilidad Total",
-      description: "Tú decides tus propios horarios y cuánto tiempo dedicarle a tu negocio independiente.",
+      description:
+        "Tú decides tus propios horarios y cuánto tiempo dedicarle a tu negocio independiente.",
     },
     {
       label: "Salud",
       title: "Bienestar Primero",
-      description: "Acceso preferencial a productos que mejoran tu salud y la de tu entorno cercano.",
+      description:
+        "Acceso preferencial a productos que mejoran tu salud y la de tu entorno cercano.",
     },
     {
       label: "Energía",
       title: "Crecimiento Personal",
-      description: "Desarrolla nuevas habilidades de comunicación, ventas y gestión de equipos.",
+      description:
+        "Desarrolla nuevas habilidades de comunicación, ventas y gestión de equipos.",
     },
     {
       label: "Reconocimiento",
       title: "Premios y Viajes",
-      description: "Participa en programas de incentivos exclusivos, convenciones y viajes nacionales.",
+      description:
+        "Participa en programas de incentivos exclusivos, convenciones y viajes nacionales.",
     },
     {
       label: "Comunidad",
       title: "Satisfacción Personal",
-      description: "Siente el orgullo de ayudar a otras personas a transformar su vida y su salud.",
+      description:
+        "Siente el orgullo de ayudar a otras personas a transformar su vida y su salud.",
     },
   ];
 
-  const benefits = rawDetails ? rawDetails.map(item => ({
-    id: item.id,
-    icon: item.icon,
-    label: item.label || item.subtitle || "",
-    title: item.title,
-    description: item.description
-  })) : defaultBenefits;
+  const benefits = rawDetails
+    ? rawDetails.map((item) => ({
+        id: item.id,
+        icon: item.icon,
+        label: item.label || item.subtitle || "",
+        title: item.title,
+        description: item.description,
+      }))
+    : defaultBenefits;
 
   const subtitle = header?.label || header?.subtitle || "Beneficios";
-  const title = header?.title || "¿Por qué ser asesor de ventas de Térbol Inspira?";
-  const description = header?.description || "Más allá de los ingresos, ser promotora te ofrece crecimiento personal, flexibilidad y la satisfacción de ayudar a otros.";
+  const title =
+    header?.title || "¿Por qué ser asesor de ventas de Térbol Inspira?";
+  const description =
+    header?.description ||
+    "Más allá de los ingresos, ser promotora te ofrece crecimiento personal, flexibilidad y la satisfacción de ayudar a otros.";
 
   return (
     <section className="wrapper-section bg-white">
@@ -148,15 +160,11 @@ export function AsesorBenefits({ data }: AsesorBenefitsProps) {
             </span>
           </AnimateOnScroll>
           <AnimateOnScroll variant="slide-up" delay={0.1}>
-            <h2 className="heading-h3 text-foreground">
-              {title}
-            </h2>
+            <h2 className="heading-h3 text-foreground">{title}</h2>
           </AnimateOnScroll>
           {description && (
             <AnimateOnScroll variant="slide-up" delay={0.2}>
-              <p className="text-gray-500 text-body-medium">
-                {description}
-              </p>
+              <p className="text-gray-500 text-body-medium">{description}</p>
             </AnimateOnScroll>
           )}
         </div>

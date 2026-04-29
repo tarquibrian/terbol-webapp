@@ -19,10 +19,10 @@ const DEFAULT_CMS_REVALIDATE_SECONDS = 60 * 60;
 async function fetchCMS<T>(
   endpoint: string,
   tags: string[],
-  cacheOptions?: RequestInit["cache"]
+  cacheOptions?: RequestInit["cache"],
 ): Promise<T> {
   const url = `${env.API_URL}${endpoint}`;
-  
+
   const options: RequestInit = {
     headers: {
       Accept: "application/json",
@@ -49,7 +49,10 @@ async function fetchCMS<T>(
 
     return (await res.json()) as T;
   } catch (error) {
-    console.error(`[CMS API Error] Fallo al obtener data de ${endpoint}:`, error);
+    console.error(
+      `[CMS API Error] Fallo al obtener data de ${endpoint}:`,
+      error,
+    );
     // Relanzamos el error para que pueda ser manejado por un error.tsx en Next.js
     throw error;
   }
@@ -61,19 +64,20 @@ async function fetchCMS<T>(
 
 export const cmsApi = {
   // ─── Secciones Principales Estáticas (ISR) ──────────────────────────────────
-  
+
   getHome: () => fetchCMS<CmsEnvelope>("/sections/home", ["home", "footer"]),
-  
+
   getAbout: () => fetchCMS<CmsEnvelope>("/sections/about", ["about"]),
-  
-  getSuccessPlan: () => fetchCMS<CmsEnvelope>("/sections/success-plan", ["success-plan"]),
-  
+
+  getSuccessPlan: () =>
+    fetchCMS<CmsEnvelope>("/sections/success-plan", ["success-plan"]),
+
   getLearn: () => fetchCMS<CmsEnvelope>("/sections/learn", ["learn"]),
-  
+
   getHelp: () => fetchCMS<CmsEnvelope>("/sections/help", ["help"]),
-  
+
   getPromoter: () => fetchCMS<CmsEnvelope>("/sections/promoter", ["promoter"]),
-  
+
   getScience: () => fetchCMS<CmsEnvelope>("/sections/science", ["science"]),
 
   // ─── Blog / Artículos ──────────────────────────────────────────────────────
@@ -83,29 +87,44 @@ export const cmsApi = {
    * Al depender de parámetros dinámicos, optamos por no cachear agresivamente
    * u omitir el caché para obtener datos frescos al filtrar.
    */
-  getBlogsFiltered: (categoryId: string | number = 0, search: string = "", page: string | number = 1) => {
+  getBlogsFiltered: (
+    categoryId: string | number = 0,
+    search: string = "",
+    page: string | number = 1,
+  ) => {
     const queryParams = new URLSearchParams({
       category_blog_id: String(categoryId),
       search: search,
       page: String(page),
     });
-    
+
     // Usamos 'no-store' (SSR dinámico) para búsquedas, o configuramos un revalidate muy corto
-    return fetchCMS<CmsEnvelope>(`/sections/learn/blogs?${queryParams.toString()}`, ["learn"], "no-store");
+    return fetchCMS<CmsEnvelope>(
+      `/sections/learn/blogs?${queryParams.toString()}`,
+      ["learn"],
+      "no-store",
+    );
   },
 
   /**
    * Obtiene el detalle de un artículo específico.
    * Etiquetado con un tag general y uno específico para revalidar solo este artículo.
    */
-  getBlogDetail: (id: string | number) => 
-    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, ["learn", `blog-${id}`]),
+  getBlogDetail: (id: string | number) =>
+    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, [
+      "learn",
+      `blog-${id}`,
+    ]),
 
   // ─── Productos (Pendientes de desarrollo) ──────────────────────────────────
-  
+
   // TODO: Actualizar estas rutas cuando el equipo de Laravel termine los endpoints
-  getProducts: () => fetchCMS<CmsEnvelope>("/sections/products", ["products-list"]),
-  
-  getProductDetail: (id: string | number) => 
-    fetchCMS<CmsEnvelope>(`/sections/products/${id}`, ["products", `product-${id}`]),
+  getProducts: () =>
+    fetchCMS<CmsEnvelope>("/sections/products", ["products-list"]),
+
+  getProductDetail: (id: string | number) =>
+    fetchCMS<CmsEnvelope>(`/sections/products/${id}`, [
+      "products",
+      `product-${id}`,
+    ]),
 };

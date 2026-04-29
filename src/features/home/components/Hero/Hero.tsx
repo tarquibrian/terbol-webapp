@@ -33,11 +33,13 @@ export function Hero({ data }: HeroProps) {
   const getImageUrl = (path?: string) => {
     if (!path) return "/images/productextra2.png";
     if (path.startsWith("http")) return path;
-    
+
     // Remover slash inicial si existe para evitar dobles slashes al unir
     const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    
+    const baseStorage = env.STORAGE_URL.endsWith("/")
+      ? env.STORAGE_URL
+      : `${env.STORAGE_URL}/`;
+
     return `${baseStorage}${cleanPath}`;
   };
 
@@ -47,15 +49,15 @@ export function Hero({ data }: HeroProps) {
     <section className="wrapper-section">
       <div className="wrapper-content">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_570px] items-center">
-
-          <div className="flex flex-col justify-center space-y-8 max-w-[760px]" >
+          <div className="flex flex-col justify-center space-y-8 max-w-[760px]">
             <div className="space-y-4">
               {/* Título — slide-up inmediato */}
               <AnimateOnScroll variant="slide-up">
                 {data?.label && (
-                   <span className="text-sm font-semibold text-primary uppercase tracking-wider block mb-2">
-                     {data.label}
-                   </span>
+                  <div className="text-body-small uppercase font-medium text-gray-500 bg-primary-soft-gray-balance mb-4 px-3 py-1 rounded-full flex items-center gap-2 w-fit">
+                    <div className="h-2 w-2 bg-gray-300 rounded-full"></div>
+                    {data.label}
+                  </div>
                 )}
                 <h1 className="heading-h1-bold">
                   {data?.title || "Inspiramos bienestar, transformamos vidas"}
@@ -65,7 +67,8 @@ export function Hero({ data }: HeroProps) {
               {/* Descripción — slide-up con delay para efecto stagger */}
               <AnimateOnScroll variant="slide-up" delay={0.15}>
                 <p className="text-gray-500 text-body-medium">
-                  {data?.description || "Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica."}
+                  {data?.description ||
+                    "Térbol Inspira nace para elevar tu calidad de vida. Una nueva gama de nutracéuticos de alta gama, respaldados por la trayectoria de Térbol y formulados con estricta evidencia científica."}
                 </p>
               </AnimateOnScroll>
             </div>
@@ -86,7 +89,11 @@ export function Hero({ data }: HeroProps) {
             </AnimateOnScroll>
           </div>
 
-          <AnimateOnScroll variant="fade" delay={0.2} className="mx-auto flex w-full items-center justify-center lg:justify-end p-3 bg-primary-soft-gray-balance rounded-lg">
+          <AnimateOnScroll
+            variant="fade"
+            delay={0.2}
+            className="mx-auto flex w-full items-center justify-center lg:justify-end p-3 bg-primary-soft-gray-balance rounded-lg"
+          >
             <div className="relative w-full aspect-video rounded-md overflow-hidden bg-primary-soft-gray-balance lg:aspect-video lg:h-[500px] p-3 flex items-center justify-center">
               <Image
                 src={imageUrl}
@@ -98,7 +105,6 @@ export function Hero({ data }: HeroProps) {
               />
             </div>
           </AnimateOnScroll>
-
         </div>
       </div>
     </section>

@@ -21,16 +21,21 @@ interface AsesorRequirementsProps {
 
 export function AsesorRequirements({ data }: AsesorRequirementsProps) {
   const header = data?.header;
-  const items: PromoterDetail[] = data?.items && data.items.length > 0 ? sortByOrder(data.items) : [
-    { title: "Documento de identidad vigente (DNI)" },
-    { title: "Constancia de CUIL/CUIT" },
-    { title: "Datos bancarios para recibir comisiones" },
-    { title: "Comprobante de domicilio actualizado" }
-  ];
+  const items: PromoterDetail[] =
+    data?.items && data.items.length > 0
+      ? sortByOrder(data.items)
+      : [
+          { title: "Documento de identidad vigente (DNI)" },
+          { title: "Constancia de CUIL/CUIT" },
+          { title: "Datos bancarios para recibir comisiones" },
+          { title: "Comprobante de domicilio actualizado" },
+        ];
 
   const subtitle = header?.label || header?.subtitle || "Requisitos";
   const title = header?.title || "¿Qué necesitás para afiliarte?";
-  const description = header?.description || "Los requisitos son simples y están pensados para que puedas comenzar de manera ordenada y profesional.";
+  const description =
+    header?.description ||
+    "Los requisitos son simples y están pensados para que puedas comenzar de manera ordenada y profesional.";
   const requirementTitle = header?.requirement_title || "Documentación básica";
   const imageUrl = resolvePromoterAsset(
     header?.image ?? header?.image_url,
@@ -48,15 +53,11 @@ export function AsesorRequirements({ data }: AsesorRequirementsProps) {
             </span>
           </AnimateOnScroll>
           <AnimateOnScroll variant="slide-up" delay={0.1}>
-            <h2 className="heading-h3 text-foreground">
-              {title}
-            </h2>
+            <h2 className="heading-h3 text-foreground">{title}</h2>
           </AnimateOnScroll>
           <AnimateOnScroll variant="slide-up" delay={0.2}>
             <div className="flex flex-col gap-4">
-              <p className="text-gray-500 text-body-medium">
-                {description}
-              </p>
+              <p className="text-gray-500 text-body-medium">{description}</p>
               {!data && (
                 <p className="text-gray-400 text-body-small">
                   Los requisitos específicos y montos pueden variar. Consultá
@@ -105,7 +106,10 @@ export function AsesorRequirements({ data }: AsesorRequirementsProps) {
                   </h3>
                   <ul className="flex flex-col gap-5">
                     {items.map((item, idx) => (
-                      <li key={item.id ?? item.title ?? idx} className="flex items-start gap-4">
+                      <li
+                        key={item.id ?? item.title ?? idx}
+                        className="flex items-start gap-4"
+                      >
                         <span className="text-body-lg font-bold text-primary">
                           {idx + 1}.
                         </span>
@@ -118,22 +122,20 @@ export function AsesorRequirements({ data }: AsesorRequirementsProps) {
                 </div>
 
                 {/* CTA de Soporte dentro de la card */}
-                {!data && (
-                  <div className="flex flex-col items-end justify-end gap-4 mt-8 lg:mt-0">
-                    <p className="text-body-small text-gray-500">
-                      ¿Aún tienes dudas?, háblanos.
-                    </p>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="w-full lg:w-auto"
-                      icon={<MessageCircle size={18} />}
-                      iconPosition="right"
-                    >
-                      CONTACTAR CON SOPORTE
-                    </Button>
-                  </div>
-                )}
+                <div className="flex flex-col items-end justify-end gap-4 mt-8 lg:mt-0">
+                  <p className="text-body-small text-gray-500">
+                    ¿Aún tienes dudas?, háblanos.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full lg:w-auto"
+                    icon={<MessageCircle size={18} />}
+                    iconPosition="right"
+                  >
+                    CONTACTAR CON SOPORTE
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
