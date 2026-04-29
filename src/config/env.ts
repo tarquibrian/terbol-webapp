@@ -37,6 +37,16 @@ export const SITE_URL: string =
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL ?? `${SITE_URL}/api`;
 
+/**
+ * URL base del almacenamiento de archivos (imágenes, documentos) del CMS.
+ * 
+ * En local: usa el storage local de Laravel.
+ * En producción: usa la URL del bucket o disco del CMS en la nube.
+ * Ej: `NEXT_PUBLIC_STORAGE_URL=https://cms.terbolinspira.com/storage`
+ */
+export const STORAGE_URL: string =
+  process.env.NEXT_PUBLIC_STORAGE_URL ?? "http://localhost:8000/storage";
+
 // ─── Aggregated env object (uso conveniente al importar) ─────────────────────
 
 /**
@@ -49,4 +59,5 @@ export const API_URL: string =
 export const env = {
   SITE_URL,
   API_URL,
+  STORAGE_URL,
 } as const;
