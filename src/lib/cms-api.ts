@@ -6,6 +6,8 @@ interface CmsEnvelope<T = unknown> {
   data?: T;
 }
 
+const DEFAULT_CMS_REVALIDATE_SECONDS = 60 * 60;
+
 /**
  * Función genérica interna para realizar peticiones al CMS de Laravel.
  * Centraliza la configuración de headers y las estrategias de caché (ISR).
@@ -33,8 +35,8 @@ async function fetchCMS<T>(
   if (cacheOptions) {
     options.cache = cacheOptions;
   } else {
-    // Estrategia ISR: Cacheamos por defecto, atado a los tags para revalidación manual
-    options.next = { tags };
+    // Estrategia ISR: webhook por tag + revalidación temporal como fallback
+    options.next = { tags, revalidate: DEFAULT_CMS_REVALIDATE_SECONDS };
   }
 
   try {
@@ -89,7 +91,7 @@ export const cmsApi = {
     });
     
     // Usamos 'no-store' (SSR dinámico) para búsquedas, o configuramos un revalidate muy corto
-    return fetchCMS<CmsEnvelope>(`/sections/learn/blogs?${queryParams.toString()}`, ["blogs-list"], "no-store");
+    return fetchCMS<CmsEnvelope>(`/sections/learn/blogs?${queryParams.toString()}`, ["learn"], "no-store");
   },
 
   /**
@@ -97,7 +99,7 @@ export const cmsApi = {
    * Etiquetado con un tag general y uno específico para revalidar solo este artículo.
    */
   getBlogDetail: (id: string | number) => 
-    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, ["blogs", `blog-${id}`]),
+    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, ["learn", `blog-${id}`]),
 
   // ─── Productos (Pendientes de desarrollo) ──────────────────────────────────
   

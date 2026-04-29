@@ -10,7 +10,6 @@ const VALID_TAGS = new Set([
   "help",
   "promoter",
   "science",
-  "blogs",
   "products-list",
 ]);
 
