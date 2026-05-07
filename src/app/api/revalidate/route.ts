@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     // 1. Proteger el endpoint (definir REVALIDATE_SECRET en .env)
     const validSecret = process.env.REVALIDATE_SECRET;
     if (validSecret && secret !== validSecret) {
-      return NextResponse.json({ message: "Token inválido" }, { status: 401 });
+      return NextResponse.json({ success: false, message: "Token inválido" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     if (tags.length === 0) {
       return NextResponse.json(
-        { message: "Falta el campo 'tag' en el body" },
+        { success: false, message: "Falta el campo 'tag' en el body" },
         { status: 400 }
       );
     }
@@ -79,10 +79,13 @@ export async function POST(request: NextRequest) {
     if (invalidTags.length > 0) {
       return NextResponse.json(
         {
+          success: false,
           message: `Tags no permitidos: ${invalidTags.join(", ")}`,
-          invalidTags,
-          allowedTags: [...VALID_TAGS],
-          allowedPatterns: ["blog-{id}", "product-{id}"],
+          data: {
+            invalidTags,
+            allowedTags: [...VALID_TAGS],
+            allowedPatterns: ["blog-{id}", "product-{id}"],
+          },
         },
         { status: 400 }
       );
@@ -92,18 +95,20 @@ export async function POST(request: NextRequest) {
     tags.forEach((tag) => revalidateTag(tag, "max"));
 
     return NextResponse.json({
-      revalidated: true,
+      success: true,
       message:
         tags.length === 1
           ? `Tag '${tags[0]}' marcado para revalidación.`
           : "Tags marcados para revalidación.",
-      tags,
-      now: Date.now(),
+      data: {
+        tags,
+        now: Date.now(),
+      },
     });
   } catch (error) {
     console.error("[Revalidate API Error]:", error);
     return NextResponse.json(
-      { message: "Error interno del servidor al revalidar" },
+      { success: false, message: "Error interno del servidor al revalidar" },
       { status: 500 }
     );
   }
