@@ -50,11 +50,26 @@ function getDetailIcon(detail: PromoterDetail, index: number): ReactNode {
 
 export function RoleDescription({ data }: RoleDescriptionProps) {
   const header = data?.header;
-  const details = data?.details && data.details.length > 0 ? sortByOrder(data.details) : [
-    { title: "Crecimiento Profesional", description: "Accede a capacitaciones constantes y herramientas para potenciar tus habilidades de venta y liderazgo." },
-    { title: "Comunidad de Apoyo", description: "Forma parte de una red de asesores que comparten experiencias y crecen juntos hacia metas comunes." },
-    { title: "Respaldo Institucional", description: "Trabaja con productos de alta calidad respaldados por la trayectoria y ciencia de Térbol." }
-  ];
+  const details =
+    data?.details && data.details.length > 0
+      ? sortByOrder(data.details)
+      : [
+          {
+            title: "Crecimiento Profesional",
+            description:
+              "Accede a capacitaciones constantes y herramientas para potenciar tus habilidades de venta y liderazgo.",
+          },
+          {
+            title: "Comunidad de Apoyo",
+            description:
+              "Forma parte de una red de asesores que comparten experiencias y crecen juntos hacia metas comunes.",
+          },
+          {
+            title: "Respaldo Institucional",
+            description:
+              "Trabaja con productos de alta calidad respaldados por la trayectoria y ciencia de Térbol.",
+          },
+        ];
 
   const title = header?.title || "¿Qué significa ser asesor de ventas?";
   const subtitle = header?.label || header?.subtitle || "El rol de promotora";
@@ -74,9 +89,7 @@ export function RoleDescription({ data }: RoleDescriptionProps) {
             </span>
           </AnimateOnScroll>
           <AnimateOnScroll variant="slide-up" delay={0.1}>
-            <h2 className="heading-h3 text-foreground">
-              {title}
-            </h2>
+            <h2 className="heading-h3 text-foreground">{title}</h2>
           </AnimateOnScroll>
           {legend && (
             <AnimateOnScroll variant="slide-up" delay={0.2}>
@@ -88,7 +101,7 @@ export function RoleDescription({ data }: RoleDescriptionProps) {
         </div>
 
         <AnimateOnScroll variant="fade" delay={0.2}>
-          <div className="w-full bg-primary-soft-gray-light rounded-2xl p-3 max-w-6xl mx-auto">
+          <div className="w-full bg-primary-soft-gray-light rounded-lg p-3 max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
               {/* Columna 1: Features */}
               <div className="flex flex-col justify-center px-4 py-2">
@@ -110,7 +123,7 @@ export function RoleDescription({ data }: RoleDescriptionProps) {
               </div>
 
               {/* Columna 2: Imagen */}
-              <div className="relative min-h-[400px] rounded-lg overflow-hidden">
+              <div className="relative min-h-[400px] rounded-md overflow-hidden">
                 <Image
                   src={imageUrl}
                   alt={title}

@@ -58,7 +58,7 @@ export function Banner({ data }: BannerProps) {
                 size="default"
                 icon={<ArrowRight />}
                 iconPosition="right"
-                className="w-full sm:w-auto justify-between"
+                className="w-fit justify-between"
                 href={data?.button_url || "#"}
               >
                 <span className="hidden sm:block uppercase">

@@ -80,7 +80,6 @@ export function Footer({ socialNetworks }: FooterProps) {
                   style={{ width: "auto", height: "auto" }}
                 />
               </Link>
-              <a href="https://www.google.com/">link test</a>
 
               <p className="text-body-medium text-gray-900 font-semibold">
                 Una iniciativa de Térbol

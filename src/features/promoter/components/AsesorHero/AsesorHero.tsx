@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import {
   ArrowRight,
+  ArrowUpRight,
   CheckCircle2,
   PackageCheck,
   TrendingUp,
@@ -74,7 +75,9 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                 {label}
               </div>
               <AnimateOnScroll variant="slide-up">
-                <h1 className="heading-h1-bold text-balance">{title}</h1>
+                <h1 className="heading-h3 font-semibold text-balance">
+                  {title}
+                </h1>
               </AnimateOnScroll>
 
               <AnimateOnScroll variant="slide-up" delay={0.15}>
@@ -88,20 +91,22 @@ export function AsesorHero({ data }: AsesorHeroProps) {
               <div className="flex flex-col gap-4 sm:flex-row w-full lg:w-auto">
                 <Button
                   size="default"
-                  className="w-full sm:w-auto px-8"
-                  href="#advisor-registration"
+                  className="w-full sm:w-auto justify-between"
+                  icon={<ArrowUpRight />}
+                  iconPosition="right"
+                  href="https://www.terbolinspira.com/VentaPorCatalogo/PRD/incorporacionwizard"
                 >
-                  REGISTRARME COMO PROMOTORA
+                  REGISTRARME COMO ASESOR DE VENTAS
                 </Button>
                 <Button
                   variant="outline"
                   size="default"
-                  className="w-full sm:min-w-[280px] justify-between"
-                  icon={<ArrowRight />}
+                  className="w-full sm:w-fit justify-between"
+                  icon={<ArrowUpRight />}
                   iconPosition="right"
-                  href="/success-plan"
+                  href="https://www.terbolinspira.com/VentaPorCatalogo/PRD"
                 >
-                  CONOCE EL PLAN DE ÉXITO
+                  SOY ASESOR DE VENTAS
                 </Button>
               </div>
             </AnimateOnScroll>
@@ -117,7 +122,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary-orange">
                         {renderDetailIcon(detail, index)}
                       </span>
-                      <p className="text-body-small font-medium text-gray-400">
+                      <p className="text-body-small font-regular text-gray-900">
                         {detail.title}
                       </p>
                     </div>
@@ -130,9 +135,9 @@ export function AsesorHero({ data }: AsesorHeroProps) {
           <AnimateOnScroll
             variant="fade"
             delay={0.2}
-            className="w-full lg:justify-end p-2 sm:p-3 bg-primary-soft-gray-balance rounded-2xl"
+            className="w-full lg:justify-end p-2 sm:p-3 bg-primary-soft-gray-balance rounded-lg"
           >
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-primary-soft-gray-balance lg:h-[500px] flex items-center justify-center">
+            <div className="relative w-full aspect-video rounded-md overflow-hidden bg-primary-soft-gray-balance lg:h-[500px] flex items-center justify-center">
               <Image
                 src={imageUrl}
                 alt={title}
