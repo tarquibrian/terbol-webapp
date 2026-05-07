@@ -18,7 +18,7 @@ export const About = ({ data }: AboutProps) => {
           <AnimateOnScroll variant="slide-up">
             <div className="flex flex-col  gap-4 py-4 md:py-8 max-w-[770px] mx-auto">
               <header className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-                <span className="text-body font-medium text-primary-orange">NUESTRA MARCA</span>
+                <span className="text-body font-medium text-primary-orange" aria-hidden="true">NUESTRA MARCA</span>
                 <div className="w-[20px] h-px bg-gray-200"></div>
                 <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} style={{ width: 'auto', height: 'auto' }} />
               </header>

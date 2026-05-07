@@ -172,17 +172,17 @@ export function Footer({ socialNetworks }: FooterProps) {
               </Link>
             ))}
             <div className="flex items-start">
-              <Link href="/promoter" className="w-full sm:w-auto">
-                <Button
-                  variant="default"
-                  size="default"
-                  icon={<ArrowRight />}
-                  iconPosition="right"
-                  className="w-full justify-between"
-                >
-                  SOY ASESOR DE VENTAS
-                </Button>
-              </Link>
+              <Button
+                href="/promoter"
+                variant="default"
+                size="default"
+                icon={<ArrowRight />}
+                iconPosition="right"
+                className="w-full sm:w-auto justify-between"
+                aria-label="Soy asesor de ventas"
+              >
+                SOY ASESOR DE VENTAS
+              </Button>
             </div>
           </nav>
         </div>

@@ -104,11 +104,9 @@ export function Navbar() {
             </nav>
 
             {/* CTA Principal */}
-            <Link href="/promoter">
-              <Button variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex">
-                Soy asesor de ventas
-              </Button>
-            </Link>
+            <Button href="/promoter" variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex" aria-label="Soy asesor de ventas">
+              Soy asesor de ventas
+            </Button>
 
             {/* Menú Responsive (< 1440px) */}
             <MobileMenu className="desk:hidden" />
