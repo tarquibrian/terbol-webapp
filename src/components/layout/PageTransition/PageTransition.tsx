@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useIsPresent } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -21,10 +21,22 @@ export interface PageTransitionProps {
  */
 function FrozenRouter({ children }: { children: React.ReactNode }) {
   const context = React.useContext(LayoutRouterContext);
-  const frozen = React.useRef(context).current;
+  const isPresent = useIsPresent();
+  const [frozenContext, setFrozenContext] = React.useState(context);
+
+  React.useEffect(() => {
+    if (isPresent) {
+      setFrozenContext(context);
+    }
+  }, [context, isPresent]);
+
+  // Si está presente, usamos el contexto vivo.
+  // Si está saliendo (animación exit), usamos el contexto congelado.
+  // Esto soluciona el problema de BFCache/enlaces externos.
+  const value = isPresent ? context : frozenContext;
 
   return (
-    <LayoutRouterContext.Provider value={frozen}>
+    <LayoutRouterContext.Provider value={value}>
       {children}
     </LayoutRouterContext.Provider>
   );
@@ -46,13 +58,29 @@ export function PageTransition({
 }: PageTransitionProps) {
   const pathname = usePathname();
 
+  // Hack para forzar re-render cuando se restaura desde BFCache (navegación atrás desde web externa)
+  const [restoreKey, setRestoreKey] = React.useState(0);
+
+  React.useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // Al incrementar el key, forzamos a Framer Motion a re-montar la vista
+        // y ejecutar la animación de entrada nuevamente, evitando que se quede en blanco.
+        setRestoreKey((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   return (
     <AnimatePresence 
       mode="wait" 
       onExitComplete={() => window.scrollTo(0, 0)}
     >
       <motion.div
-        key={pathname}
+        key={`${pathname}-${restoreKey}`}
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
@@ -68,4 +96,3 @@ export function PageTransition({
     </AnimatePresence>
   );
 }
-

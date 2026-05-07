@@ -67,7 +67,6 @@ export function Footer({ socialNetworks }: FooterProps) {
       {/* Contenido Principal */}
       <div className="container max-w-[1512px] mx-auto px-6 md:px-16 py-12 md:py-16 bg-primary-soft-gray-balance rounded-t-lg flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-10 md:gap-16">
-
           {/* ─── Columna 1: Logo + Descripción + Redes ─── */}
           <div className="flex flex-col gap-6 max-w-[400px]">
             <div className="flex flex-col gap-3">
@@ -78,9 +77,10 @@ export function Footer({ socialNetworks }: FooterProps) {
                   width={230}
                   height={30}
                   priority
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{ width: "auto", height: "auto" }}
                 />
               </Link>
+              <a href="https://www.google.com/">link test</a>
 
               <p className="text-body-medium text-gray-900 font-semibold">
                 Una iniciativa de Térbol
@@ -88,7 +88,9 @@ export function Footer({ socialNetworks }: FooterProps) {
             </div>
 
             <p className="text-body-small text-gray-500">
-              Los productos mencionados son suplementos dietarios. Antes de consumir cualquier suplemento, consulte a su médico o profesional de la salud.
+              Los productos mencionados son suplementos dietarios. Antes de
+              consumir cualquier suplemento, consulte a su médico o profesional
+              de la salud.
             </p>
 
             <div className="w-full h-px bg-gray-200" />
@@ -141,7 +143,10 @@ export function Footer({ socialNetworks }: FooterProps) {
           </div>
 
           {/* ─── Columna 2: Nav Col 1 ─── */}
-          <nav className="flex flex-col gap-6" aria-label="Links de navegación – columna 1">
+          <nav
+            className="flex flex-col gap-6"
+            aria-label="Links de navegación – columna 1"
+          >
             {FOOTER_NAV_COL_1.map((link) => (
               <Link
                 key={link.href}
@@ -154,7 +159,10 @@ export function Footer({ socialNetworks }: FooterProps) {
           </nav>
 
           {/* ─── Columna 3: Nav Col 2 ─── */}
-          <nav className="flex flex-col gap-6" aria-label="Links de navegación – columna 2">
+          <nav
+            className="flex flex-col gap-6"
+            aria-label="Links de navegación – columna 2"
+          >
             {FOOTER_NAV_COL_2.map((link) => (
               <Link
                 key={link.href}
@@ -184,8 +192,6 @@ export function Footer({ socialNetworks }: FooterProps) {
           © 2026 Térbol Inspira. Todos los derechos reservados.
         </p>
       </div>
-
-
     </footer>
   );
 }

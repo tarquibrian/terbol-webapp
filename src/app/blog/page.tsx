@@ -12,6 +12,7 @@ import {
 interface BlogPageProps {
   searchParams: Promise<{
     category?: string | string[];
+    category_blog_id?: string | string[];
     search?: string | string[];
     page?: string | string[];
   }>;
@@ -35,7 +36,7 @@ function getPositiveNumber(value: string, fallback: number): number {
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const currentCategoryId = getPositiveNumber(
-    getSingleSearchParam(params.category),
+    getSingleSearchParam(params.category_blog_id ?? params.category),
     0,
   );
   const currentSearch = getSingleSearchParam(params.search);

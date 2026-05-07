@@ -7,9 +7,14 @@ import { Button } from "@/components/ui/Button";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  alwaysShow?: boolean;
 }
 
-export function Pagination({ currentPage, totalPages }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  alwaysShow = false,
+}: PaginationProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -24,7 +29,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
     });
   };
 
-  if (totalPages <= 1) return null;
+  if (totalPages <= 1 && !alwaysShow) return null;
 
   return (
     <div className="mt-10 flex items-center justify-between gap-4">

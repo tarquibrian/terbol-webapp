@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Pagination } from "@/components/ui/Pagination";
@@ -7,7 +8,11 @@ import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Check } from "lucide-react";
 import { ArticleCard } from "./ArticleCard";
+import { ArticleCardSkeleton } from "./ArticleCardSkeleton";
 import type { BlogCategory, BlogPagination, BlogPost } from "../data/cmsBlog";
+
+const CATEGORY_PARAM = "category_blog_id";
+const LEGACY_CATEGORY_PARAM = "category";
 
 interface ArticlesSectionProps {
   categories: BlogCategory[];
@@ -27,24 +32,49 @@ export function ArticlesSection({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = React.useTransition();
 
-  // Leer parámetros de la URL
-  const currentPage = Number(searchParams.get("page")) || pagination.currentPage;
+  const currentPage = pagination.currentPage;
   const activeCategoryId =
-    Number(searchParams.get("category")) || currentCategoryId;
+    Number(searchParams.get(CATEGORY_PARAM) ?? searchParams.get(LEGACY_CATEGORY_PARAM)) ||
+    currentCategoryId;
   const activeSearch = searchParams.get("search") ?? currentSearch;
 
-  // Manejo de categorías
+  // Tracking the previous count of posts to adapt the skeleton grid size
+  const [previousCount, setPreviousCount] = React.useState(6);
+  
+  React.useEffect(() => {
+    if (!isPending) {
+      setPreviousCount(posts.length);
+    }
+  }, [posts.length, isPending]);
+
+  // Determine skeleton count based on the previous grid size
+  // 1-3 items -> 3 skeletons. 4-6 items -> 6 skeletons. 0 -> default to 6
+  const skeletonCount = previousCount > 0 && previousCount <= 3 ? 3 : 6;
+
+  const navigateWithParams = (params: URLSearchParams) => {
+    const nextUrl = params.toString()
+      ? `${pathname}?${params.toString()}`
+      : pathname;
+
+    startTransition(() => {
+      router.push(nextUrl, { scroll: false });
+    });
+  };
+
   const handleCategoryChange = (categoryId: number) => {
     const params = new URLSearchParams(searchParams.toString());
+    params.delete(LEGACY_CATEGORY_PARAM);
+
     if (categoryId === 0) {
-      params.delete("category");
+      params.delete(CATEGORY_PARAM);
     } else {
-      params.set("category", String(categoryId));
+      params.set(CATEGORY_PARAM, String(categoryId));
     }
-    params.set("page", "1"); // reset page
-    const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
-    router.push(nextUrl, { scroll: false });
+
+    params.set("page", "1");
+    navigateWithParams(params);
   };
 
   const handleSearch = (value: string) => {
@@ -58,8 +88,7 @@ export function ArticlesSection({
     }
 
     params.set("page", "1");
-    const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
-    router.push(nextUrl, { scroll: false });
+    navigateWithParams(params);
   };
 
   return (
@@ -77,6 +106,7 @@ export function ArticlesSection({
                   variant={isActive ? "secondary" : "outline"}
                   size="sm"
                   className="rounded-full text-gray-500 whitespace-nowrap"
+                  disabled={isPending}
                   icon={isActive ? <Check size={16} /> : undefined}
                   iconPosition="left"
                 >
@@ -89,6 +119,7 @@ export function ArticlesSection({
 
         <AnimateOnScroll variant="slide-up" className="w-full max-w-xl">
           <SearchInput
+            key={activeSearch}
             defaultValue={activeSearch}
             onSearch={handleSearch}
             placeholder="Buscar artículos"
@@ -111,7 +142,13 @@ export function ArticlesSection({
           </div>
 
           {/* Grid de Artículos (3 columnas x 2 filas) */}
-          {posts.length > 0 ? (
+          {isPending ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-x-8 md:gap-y-12">
+              {Array.from({ length: skeletonCount }).map((_, idx) => (
+                <ArticleCardSkeleton key={`skeleton-${idx}`} />
+              ))}
+            </div>
+          ) : posts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-x-8 md:gap-y-12">
               {posts.map((post, idx) => (
                 <AnimateOnScroll
@@ -129,18 +166,13 @@ export function ArticlesSection({
             </div>
           )}
 
-          {/* Paginación (si hay más de 1 página) */}
-          {pagination.totalPages > 1 && (
-            <AnimateOnScroll
-              variant="fade"
-              className="mt-8 border-t border-gray-100 pt-8"
-            >
-              <Pagination
-                currentPage={currentPage}
-                totalPages={pagination.totalPages}
-              />
-            </AnimateOnScroll>
-          )}
+          <AnimateOnScroll variant="fade">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.totalPages}
+              alwaysShow
+            />
+          </AnimateOnScroll>
         </div>
       </div>
     </section>

@@ -15,11 +15,31 @@ const VALID_TAGS = new Set([
 
 const VALID_DYNAMIC_TAG_PATTERNS = [/^blog-[1-9]\d*$/, /^product-[1-9]\d*$/];
 
+interface RevalidateRequestBody {
+  tag?: unknown;
+}
+
 function isValidRevalidationTag(tag: string): boolean {
   return (
     VALID_TAGS.has(tag) ||
     VALID_DYNAMIC_TAG_PATTERNS.some((pattern) => pattern.test(tag))
   );
+}
+
+function getRevalidationTags(body: unknown): string[] {
+  if (!body || typeof body !== "object") {
+    return [];
+  }
+
+  const { tag } = body as RevalidateRequestBody;
+  const requestedTags =
+    typeof tag === "string"
+      ? [tag]
+      : Array.isArray(tag)
+        ? tag.filter((item) => typeof item === "string")
+        : [];
+
+  return [...new Set(requestedTags.map((item) => item.trim()).filter(Boolean))];
 }
 
 /**
@@ -32,6 +52,7 @@ function isValidRevalidationTag(tag: string): boolean {
  *   x-revalidate-secret: TU_TOKEN_SECRETO
  * Body:
  *   { "tag": "home" }
+ *   { "tag": ["blog-12", "learn"] }
  */
 export async function POST(request: NextRequest) {
   try {
@@ -44,19 +65,22 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const tag = typeof body?.tag === "string" ? body.tag.trim() : "";
+    const tags = getRevalidationTags(body);
 
-    if (!tag) {
+    if (tags.length === 0) {
       return NextResponse.json(
         { message: "Falta el campo 'tag' en el body" },
         { status: 400 }
       );
     }
 
-    if (!isValidRevalidationTag(tag)) {
+    const invalidTags = tags.filter((tag) => !isValidRevalidationTag(tag));
+
+    if (invalidTags.length > 0) {
       return NextResponse.json(
         {
-          message: `Tag no permitido: ${tag}`,
+          message: `Tags no permitidos: ${invalidTags.join(", ")}`,
+          invalidTags,
           allowedTags: [...VALID_TAGS],
           allowedPatterns: ["blog-{id}", "product-{id}"],
         },
@@ -65,12 +89,15 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Limpiar la caché en Next.js para la etiqueta específica
-    revalidateTag(tag, "max");
+    tags.forEach((tag) => revalidateTag(tag, "max"));
 
     return NextResponse.json({
       revalidated: true,
-      message: `Tag '${tag}' marcado para revalidación.`,
-      tag,
+      message:
+        tags.length === 1
+          ? `Tag '${tags[0]}' marcado para revalidación.`
+          : "Tags marcados para revalidación.",
+      tags,
       now: Date.now(),
     });
   } catch (error) {
