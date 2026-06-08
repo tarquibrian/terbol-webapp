@@ -60,9 +60,13 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
           </AnimateOnScroll>
 
           <AnimateOnScroll variant="slide-up" delay={0.1} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:max-w-[600px] lg:justify-end">
-            <span className="text-body-sm text-foreground/60 whitespace-nowrap order-2 sm:order-1">
+            <span
+              className="text-body-sm text-foreground/60 whitespace-nowrap order-2 sm:order-1"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {loading || totalResults === undefined ? (
-                "..."
+                "…"
               ) : (
                 `${totalResults} resultado${totalResults !== 1 ? "s" : ""}`
               )}

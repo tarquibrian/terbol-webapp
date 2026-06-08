@@ -30,6 +30,9 @@ export interface DrawerProps {
  */
 export function Drawer({ isOpen, onClose, title, children, className, instantClose, side = "right" }: DrawerProps) {
   const [mounted, setMounted] = React.useState(false);
+  const titleId = React.useId();
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
 
   // Evitar error de hidratación renderizando el Portal solo en el cliente
   React.useEffect(() => {
@@ -39,14 +42,34 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
   // Bloquear scroll global del documento cuando está abierto
   React.useEffect(() => {
     if (isOpen) {
+      previousActiveElementRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
       document.body.style.overflow = "hidden";
+      window.requestAnimationFrame(() => closeButtonRef.current?.focus());
     } else {
       document.body.style.overflow = "";
+      previousActiveElementRef.current?.focus();
+      previousActiveElementRef.current = null;
     }
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!mounted) return null;
 
@@ -56,7 +79,7 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
       <div
         className={cn(
           "fixed inset-0 z-100 bg-black/30 backdrop-blur-sm",
-          instantClose ? "transition-none duration-0" : "transition-all duration-400",
+          instantClose ? "transition-none duration-0" : "transition-opacity duration-400",
           isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         )}
         onClick={onClose}
@@ -74,26 +97,35 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
             isOpen ? "translate-x-0" : side === "left" ? "-translate-x-full" : "translate-x-full",
             className
           )}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          aria-hidden={!isOpen}
+          inert={!isOpen}
+          tabIndex={-1}
         >
           {/* Drawer Header (Opcional, pero se asume un diseño estándar con 'X') */}
           <div className="flex items-center justify-between p-6">
             {title ? (
-              <span className="font-medium text-h5 text-primary-orange">{title}</span>
+              <h2 id={titleId} className="font-medium text-h5 text-primary-orange">
+                {title}
+              </h2>
             ) : (
               <div /> // Espaciador para justificar 'X' a la derecha si no hay título
             )}
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               aria-label="Cerrar modal"
               className="p-2 -mr-2 rounded-md hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <X className="h-6 w-6 text-foreground" />
+              <X className="h-6 w-6 text-foreground" aria-hidden="true" />
             </button>
           </div>
 
           {/* Drawer Content */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-3">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain py-3 px-3">
             {children}
           </div>
         </div>

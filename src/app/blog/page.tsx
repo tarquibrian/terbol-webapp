@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { BlogView } from "@/features/blog";
 import { cmsApi } from "@/lib/cms-api";
+import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
+import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 import {
   mapCmsBlogCategories,
   mapCmsBlogList,
-  type CmsBlogListData,
   type CmsLearnData,
 } from "@/features/blog/data/cmsBlog";
 
@@ -18,11 +20,13 @@ interface BlogPageProps {
   }>;
 }
 
-export const metadata: Metadata = {
-  title: "Blog - Terbol",
+export const metadata: Metadata = createPageMetadata({
+  title: "Blog",
   description:
     "Explora nuestros artículos más recientes sobre nutrición, salud mental y estilo de vida para encontrar tu balance perfecto.",
-};
+  path: "/blog",
+  image: SEO_IMAGES.blog,
+});
 
 function getSingleSearchParam(value: string | string[] | undefined): string {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
@@ -42,13 +46,18 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const currentSearch = getSingleSearchParam(params.search);
   const currentPage = getPositiveNumber(getSingleSearchParam(params.page), 1);
 
-  const [learnDataResponse, blogDataResponse] = await Promise.all([
-    cmsApi.getLearn(),
-    cmsApi.getBlogsFiltered(currentCategoryId, currentSearch, currentPage),
+  const [learnData, blogData] = await Promise.all([
+    getOptionalCmsPageData<CmsLearnData>(
+      () => cmsApi.getLearn(),
+      CMS_PAGE_SCHEMAS.learn,
+      "learn",
+    ),
+    getOptionalCmsPageData(
+      () => cmsApi.getBlogsFiltered(currentCategoryId, currentSearch, currentPage),
+      CMS_PAGE_SCHEMAS.blogList,
+      "blog-list",
+    ),
   ]);
-
-  const learnData = learnDataResponse?.data as CmsLearnData | undefined;
-  const blogData = blogDataResponse?.data as CmsBlogListData | undefined;
   const categories = mapCmsBlogCategories(learnData?.categories);
   const { posts, pagination } = mapCmsBlogList(blogData);
 

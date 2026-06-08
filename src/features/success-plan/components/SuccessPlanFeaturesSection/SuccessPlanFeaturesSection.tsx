@@ -2,7 +2,7 @@ import { FeatureCard } from "@/components/ui/FeatureCard";
 import { Award, Microscope, Star } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import Image from "next/image";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 import * as React from "react";
 
 interface FeatureItem {
@@ -25,11 +25,7 @@ interface SuccessPlanFeaturesSectionProps {
 
 export function SuccessPlanFeaturesSection({ data }: SuccessPlanFeaturesSectionProps) {
   const getIconUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   const header = data?.header || {

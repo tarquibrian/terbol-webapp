@@ -1,4 +1,5 @@
-import { env } from "@/config/env";
+import { isCmsRecord, normalizeCmsRecordList } from "@/lib/cms-data";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 export interface CmsBlogCategory {
   id?: number | string;
@@ -80,50 +81,43 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("es-BO", {
   year: "numeric",
 });
 
-function toNumber(value: number | string | undefined, fallback = 0): number {
+function toNumber(value: unknown, fallback = 0): number {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-function resolveStorageImage(path?: string): string {
-  if (!path) return "/images/image14.png";
-  if (/^https?:\/\//.test(path) || path.startsWith("data:")) return path;
-
-  const localPublicPathPrefixes = [
-    "/banner/",
-    "/categories/",
-    "/homegrid/",
-    "/images/",
-  ];
-
-  if (localPublicPathPrefixes.some((prefix) => path.startsWith(prefix))) {
-    return path;
-  }
-
-  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  const baseStorage = env.STORAGE_URL.endsWith("/")
-    ? env.STORAGE_URL
-    : `${env.STORAGE_URL}/`;
-
-  return `${baseStorage}${cleanPath}`;
+function toStringValue(value: unknown): string | undefined {
+  if (typeof value === "string" && value.trim()) return value.trim();
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  return undefined;
 }
 
-function formatBlogDate(value?: string): string {
-  if (!value) return "";
+function resolveStorageImage(path?: unknown): string {
+  const imagePath = toStringValue(path);
 
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return value;
+  return resolveImageAsset(imagePath, "/images/image14.png") ?? "/images/image14.png";
+}
+
+function formatBlogDate(value?: unknown): string {
+  const dateValue = toStringValue(value);
+  if (!dateValue) return "";
+
+  const date = new Date(`${dateValue}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return dateValue;
 
   return DATE_FORMATTER.format(date).replace(".", "");
 }
 
 export function mapCmsBlogCategories(
-  categories: CmsBlogCategory[] | undefined,
+  categories: unknown,
 ): BlogCategory[] {
-  const mappedCategories = (categories ?? [])
+  const mappedCategories = normalizeCmsRecordList<CmsBlogCategory>(
+    categories,
+    "learn.categories",
+  )
     .map((category) => ({
       id: toNumber(category.id),
-      title: category.title?.trim() ?? "",
+      title: toStringValue(category.title) ?? "",
       order: category.order ?? 0,
     }))
     .filter((category) => category.id > 0 && category.title.length > 0)
@@ -133,29 +127,39 @@ export function mapCmsBlogCategories(
   return [ALL_CATEGORIES, ...mappedCategories];
 }
 
-export function mapCmsBlogPost(item?: CmsBlogItem | null): BlogPost | null {
-  if (!item?.id || !item.title) return null;
+export function mapCmsBlogPost(item?: unknown): BlogPost | null {
+  if (!isCmsRecord(item)) return null;
 
-  const id = String(item.id);
-  const categoryId = toNumber(item.category_blog_id ?? item.category?.id);
+  const id = toStringValue(item.id);
+  const title = toStringValue(item.title);
+
+  if (!id || !title) return null;
+
+  const category = isCmsRecord(item.category) ? item.category : undefined;
+  const categoryId = toNumber(item.category_blog_id ?? category?.id);
 
   return {
     id,
-    title: item.title,
+    title,
     image: resolveStorageImage(item.image),
-    category: item.category?.title ?? "",
+    category: toStringValue(category?.title) ?? "",
     categoryId,
     date: formatBlogDate(item.published_at),
     href: `/blog/${id}`,
-    content: item.detail,
+    content: toStringValue(item.detail),
   };
 }
 
-export function mapCmsBlogList(data: CmsBlogListData | undefined): {
+export function mapCmsBlogList(data: unknown): {
   posts: BlogPost[];
   pagination: BlogPagination;
 } {
-  const posts = (data?.items ?? [])
+  const listData = isCmsRecord(data) ? data : undefined;
+  const items = Array.isArray(listData?.items) ? listData.items : [];
+  const pagination = isCmsRecord(listData?.pagination)
+    ? listData.pagination
+    : undefined;
+  const posts = items
     .map(mapCmsBlogPost)
     .filter((post): post is BlogPost => Boolean(post));
 
@@ -163,10 +167,10 @@ export function mapCmsBlogList(data: CmsBlogListData | undefined): {
     posts,
     pagination: {
       currentPage:
-        data?.pagination?.current_page ?? DEFAULT_PAGINATION.currentPage,
-      totalPages: data?.pagination?.last_page ?? DEFAULT_PAGINATION.totalPages,
-      perPage: data?.pagination?.per_page ?? DEFAULT_PAGINATION.perPage,
-      total: data?.pagination?.total ?? posts.length,
+        toNumber(pagination?.current_page, DEFAULT_PAGINATION.currentPage),
+      totalPages: toNumber(pagination?.last_page, DEFAULT_PAGINATION.totalPages),
+      perPage: toNumber(pagination?.per_page, DEFAULT_PAGINATION.perPage),
+      total: toNumber(pagination?.total, posts.length),
     },
   };
 }

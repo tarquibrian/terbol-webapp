@@ -14,14 +14,14 @@ import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
 import { CONSUMPTION_CATEGORIES, FEATURED_PRODUCTS } from "@/features/products/data/products";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem, Autoplay } from "@/components/ui/Carousel/Carousel";
+import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
 
 export function FeaturedProducts() {
   const plugin = React.useMemo(() => {
     return [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })];
   }, []);
 
-  const [api, setApi] = React.useState<any>();
+  const [api, setApi] = React.useState<CarouselApi>();
 
   const handlePrev = React.useCallback(() => {
     api?.scrollPrev();
@@ -150,7 +150,6 @@ export function FeaturedProducts() {
             className="mt-8 md:mt-16 mx-auto text-primary-white w-full sm:w-fit"
             icon={<ArrowRight className="w-5 h-5 text-primary-white" />}
             iconPosition="right"
-            onClick={() => console.log("Ver todos los productos")}
             href="/products"
             scroll={false}
           >

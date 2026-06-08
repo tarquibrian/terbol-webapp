@@ -11,8 +11,14 @@ import { WhoWeAre } from "../components/WhoWeAre";
 import { ContactForm } from "../components/ContactForm";
 import { Banner } from "@/components/layout/Banner";
 
+export interface AboutPageData {
+  identity?: React.ComponentProps<typeof AboutHero>["data"];
+  about_us?: React.ComponentProps<typeof WhoWeAre>["data"];
+  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
+}
+
 interface AboutViewProps {
-  data?: any;
+  data?: AboutPageData;
 }
 
 export function AboutView({ data }: AboutViewProps) {

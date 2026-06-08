@@ -12,8 +12,16 @@ import { SuccessPlanFeaturesSection } from "../components/SuccessPlanFeaturesSec
 import { SuccessPlanStepsSection } from "../components/SuccessPlanStepsSection/SuccessPlanStepsSection";
 import { Banner } from "@/components/layout/Banner";
 
+export interface SuccessPlanPageData {
+  plan?: React.ComponentProps<typeof SuccessPlanHero>["data"];
+  video_section?: React.ComponentProps<typeof About>["data"];
+  our_proposal?: React.ComponentProps<typeof SuccessPlanFeaturesSection>["data"];
+  how_it_works?: React.ComponentProps<typeof SuccessPlanStepsSection>["data"];
+  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
+}
+
 interface SuccessPlanViewProps {
-  data?: any;
+  data?: SuccessPlanPageData;
 }
 
 export function SuccessPlanView({ data }: SuccessPlanViewProps) {

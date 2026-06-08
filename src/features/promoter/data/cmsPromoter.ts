@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { isSvgAsset, resolveImageAsset } from "@/lib/image-assets";
 
 export interface PromoterHeader {
   label?: string;
@@ -69,25 +69,17 @@ export function resolvePromoterAsset(
   path?: string | null,
   fallback = "/images/image19.png",
 ): string {
-  if (!path) return fallback;
-  if (/^https?:\/\//.test(path) || path.startsWith("data:")) return path;
-  if (path.startsWith("/")) return path;
-
-  const baseStorage = env.STORAGE_URL.endsWith("/")
-    ? env.STORAGE_URL
-    : `${env.STORAGE_URL}/`;
-
-  return `${baseStorage}${path}`;
+  return resolveImageAsset(path, fallback) ?? fallback;
 }
 
-export function isSvgAsset(path?: string): boolean {
-  return Boolean(path?.split("?")[0]?.toLowerCase().endsWith(".svg"));
-}
+export { isSvgAsset };
 
 export function sortByOrder<T extends { order?: string | number }>(
-  items?: T[],
+  items?: T[] | null,
 ): T[] {
-  return [...(items ?? [])].sort((a, b) => {
+  if (!Array.isArray(items)) return [];
+
+  return [...items].sort((a, b) => {
     const orderA = Number(a.order ?? 0);
     const orderB = Number(b.order ?? 0);
 

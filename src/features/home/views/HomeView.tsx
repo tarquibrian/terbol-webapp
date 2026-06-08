@@ -10,15 +10,21 @@
 import * as React from "react";
 import { Hero } from "../components/Hero";
 import { FeaturedProducts } from "../components/FeaturedProducts";
-import { Testimonials } from "../components/Testimonials";
-import { Newsletter } from "../components/Newsletter";
 import { About } from "../components/About";
 import { ProductPillars } from "../components/ProductPillars";
 import { DevelopmentSteps } from "../components/DevelopmentSteps";
 import { Banner } from "@/components/layout/Banner";
 
+export interface HomePageData {
+  hero_section?: React.ComponentProps<typeof Hero>["data"];
+  video_section?: React.ComponentProps<typeof About>["data"];
+  pillars?: React.ComponentProps<typeof ProductPillars>["data"];
+  development_products?: React.ComponentProps<typeof DevelopmentSteps>["data"];
+  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
+}
+
 interface HomeViewProps {
-  data?: any;
+  data?: HomePageData;
 }
 
 /**

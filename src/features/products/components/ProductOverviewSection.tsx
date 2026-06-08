@@ -76,6 +76,7 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
                             src={img}
                             alt={`${product.name} miniatura ${idx + 1}`}
                             fill
+                            sizes="96px"
                             className="object-contain"
                           />
                         </button>

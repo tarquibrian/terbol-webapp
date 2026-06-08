@@ -2,7 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import { Microscope, ScrollText, SunMedium, Star } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface PillarData {
   id: string | number;
@@ -49,11 +49,7 @@ export function ProductPillars({ data }: ProductPillarsProps) {
   const pillarsToRender = data && data.length > 0 ? data : FALLBACK_PILLARS;
 
   const getIconUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   return (

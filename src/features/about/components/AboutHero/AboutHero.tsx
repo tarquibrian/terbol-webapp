@@ -14,7 +14,7 @@
 import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import Image from "next/image";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface DetailItem {
   id: number | string;
@@ -39,13 +39,7 @@ interface AboutHeroProps {
  */
 export function AboutHero({ data }: AboutHeroProps) {
   const getImageUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/")
-      ? env.STORAGE_URL
-      : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   const header = data?.header || {

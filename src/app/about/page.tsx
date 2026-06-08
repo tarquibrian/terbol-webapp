@@ -9,26 +9,27 @@
 import * as React from "react";
 import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { AboutView } from "@/features/about";
+import { AboutView, type AboutPageData } from "@/features/about";
 import { cmsApi } from "@/lib/cms-api";
+import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
+import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 
 /** Metadatos SEO de la página ¿Quiénes somos? */
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Quiénes somos",
   description:
     "Conoce la historia y los valores de Terbol. Más de años de trayectoria en el sector farmacéutico, comprometidos con la salud y el bienestar de las personas.",
-  openGraph: {
-    title: "Quiénes somos — Terbol",
-    description:
-      "Conoce la historia y los valores de Terbol. Comprometidos con la salud y el bienestar desde hace años.",
-    // TODO: Reemplazar con imagen OG de About cuando esté disponible
-    // images: [{ url: "/images/og-about.jpg", width: 1200, height: 630, alt: "Sobre Terbol" }],
-  },
-};
+  path: "/about",
+  image: SEO_IMAGES.about,
+});
 
 export default async function AboutPage() {
-  const aboutDataResponse = await cmsApi.getAbout();
-  const aboutData = aboutDataResponse?.data;
+  const aboutData = await getOptionalCmsPageData<AboutPageData>(
+    () => cmsApi.getAbout(),
+    CMS_PAGE_SCHEMAS.about,
+    "about",
+  );
 
   return (
     <PageLayout>

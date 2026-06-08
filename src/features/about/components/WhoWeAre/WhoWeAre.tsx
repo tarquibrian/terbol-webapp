@@ -2,9 +2,9 @@
 
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import Image from "next/image";
-import { TrendingUp, User, Star, Lightbulb } from 'lucide-react'
+import { TrendingUp, User, Star, Lightbulb, type LucideIcon } from 'lucide-react'
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 import * as React from "react";
 
 interface AboutUsDetail {
@@ -29,11 +29,7 @@ interface WhoWeAreProps {
 
 export const WhoWeAre = ({ data }: WhoWeAreProps) => {
   const getImageUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   const header = data?.header || {
@@ -58,7 +54,7 @@ export const WhoWeAre = ({ data }: WhoWeAreProps) => {
     : (data?.header?.image || "/about/aboutproduct.png");
 
   // Helper para renderizar los iconos o los SVGs del CMS
-  const renderIcon = (path: string | undefined, FallbackIcon: any) => {
+  const renderIcon = (path: string | undefined, FallbackIcon: LucideIcon) => {
     if (!path) return <FallbackIcon strokeWidth={1.2} size={40} />;
     
     const url = getImageUrl(path);

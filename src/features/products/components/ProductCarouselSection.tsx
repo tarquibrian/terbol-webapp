@@ -6,7 +6,7 @@ import { ProductCard } from "./ProductCard/ProductCard";
 import type { Product } from "../data/products";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
-import { Carousel, CarouselContent, CarouselItem, Autoplay } from "@/components/ui/Carousel/Carousel";
+import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
 
 interface ProductCarouselSectionProps {
   /** Los productos a mostrar en el carousel */
@@ -34,7 +34,7 @@ export function ProductCarouselSection({
       : [];
   }, [autoplayIntervalMs]);
 
-  const [api, setApi] = React.useState<any>();
+  const [api, setApi] = React.useState<CarouselApi>();
 
   /** Navega al slide anterior y resetea el timer de autoplay */
   const handlePrev = React.useCallback(() => {

@@ -1,8 +1,9 @@
 import * as React from "react";
 import Link from "next/link";
+import type { LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonStyleProps {
   variant?:
     | "default"
     | "destructive"
@@ -13,11 +14,21 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: "default" | "sm";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
-  href?: string;
-  scroll?: boolean;
-  target?: string;
-  rel?: string;
 }
+
+type ButtonAsButtonProps = ButtonStyleProps &
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: undefined;
+    scroll?: undefined;
+  };
+
+type ButtonAsLinkProps = ButtonStyleProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+    href: LinkProps["href"];
+    scroll?: boolean;
+  };
+
+export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 // Clases base para todos los botones
 const BASE_CLASSES =
@@ -42,7 +53,7 @@ const SIZE_CLASSES = {
   sm: "h-[36px] px-3 text-body-small gap-1.5",
 };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
   (
     {
       className,
@@ -73,21 +84,35 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     if (href) {
+      const linkProps = props as Omit<
+        ButtonAsLinkProps,
+        keyof ButtonStyleProps | "href" | "scroll"
+      >;
+
       return (
         <Link
           href={href}
           scroll={scroll}
-          ref={ref as any}
+          ref={ref as React.Ref<HTMLAnchorElement>}
           className={combinedClassName}
-          {...(props as any)}
+          {...linkProps}
         >
           {content}
         </Link>
       );
     }
 
+    const buttonProps = props as Omit<
+      ButtonAsButtonProps,
+      keyof ButtonStyleProps | "href"
+    >;
+
     return (
-      <button ref={ref} className={combinedClassName} {...props}>
+      <button
+        ref={ref as React.Ref<HTMLButtonElement>}
+        className={combinedClassName}
+        {...buttonProps}
+      >
         {content}
       </button>
     );

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import Image, { StaticImageData } from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { sanitizeCmsHtml } from "@/lib/html-sanitizer";
 
 export interface StepProps {
   number: number;
@@ -12,6 +13,9 @@ export interface StepProps {
 }
 
 export function SuccessPlanStep({ number, title, description, image, reverse, imageAlt = "Step image" }: StepProps) {
+  const sanitizedTitle = sanitizeCmsHtml(title);
+  const sanitizedDescription = sanitizeCmsHtml(description);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 lg:gap-[80px] items-center">
       <AnimateOnScroll
@@ -25,8 +29,8 @@ export function SuccessPlanStep({ number, title, description, image, reverse, im
           <span className="min-w-fit">{String(number).padStart(2, '0')}</span>
           <div className="w-[80%] h-[1px] bg-gray-200"></div>
         </div>
-        <h3 className="heading-h4 font-bold text-wrap text-primary" dangerouslySetInnerHTML={{ __html: title }} />
-        <p className="text-body-medium text-gray-500" dangerouslySetInnerHTML={{ __html: description }} />
+        <h3 className="heading-h4 font-bold text-wrap text-primary" dangerouslySetInnerHTML={{ __html: sanitizedTitle }} />
+        <p className="text-body-medium text-gray-500" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
       </AnimateOnScroll>
       <AnimateOnScroll
         variant="fade"

@@ -10,8 +10,15 @@ import { ScienceDevelopmentSteps } from "../components/ScienceDevelopmentSteps";
 import { ScienceAbout } from "../components/ScienceAbout";
 import { Banner } from "@/components/layout/Banner";
 
+export interface ScienceQualityPageData {
+  cover_section?: React.ComponentProps<typeof ScienceHero>["data"];
+  development_products?: React.ComponentProps<typeof ScienceDevelopmentSteps>["data"];
+  evidence?: React.ComponentProps<typeof ScienceAbout>["data"];
+  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
+}
+
 interface ScienceQualityViewProps {
-  data?: any;
+  data?: ScienceQualityPageData;
 }
 
 export function ScienceQualityView({ data }: ScienceQualityViewProps) {

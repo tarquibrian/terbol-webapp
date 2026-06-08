@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import {
+  getDurationMs,
+  getRequestLogContext,
+  logError,
+  logInfo,
+  logWarn,
+} from "@/lib/logger";
 
 const VALID_TAGS = new Set([
   "home",
@@ -10,10 +17,9 @@ const VALID_TAGS = new Set([
   "help",
   "promoter",
   "science",
-  "products-list",
 ]);
 
-const VALID_DYNAMIC_TAG_PATTERNS = [/^blog-[1-9]\d*$/, /^product-[1-9]\d*$/];
+const VALID_DYNAMIC_TAG_PATTERNS = [/^blog-[1-9]\d*$/];
 
 interface RevalidateRequestBody {
   tag?: unknown;
@@ -55,12 +61,30 @@ function getRevalidationTags(body: unknown): string[] {
  *   { "tag": ["blog-12", "learn"] }
  */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
+  const logContext = getRequestLogContext(request, "/api/revalidate");
+
   try {
     const secret = request.headers.get("x-revalidate-secret");
 
     // 1. Proteger el endpoint (definir REVALIDATE_SECRET en .env)
     const validSecret = process.env.REVALIDATE_SECRET;
-    if (validSecret && secret !== validSecret) {
+    if (!validSecret) {
+      logError("revalidate_missing_secret", undefined, {
+        ...logContext,
+        durationMs: getDurationMs(startedAt),
+      });
+      return NextResponse.json(
+        { success: false, message: "Revalidación no configurada" },
+        { status: 500 }
+      );
+    }
+
+    if (secret !== validSecret) {
+      logWarn("revalidate_invalid_token", {
+        ...logContext,
+        durationMs: getDurationMs(startedAt),
+      });
       return NextResponse.json({ success: false, message: "Token inválido" }, { status: 401 });
     }
 
@@ -68,6 +92,10 @@ export async function POST(request: NextRequest) {
     const tags = getRevalidationTags(body);
 
     if (tags.length === 0) {
+      logWarn("revalidate_missing_tags", {
+        ...logContext,
+        durationMs: getDurationMs(startedAt),
+      });
       return NextResponse.json(
         { success: false, message: "Falta el campo 'tag' en el body" },
         { status: 400 }
@@ -77,6 +105,11 @@ export async function POST(request: NextRequest) {
     const invalidTags = tags.filter((tag) => !isValidRevalidationTag(tag));
 
     if (invalidTags.length > 0) {
+      logWarn("revalidate_invalid_tags", {
+        ...logContext,
+        invalidTags,
+        durationMs: getDurationMs(startedAt),
+      });
       return NextResponse.json(
         {
           success: false,
@@ -84,7 +117,7 @@ export async function POST(request: NextRequest) {
           data: {
             invalidTags,
             allowedTags: [...VALID_TAGS],
-            allowedPatterns: ["blog-{id}", "product-{id}"],
+            allowedPatterns: ["blog-{id}"],
           },
         },
         { status: 400 }
@@ -93,6 +126,12 @@ export async function POST(request: NextRequest) {
 
     // 2. Limpiar la caché en Next.js para la etiqueta específica
     tags.forEach((tag) => revalidateTag(tag, "max"));
+    logInfo("revalidate_succeeded", {
+      ...logContext,
+      tags,
+      tagCount: tags.length,
+      durationMs: getDurationMs(startedAt),
+    });
 
     return NextResponse.json({
       success: true,
@@ -106,7 +145,10 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("[Revalidate API Error]:", error);
+    logError("revalidate_failed", error, {
+      ...logContext,
+      durationMs: getDurationMs(startedAt),
+    });
     return NextResponse.json(
       { success: false, message: "Error interno del servidor al revalidar" },
       { status: 500 }

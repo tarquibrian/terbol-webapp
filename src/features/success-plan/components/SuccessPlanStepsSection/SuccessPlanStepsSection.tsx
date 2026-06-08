@@ -1,6 +1,6 @@
 import { SuccessPlanStep } from "../SuccessPlanStep/SuccessPlanStep";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 import * as React from "react";
 import s1 from "../../../../../public/images/image15.png";
 import s2 from "../../../../../public/images/image14.png";
@@ -31,11 +31,7 @@ interface SuccessPlanStepsSectionProps {
 
 export function SuccessPlanStepsSection({ data }: SuccessPlanStepsSectionProps) {
   const getImageUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   const header = data?.header || {

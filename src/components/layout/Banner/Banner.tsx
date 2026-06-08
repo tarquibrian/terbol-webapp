@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight, Phone, Mail } from "lucide-react";
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 export interface BannerData {
   title?: string;
@@ -22,11 +22,7 @@ interface BannerProps {
 export function Banner({ data }: BannerProps) {
   // Función para resolver la URL de la imagen del CMS
   const getImageUrl = (path?: string) => {
-    if (!path) return "/banner/productbanner.png";
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path, "/banner/productbanner.png") ?? "/banner/productbanner.png";
   };
 
   const imageUrl = getImageUrl(data?.image);

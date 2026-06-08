@@ -5,8 +5,8 @@
  * La paginación se sincroniza con la URL (?page=2) para que las
  * URLs sean compartibles y navegables.
  *
- * Cuando se integre el backend real, solo hay que cambiar la URL
- * del fetch en `fetchProducts()`.
+ * El cliente consulta `/api/products`; la integracion con el API real se
+ * configura del lado servidor con `PRODUCTS_API_URL`.
  */
 
 "use client";
@@ -20,81 +20,144 @@ import type { Product } from "../data/products";
 import { CONSUMPTION_CATEGORIES } from "../data/products";
 import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
-import { Filter } from "lucide-react";
+import { Check, Filter } from "lucide-react";
 import { EndBanner } from "@/components/layout/EndBanner";
+import { logError } from "@/lib/logger";
+import { cn } from "@/lib/utils";
+import type { ProductsListResponse } from "../api/types";
 
 // ─── Constantes ───
 const PRODUCTS_PER_PAGE = 9;
+const PRODUCT_TYPE_FILTERS = ["Medicamentos", "Suplementos", "Vitaminas"];
+
+type ProductFilterType = "category" | "consumptionType";
+
+interface FilterCheckboxProps {
+  id: string;
+  name: string;
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+}
+
+function FilterCheckbox({
+  id,
+  name,
+  label,
+  checked,
+  onChange,
+}: FilterCheckboxProps) {
+  return (
+    <label
+      htmlFor={id}
+      className={cn(
+        "group flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-1 py-1 text-foreground/80 transition-colors hover:text-primary-orange focus-within:text-primary-orange focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        checked && "font-medium text-primary-orange",
+      )}
+    >
+      <input
+        id={id}
+        name={name}
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        className="sr-only"
+      />
+      <span
+        aria-hidden="true"
+        className={cn(
+          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors",
+          checked
+            ? "border-primary-orange bg-primary-orange text-white"
+            : "border-primary-light-gray bg-transparent",
+        )}
+      >
+        {checked ? <Check className="h-3 w-3" strokeWidth={3} /> : null}
+      </span>
+      <span className="min-w-0 break-words text-body-small">{label}</span>
+    </label>
+  );
+}
 
 // ─── Filtros (Desktop & Mobile reutilizable) ───
 const FilterContent = ({
+  idPrefix,
   onApply,
   selectedCategories,
   selectedConsumptionTypes,
   onFilterChange
 }: {
+  idPrefix: string;
   onApply: () => void;
   selectedCategories: string[];
   selectedConsumptionTypes: string[];
-  onFilterChange: (type: "category" | "consumptionType", value: string) => void;
+  onFilterChange: (type: ProductFilterType, value: string) => void;
 }) => (
-  <div className="flex flex-col gap-8">
+  <form
+    className="flex flex-col gap-8"
+    onSubmit={(event) => {
+      event.preventDefault();
+      onApply();
+    }}
+  >
     <h2 className="text-xl font-bold text-foreground hidden lg:block">Filtros</h2>
 
     {/* Categorías (Multi-select) */}
-    <div>
-      <h3 className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
+    <fieldset>
+      <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
         Tipo de producto
-      </h3>
+      </legend>
       <ul className="space-y-3">
-        {["Medicamentos", "Suplementos", "Vitaminas"].map((cat) => {
+        {PRODUCT_TYPE_FILTERS.map((cat) => {
           const isSelected = selectedCategories.includes(cat);
+          const id = `${idPrefix}-category-${cat.toLowerCase()}`;
+
           return (
-            <li
-              key={cat}
-              className={`flex items-center gap-3 cursor-pointer transition-colors ${isSelected ? 'text-primary-orange font-medium' : 'text-foreground/80 hover:text-primary-orange'}`}
-              onClick={() => onFilterChange("category", cat)}
-            >
-              <div className={`w-4 h-4 border rounded-sm shrink-0 flex items-center justify-center ${isSelected ? 'border-primary-orange bg-primary-orange' : 'border-primary-light-gray'}`}>
-                {isSelected && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-              </div>
-              <span className="text-body-small">{cat}</span>
+            <li key={cat}>
+              <FilterCheckbox
+                id={id}
+                name={`${idPrefix}-category`}
+                label={cat}
+                checked={isSelected}
+                onChange={() => onFilterChange("category", cat)}
+              />
             </li>
           );
         })}
       </ul>
-    </div>
+    </fieldset>
 
     <div className="w-full h-px bg-gray-100"></div>
 
     {/* Laboratorio (Multi-select) */}
-    <div>
-      <h3 className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
+    <fieldset>
+      <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
         Tipo de consumo
-      </h3>
+      </legend>
       <ul className="space-y-3">
         {CONSUMPTION_CATEGORIES.map((categoryObj) => {
           const lab = categoryObj.name;
           const isSelected = selectedConsumptionTypes.includes(lab);
+          const id = `${idPrefix}-consumption-${categoryObj.id}`;
+
           return (
-            <li
-              key={lab}
-              className={`flex items-center gap-3 cursor-pointer transition-colors ${isSelected ? 'text-primary-orange font-medium' : 'text-foreground/80 hover:text-primary-orange'}`}
-              onClick={() => onFilterChange("consumptionType", lab)}
-            >
-              <div className={`w-4 h-4 border rounded-sm shrink-0 flex items-center justify-center ${isSelected ? 'border-primary-orange bg-primary-orange' : 'border-primary-light-gray'}`}>
-                {isSelected && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-              </div>
-              <span className="text-body-small">{lab}</span>
+            <li key={categoryObj.id}>
+              <FilterCheckbox
+                id={id}
+                name={`${idPrefix}-consumptionType`}
+                label={lab}
+                checked={isSelected}
+                onChange={() => onFilterChange("consumptionType", lab)}
+              />
             </li>
           );
         })}
       </ul>
-    </div>
+    </fieldset>
 
     {/* Botón Aplicar */}
-    <Button size="sm" variant="secondary" className="w-full" onClick={onApply}>Aplicar Filtros</Button>
-  </div>
+    <Button size="sm" variant="secondary" className="w-full" type="submit">Aplicar Filtros</Button>
+  </form>
 );
 
 // ─── Vista Principal ───
@@ -105,14 +168,22 @@ export function ProductsView() {
 
   // Leer la página actual desde la URL (?page=X)
   const currentPage = Number(searchParams.get("page")) || 1;
-  const appliedCategories = searchParams.getAll("category");
-  const appliedConsumptionTypes = searchParams.getAll("consumptionType");
+  const appliedCategories = React.useMemo(
+    () => searchParams.getAll("category"),
+    [searchParams],
+  );
+  const appliedConsumptionTypes = React.useMemo(
+    () => searchParams.getAll("consumptionType"),
+    [searchParams],
+  );
   const searchQuery = searchParams.get("search");
 
   const [products, setProducts] = React.useState<Product[]>([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [totalResults, setTotalResults] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [fetchError, setFetchError] = React.useState<string | null>(null);
+  const [reloadToken, setReloadToken] = React.useState(0);
   const [isFiltersOpen, setIsFiltersOpen] = React.useState(false);
 
   // Estados locales para los filtros antes de aplicarlos
@@ -128,8 +199,9 @@ export function ProductsView() {
   // ─── Fetch de productos ───
   // Se dispara cada vez que cambia 'currentPage' o los parámetros de la URL
   React.useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
+    setFetchError(null);
 
     const params = new URLSearchParams();
     params.set("page", currentPage.toString());
@@ -138,21 +210,55 @@ export function ProductsView() {
     appliedConsumptionTypes.forEach((type) => params.append("consumptionType", type));
     if (searchQuery) params.set("search", searchQuery);
 
-    fetch(`/api/products?${params.toString()}`)
-      .then((res) => res.json())
+    fetch(`/api/products?${params.toString()}`, {
+      signal: controller.signal,
+    })
+      .then(async (res) => {
+        const result = (await res.json()) as ProductsListResponse;
+
+        if (!res.ok) {
+          throw new Error(
+            result.error?.message ?? "No pudimos cargar los productos.",
+          );
+        }
+
+        return result;
+      })
       .then((result) => {
-        if (cancelled) return;
         setProducts(result.data);
         setTotalPages(result.meta.totalPages);
         setTotalResults(result.meta.total);
+        setFetchError(result.error?.message ?? null);
       })
-      .catch((err) => console.error("Error fetching products:", err))
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+
+        logError("products_client_fetch_failed", err, {
+          route: "/products",
+          page: currentPage,
+          categoryCount: appliedCategories.length,
+          consumptionTypeCount: appliedConsumptionTypes.length,
+          hasSearch: Boolean(searchQuery),
+        });
+        setProducts([]);
+        setTotalPages(1);
+        setTotalResults(0);
+        setFetchError("No pudimos cargar los productos. Intenta nuevamente.");
+      })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       });
 
-    return () => { cancelled = true; };
-  }, [currentPage, searchParams]); // Usamos searchParams como dependencia porque contiene todo lo aplicado
+    return () => {
+      controller.abort();
+    };
+  }, [
+    appliedCategories,
+    appliedConsumptionTypes,
+    currentPage,
+    reloadToken,
+    searchQuery,
+  ]);
 
   // ─── Navegación de página y filtros ───
   const updateParams = (newParams: URLSearchParams) => {
@@ -166,7 +272,7 @@ export function ProductsView() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handlePendingFilterChange = (type: "category" | "consumptionType", value: string) => {
+  const handlePendingFilterChange = (type: ProductFilterType, value: string) => {
     if (type === "category") {
       setPendingCategories((prev) =>
         prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]
@@ -194,6 +300,10 @@ export function ProductsView() {
     setIsFiltersOpen(false);
   };
 
+  const retryProductsFetch = () => {
+    setReloadToken((value) => value + 1);
+  };
+
   return (
     <>
       <ProductsHero totalResults={totalResults} loading={loading} />
@@ -211,6 +321,7 @@ export function ProductsView() {
             className="max-w-[320px]"
           >
             <FilterContent
+              idPrefix="mobile-products"
               onApply={applyFilters}
               selectedCategories={pendingCategories}
               selectedConsumptionTypes={pendingConsumptionTypes}
@@ -224,9 +335,11 @@ export function ProductsView() {
               variant="ghost"
               size="sm"
               onClick={() => setIsFiltersOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={isFiltersOpen}
               className="flex items-center gap-2 px-0"
             >
-              <Filter size={18} />
+              <Filter size={18} aria-hidden="true" />
               Mostrar Filtros
             </Button>
           </div>
@@ -238,6 +351,7 @@ export function ProductsView() {
             <aside className="hidden lg:block w-[300px] sticky top-32 pb-[78px] shrink-0">
               <AnimateOnScroll variant="slide-up">
                 <FilterContent
+                  idPrefix="desktop-products"
                   onApply={applyFilters}
                   selectedCategories={pendingCategories}
                   selectedConsumptionTypes={pendingConsumptionTypes}
@@ -247,7 +361,21 @@ export function ProductsView() {
             </aside>
 
             {/* Columna Derecha: Grid de Productos o Empty State */}
-            <div className="flex-1 w-full">
+            <div className="flex-1 w-full" aria-busy={loading}>
+              {fetchError && !loading ? (
+                <div className="mb-4 flex flex-col gap-3 rounded-md border border-primary-soft-gray-balance bg-primary-soft-gray-light px-4 py-3 text-body-small text-gray-700 sm:flex-row sm:items-center sm:justify-between">
+                  <span>{fetchError}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={retryProductsFetch}
+                    className="w-full sm:w-fit"
+                  >
+                    Reintentar
+                  </Button>
+                </div>
+              ) : null}
+
               {loading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
@@ -292,7 +420,7 @@ export function ProductsView() {
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl bg-primary-soft-gray-light border border-primary-soft-gray-balance">
                   <div className="w-16 h-16 mb-4 rounded-full flex items-center justify-center text-primary-orange">
-                    <Filter size={48} strokeWidth={1.2} />
+                    <Filter size={48} strokeWidth={1.2} aria-hidden="true" />
                   </div>
                   <h3 className="heading-h4 font-bold text-gray-900 mb-4">
                     No encontramos productos

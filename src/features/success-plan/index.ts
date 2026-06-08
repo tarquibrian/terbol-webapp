@@ -5,3 +5,4 @@
  */
 
 export { SuccessPlanView } from "./views/SuccessPlanView";
+export type { SuccessPlanPageData } from "./views/SuccessPlanView";

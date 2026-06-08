@@ -7,4 +7,4 @@
 export { ProductsView } from "./views/ProductsView";
 export { ProductDetailView } from "./views/ProductDetailView";
 export type { Product } from "./data/products";
-export { getProductById, getAllProductIds } from "./data/products";
+export { getAllProductIds } from "./data/products";

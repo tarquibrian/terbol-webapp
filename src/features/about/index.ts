@@ -5,3 +5,4 @@
  */
 
 export { AboutView } from "./views/AboutView";
+export type { AboutPageData } from "./views/AboutView";

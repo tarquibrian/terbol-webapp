@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 
 /** Animación de tipo disponibles para el componente */
 export type AnimationVariant = "fade" | "slide-up" | "slide-left" | "slide-right";
+type AnimateElement = "div" | "section" | "article" | "span" | "header" | "footer" | "li" | "ul";
 
 /**
  * Mapa de variantes de Framer Motion.
@@ -122,6 +123,17 @@ const DEFAULT_VIEWPORT_AMOUNT = 0.2;
 /** Curva de easing para transiciones suaves */
 const DEFAULT_EASING = [0.25, 0.1, 0.25, 1.0] as const;
 
+const MOTION_COMPONENTS = {
+  div: motion.div,
+  section: motion.section,
+  article: motion.article,
+  span: motion.span,
+  header: motion.header,
+  footer: motion.footer,
+  li: motion.li,
+  ul: motion.ul,
+} satisfies Record<AnimateElement, React.ElementType>;
+
 // ─── Props ───
 
 /**
@@ -162,7 +174,7 @@ interface AnimateOnScrollProps {
    * Elemento HTML a renderizar.
    * @default "div"
    */
-  as?: "div" | "section" | "article" | "span" | "header" | "footer" | "li" | "ul";
+  as?: AnimateElement;
 }
 
 /**
@@ -190,11 +202,7 @@ export function AnimateOnScroll({
   className,
   as = "div",
 }: AnimateOnScrollProps) {
-  /**
-   * Creamos el componente motion dinámico según el tag `as`.
-   * Esto permite renderizar <motion.section>, <motion.div>, etc.
-   */
-  const MotionComponent = React.useMemo(() => motion.create(as), [as]);
+  const MotionComponent = MOTION_COMPONENTS[as];
 
   return (
     <MotionComponent

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Beaker, ShieldCheck, Microscope, FlaskConical, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface DevelopmentStepData {
   id: string | number;
@@ -19,11 +19,7 @@ interface DevelopmentStepsProps {
 export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
   // Función para resolver la URL del icono o imagen proveniente del CMS
   const getIconUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/") ? env.STORAGE_URL : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   // Extraemos la información del CMS con text fallbacks de seguridad
@@ -69,7 +65,13 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             <div className="flex justify-between items-start w-full relative z-10">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
                 {getIconUrl(step1.icon) ? (
-                  <Image src={getIconUrl(step1.icon)!} alt={step1.title} fill className="object-contain" />
+                  <Image
+                    src={getIconUrl(step1.icon)!}
+                    alt={step1.title}
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                  />
                 ) : (
                   <Beaker strokeWidth={1} size={48} />
                 )}
@@ -110,7 +112,13 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             <div className="flex justify-between items-start w-full">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
                 {getIconUrl(step2.icon) ? (
-                  <Image src={getIconUrl(step2.icon)!} alt={step2.title} fill className="object-contain" />
+                  <Image
+                    src={getIconUrl(step2.icon)!}
+                    alt={step2.title}
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                  />
                 ) : (
                   <FlaskConical strokeWidth={1} size={48} />
                 )}
@@ -131,7 +139,13 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             <div className="flex justify-between items-start w-full">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
                 {getIconUrl(step3.icon) ? (
-                  <Image src={getIconUrl(step3.icon)!} alt={step3.title} fill className="object-contain" />
+                  <Image
+                    src={getIconUrl(step3.icon)!}
+                    alt={step3.title}
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                  />
                 ) : (
                   <Microscope strokeWidth={1} size={48} />
                 )}
@@ -154,7 +168,13 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               <div className="flex justify-between items-start w-full">
                 <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
                   {getIconUrl(step4.icon) ? (
-                    <Image src={getIconUrl(step4.icon)!} alt={step4.title} fill className="object-contain" />
+                    <Image
+                      src={getIconUrl(step4.icon)!}
+                      alt={step4.title}
+                      fill
+                      sizes="48px"
+                      className="object-contain"
+                    />
                   ) : (
                     <ShieldCheck strokeWidth={1} size={48} />
                   )}

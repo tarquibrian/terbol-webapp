@@ -1,42 +1,69 @@
-import { NextResponse } from 'next/server';
-import { PRODUCTS } from '@/features/products/data/products';
+import { NextResponse } from "next/server";
+import {
+  getProducts,
+  parseProductsQuery,
+} from "@/features/products/api/products-api";
+import {
+  getDurationMs,
+  getRequestLogContext,
+  logError,
+  logInfo,
+} from "@/lib/logger";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "9");
-  const categories = searchParams.getAll("category");
-  const consumptionTypes = searchParams.getAll("consumptionType");
-  const search = searchParams.get("search");
+  const startedAt = Date.now();
+  const logContext = getRequestLogContext(request, "/api/products");
 
-  // Simulated delay to mimic real network request
-  await new Promise(resolve => setTimeout(resolve, 900));
+  try {
+    const { searchParams } = new URL(request.url);
+    const query = parseProductsQuery(searchParams);
+    const result = await getProducts(query);
 
-  let filteredProducts = PRODUCTS;
+    logInfo("products_route_succeeded", {
+      ...logContext,
+      page: result.meta.page,
+      limit: result.meta.limit,
+      total: result.meta.total,
+      resultCount: result.data.length,
+      source: result.meta.source,
+      hasFallbackError: Boolean(result.error),
+      durationMs: getDurationMs(startedAt),
+    });
 
-  if (search) {
-    const searchLower = search.toLowerCase();
-    filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchLower));
+    return NextResponse.json(result, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
+  } catch (error) {
+    logError("products_route_failed", error, {
+      ...logContext,
+      durationMs: getDurationMs(startedAt),
+    });
+
+    return NextResponse.json(
+      {
+        data: [],
+        meta: {
+          total: 0,
+          page: 1,
+          limit: 9,
+          totalPages: 1,
+          source: "mock",
+        },
+        error: {
+          code: "PRODUCTS_API_UNAVAILABLE",
+          message: "No pudimos cargar los productos. Intenta nuevamente.",
+        },
+      },
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      },
+    );
   }
-
-  if (categories.length > 0) {
-    filteredProducts = filteredProducts.filter(p => categories.includes(p.category));
-  }
-  if (consumptionTypes.length > 0) {
-    filteredProducts = filteredProducts.filter(p => consumptionTypes.includes(p.consumptionType));
-  }
-
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
-  return NextResponse.json({
-    data: paginatedProducts,
-    meta: {
-      total: filteredProducts.length,
-      page,
-      limit,
-      totalPages: Math.ceil(filteredProducts.length / limit)
-    }
-  });
 }

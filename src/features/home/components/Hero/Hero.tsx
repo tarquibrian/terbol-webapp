@@ -15,7 +15,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { ArrowRight } from "lucide-react";
-import { env } from "@/config/env"; // <-- Para construir URL de la imagen del CMS si fuera necesario
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface HeroProps {
   data?: {
@@ -31,16 +31,7 @@ interface HeroProps {
 export function Hero({ data }: HeroProps) {
   // Construir la URL completa de la imagen si viene del CMS, o usar el fallback
   const getImageUrl = (path?: string) => {
-    if (!path) return "/images/productextra2.png";
-    if (path.startsWith("http")) return path;
-
-    // Remover slash inicial si existe para evitar dobles slashes al unir
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/")
-      ? env.STORAGE_URL
-      : `${env.STORAGE_URL}/`;
-
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path, "/images/productextra2.png") ?? "/images/productextra2.png";
   };
 
   const imageUrl = getImageUrl(data?.image);

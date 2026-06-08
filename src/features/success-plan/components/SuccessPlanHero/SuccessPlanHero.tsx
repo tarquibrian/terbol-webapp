@@ -13,7 +13,6 @@
 
 import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 

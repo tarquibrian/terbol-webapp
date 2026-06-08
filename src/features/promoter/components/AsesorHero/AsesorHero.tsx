@@ -8,7 +8,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import {
-  ArrowRight,
   ArrowUpRight,
   CheckCircle2,
   PackageCheck,

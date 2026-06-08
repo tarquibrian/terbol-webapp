@@ -6,3 +6,4 @@
  */
 
 export { HomeView } from "./views/HomeView";
+export type { HomePageData } from "./views/HomeView";

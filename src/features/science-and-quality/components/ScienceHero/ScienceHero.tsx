@@ -11,7 +11,7 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import Image from "next/image";
-import { env } from "@/config/env";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface DetailItem {
   id: number | string;
@@ -35,13 +35,7 @@ interface ScienceHeroProps {
  */
 export function ScienceHero({ data }: ScienceHeroProps) {
   const getIconUrl = (path?: string) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    const baseStorage = env.STORAGE_URL.endsWith("/")
-      ? env.STORAGE_URL
-      : `${env.STORAGE_URL}/`;
-    return `${baseStorage}${cleanPath}`;
+    return resolveImageAsset(path);
   };
 
   const header = data?.header || {
@@ -91,6 +85,7 @@ export function ScienceHero({ data }: ScienceHeroProps) {
                       src={getIconUrl(detail.icon)!}
                       alt={detail.title}
                       fill
+                      sizes="24px"
                       className="object-contain"
                     />
                   </div>

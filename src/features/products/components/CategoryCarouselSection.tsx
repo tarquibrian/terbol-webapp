@@ -4,7 +4,7 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { Carousel, CarouselContent, CarouselItem, Autoplay } from "@/components/ui/Carousel/Carousel";
+import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
 
 export interface CategoryData {
   id: string;
@@ -44,7 +44,7 @@ export function CategoryCarouselSection({
       : [];
   }, [autoplayIntervalMs]);
 
-  const [api, setApi] = React.useState<any>();
+  const [api, setApi] = React.useState<CarouselApi>();
 
   /** Navega al slide anterior y resetea el timer de autoplay */
   const handlePrev = React.useCallback(() => {

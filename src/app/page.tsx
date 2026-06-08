@@ -10,26 +10,27 @@
 import * as React from "react";
 import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { HomeView } from "@/features/home";
+import { HomeView, type HomePageData } from "@/features/home";
 import { cmsApi } from "@/lib/cms-api";
+import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
+import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 
 /** Metadatos SEO de la página de inicio */
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Inicio Inspira | Productos farmacéuticos, suplementos y vitaminas",
   description:
     "Descubre nuestra amplia gama de productos farmacéuticos, suplementos y vitaminas de alta calidad para tu salud y bienestar.",
-  openGraph: {
-    title: "Inicio Inspira | Productos farmacéuticos, suplementos y vitaminas",
-    description:
-      "Descubre nuestra amplia gama de productos de alta calidad para tu salud y bienestar.",
-    // TODO: Reemplazar con imagen OG de la Home cuando esté disponible
-    // images: [{ url: "/images/og-home.jpg", width: 1200, height: 630, alt: "Terbol Home" }],
-  },
-};
+  path: "/",
+  image: SEO_IMAGES.home,
+});
 
 export default async function HomePage() {
-  const homeDataResponse = await cmsApi.getHome();
-  const homeData = homeDataResponse?.data;
+  const homeData = await getOptionalCmsPageData<HomePageData>(
+    () => cmsApi.getHome(),
+    CMS_PAGE_SCHEMAS.home,
+    "home",
+  );
 
   return (
     <PageLayout>

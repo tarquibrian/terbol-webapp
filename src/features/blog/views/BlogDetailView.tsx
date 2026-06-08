@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { ArticleCard } from "../components/ArticleCard";
 import { EndBanner } from "@/components/layout/EndBanner";
+import { sanitizeCmsHtml } from "@/lib/html-sanitizer";
 import type { BlogPost } from "../data/cmsBlog";
 
 interface BlogDetailViewProps {
@@ -15,6 +16,7 @@ export function BlogDetailView({
   latestPosts = [],
 }: BlogDetailViewProps) {
   const hasLatestPosts = latestPosts.length > 0;
+  const sanitizedContent = sanitizeCmsHtml(post.content);
 
   return (
     <>
@@ -90,7 +92,7 @@ export function BlogDetailView({
                     prose-a:text-primary-orange hover:prose-a:text-orange-600
                     prose-strong:text-gray-900 prose-strong:font-bold
                     prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-li:mb-2"
-                  dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
+                  dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
               </AnimateOnScroll>
             </article>

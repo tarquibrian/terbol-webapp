@@ -43,7 +43,7 @@ export function Testimonials() {
                 ))}
               </div>
               <p className="text-muted-foreground italic flex-1 text-lg leading-relaxed">
-                "{item.text}"
+                &ldquo;{item.text}&rdquo;
               </p>
               <div>
                 <p className="font-bold text-foreground">{item.name}</p>

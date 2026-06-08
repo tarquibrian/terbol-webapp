@@ -4,64 +4,35 @@
  * Muestra la información completa de un producto seleccionado:
  * imagen grande, nombre, precio, descripción y botón de acción.
  *
- * Recibe el `productId` como prop desde la thin page dinámica
+ * Recibe el producto resuelto desde la thin page dinámica
  * `app/products/[id]/page.tsx`.
  */
 
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
-import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { getProductById } from "../data/products";
 import { ProductOverviewSection } from "../components/ProductOverviewSection";
 import { ProductTargetSection } from "../components/ProductTargetSection";
 import { ProductFeaturesSection } from "../components/ProductFeaturesSection";
 import { ProductCarouselSection } from "../components/ProductCarouselSection";
 import { CategoryCarouselSection } from "../components/CategoryCarouselSection";
-import { PRODUCTS, CONSUMPTION_CATEGORIES } from "../data/products";
+import type { Product } from "../data/products";
+import { CONSUMPTION_CATEGORIES } from "../data/products";
 
 /** Props del componente ProductDetailView */
 interface ProductDetailViewProps {
-  /** ID del producto a mostrar */
-  productId: string;
+  /** Producto a mostrar */
+  product: Product;
+  /** Productos relacionados ya resueltos en servidor */
+  relatedProducts: Product[];
 }
 
 /**
  * Vista de detalle de un producto individual.
  *
- * Busca el producto en los datos y muestra su información completa.
- * Si el producto no existe, muestra un mensaje de error con link
- * para volver al catálogo.
- *
- * @param props.productId - ID del producto obtenido desde la ruta dinámica
+ * Muestra la información completa del producto. La página dinámica se encarga
+ * de resolver datos y disparar `notFound()` si el producto no existe.
  */
-export function ProductDetailView({ productId }: ProductDetailViewProps) {
-  const product = getProductById(productId);
-
-  // ─── Producto no encontrado ───
-  if (!product) {
-    return (
-      <section className="w-full py-24">
-        <div className="max-w-[1512px] mx-auto px-16 text-center">
-          <h1 className="text-h2 font-bold text-foreground mb-4">
-            Producto no encontrado
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            El producto que buscas no existe o fue removido del catálogo.
-          </p>
-          <Link
-            href="/products"
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-          >
-            ← Volver al catálogo
-          </Link>
-        </div>
-      </section>
-    );
-  }
-
-  // ─── Vista de detalle ───
+export function ProductDetailView({ product, relatedProducts }: ProductDetailViewProps) {
   return (
     <>
       {/* Componente principal de Übersicht del producto (Imágenes e Info) */}
@@ -75,7 +46,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
 
       {/* SECCION DE CAROUSEL */}
       <ProductCarouselSection
-        products={PRODUCTS.filter(p => p.id !== product.id)}
+        products={relatedProducts}
         title="Productos Relacionados"
         maxItems={9}
         autoplayIntervalMs={4000}

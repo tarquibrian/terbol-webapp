@@ -24,6 +24,15 @@ export function MobileMenu({ className }: { className?: string }) {
     }, 400); 
   };
 
+  const handleSearch = (query: string) => {
+    const normalizedQuery = query.trim();
+    const params = new URLSearchParams();
+    if (normalizedQuery) params.set("search", normalizedQuery);
+    const search = params.toString();
+
+    handleNavigation(`/products${search ? `?${search}` : ""}`);
+  };
+
   return (
     <div className={className}>
       {/* Botón Trigger Hamburguesa */}
@@ -57,10 +66,7 @@ export function MobileMenu({ className }: { className?: string }) {
           <SearchInput
             placeholder="Buscar productos..."
             className="w-full"
-            onSearch={(query) => {
-              console.log("Buscando en móvil:", query);
-              setIsOpen(false);
-            }}
+            onSearch={handleSearch}
           />
         </div>
 
