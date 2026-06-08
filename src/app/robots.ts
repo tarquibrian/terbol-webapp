@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { env } from "@/config/env";
+import { getAbsoluteUrl } from "@/lib/seo";
 
 /**
  * Genera dinámicamente el archivo robots.txt en tiempo de build o runtime.
@@ -24,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
       disallow: "/api/",
     },
     // Le indica automáticamente el dominio donde está el sitemap en base al entorno.
-    sitemap: `${env.SITE_URL}/sitemap.xml`,
+    sitemap: getAbsoluteUrl("/sitemap.xml"),
   };
 }

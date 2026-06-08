@@ -38,6 +38,32 @@ export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL ?? `${SITE_URL}/api`;
 
 /**
+ * Endpoint server-side del catalogo de productos.
+ *
+ * Si no esta definido, la app usa el mock local de productos. Cuando el equipo
+ * del API entregue el endpoint, definirlo como URL absoluta o como ruta relativa
+ * a `NEXT_PUBLIC_API_URL`.
+ * Ej: `PRODUCTS_API_URL=https://api.tudominio.com/products`
+ */
+export const PRODUCTS_API_URL: string = process.env.PRODUCTS_API_URL?.trim() ?? "";
+
+/**
+ * Endpoint server-side opcional para detalle de producto.
+ *
+ * Acepta URLs absolutas o rutas relativas a `NEXT_PUBLIC_API_URL`. Puede
+ * incluir `{id}` o `:id` como placeholder.
+ * Ej: `PRODUCTS_DETAIL_API_URL=/products/{id}`
+ */
+export const PRODUCTS_DETAIL_API_URL: string =
+  process.env.PRODUCTS_DETAIL_API_URL?.trim() ?? "";
+
+/**
+ * Token opcional para el API de productos. Solo se usa desde Route Handlers.
+ */
+export const PRODUCTS_API_TOKEN: string =
+  process.env.PRODUCTS_API_TOKEN?.trim() ?? "";
+
+/**
  * URL base del almacenamiento de archivos (imágenes, documentos) del CMS.
  * 
  * En local: usa el storage local de Laravel.
@@ -59,5 +85,8 @@ export const STORAGE_URL: string =
 export const env = {
   SITE_URL,
   API_URL,
+  PRODUCTS_API_URL,
+  PRODUCTS_DETAIL_API_URL,
+  PRODUCTS_API_TOKEN,
   STORAGE_URL,
 } as const;

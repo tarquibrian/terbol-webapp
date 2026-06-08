@@ -5,7 +5,15 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { env } from "@/config/env";
 import { cmsApi } from "@/lib/cms-api";
+import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
 import type { CmsSocialNetwork } from "@/lib/cms-social";
+import {
+  createOpenGraphImage,
+  DEFAULT_SEO,
+  SEO_IMAGES,
+  SITE_NAME,
+} from "@/lib/seo";
 import "./globals.css";
 
 // Configuración de Roboto con las variantes solicitadas: regular(400), medium(500), semibold(600), bold(700)
@@ -27,38 +35,32 @@ const roboto = Roboto({
  */
 export const metadata: Metadata = {
   metadataBase: new URL(env.SITE_URL),
-  title: {
-    default: "Terbol — Soluciones para la salud",
-    template: "%s | Terbol",
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: {
+    telephone: false,
   },
-  description:
-    "Descubre nuestra amplia gama de productos farmacéuticos y suplementos de alta calidad. Terbol: comprometidos con tu salud y bienestar.",
+  title: {
+    default: DEFAULT_SEO.title,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_SEO.description,
   openGraph: {
-    siteName: "Terbol",
+    siteName: SITE_NAME,
     type: "website",
     locale: "es_ES",
-    // Cada página puede sobreescribir title, description e images.
-    // Esto actúa como fallback global.
-    title: "Terbol — Soluciones para la salud",
-    description:
-      "Descubre nuestra amplia gama de productos farmacéuticos y suplementos de alta calidad.",
-    images: [
-      {
-        // Imagen placeholder hasta que exista la imagen OG oficial.
-        // Reemplazar con la imagen final: /images/og-default.jpg
-        url: "/logo-terbol-main.svg",
-        width: 1200,
-        height: 630,
-        alt: "Terbol — Soluciones para la salud",
-      },
-    ],
+    title: DEFAULT_SEO.title,
+    description: DEFAULT_SEO.description,
+    url: DEFAULT_SEO.path,
+    images: [createOpenGraphImage(SEO_IMAGES.default)],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terbol — Soluciones para la salud",
-    description:
-      "Descubre nuestra amplia gama de productos farmacéuticos y suplementos de alta calidad.",
-    images: ["/logo-terbol-main.svg"],
+    title: DEFAULT_SEO.title,
+    description: DEFAULT_SEO.description,
+    images: [SEO_IMAGES.default.url],
   },
 };
 
@@ -67,15 +69,13 @@ interface HomeFallbackData {
 }
 
 async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined> {
-  try {
-    const homeDataResponse = await cmsApi.getHome();
-    const homeData = homeDataResponse?.data as HomeFallbackData | undefined;
+  const homeData = await getOptionalCmsPageData<HomeFallbackData>(
+    () => cmsApi.getHome(),
+    CMS_PAGE_SCHEMAS.home,
+    "layout.home",
+  );
 
-    return homeData?.social_networks;
-  } catch (error) {
-    console.error("[Footer] No se pudieron cargar las redes sociales:", error);
-    return undefined;
-  }
+  return homeData.social_networks;
 }
 
 export default async function RootLayout({

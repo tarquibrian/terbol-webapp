@@ -1,31 +1,40 @@
 import type { MetadataRoute } from "next";
-import { env } from "@/config/env";
+import { getAllProductIds } from "@/features/products";
+import { getAbsoluteUrl } from "@/lib/seo";
+
+type SitemapEntryConfig = {
+  path: string;
+  changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
+  priority: number;
+};
 
 const STATIC_ROUTES = [
-  "",
-  "/about",
-  "/blog",
-  "/faq",
-  "/products",
-  "/promoter",
-  "/science-and-quality",
-  "/success-plan",
-] as const;
-
-function getAbsoluteUrl(path: string): string {
-  const siteUrl = env.SITE_URL.replace(/\/$/, "");
-
-  return `${siteUrl}${path}`;
-}
+  { path: "", changeFrequency: "weekly", priority: 1 },
+  { path: "/about", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/faq", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/products", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/promoter", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/science-and-quality", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/success-plan", changeFrequency: "monthly", priority: 0.8 },
+] as const satisfies readonly SitemapEntryConfig[];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-
-  // TODO: Agregar /blog/{id} cuando backend confirme paginación o endpoint liviano.
-  return STATIC_ROUTES.map((route) => ({
-    url: getAbsoluteUrl(route),
+  const staticRoutes = STATIC_ROUTES.map((route) => ({
+    url: getAbsoluteUrl(route.path),
     lastModified,
-    changeFrequency: route === "" || route === "/blog" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : 0.8,
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
   }));
+  const productRoutes = getAllProductIds().map((id) => ({
+    url: getAbsoluteUrl(`/products/${encodeURIComponent(id)}`),
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // Los detalles de blog no se incluyen hasta que el CMS exponga un indice
+  // liviano y estable; consultar cada articulo en build haria fragil el sitemap.
+  return [...staticRoutes, ...productRoutes];
 }

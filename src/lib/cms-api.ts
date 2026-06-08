@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { logError } from "@/lib/logger";
 
 interface CmsEnvelope<T = unknown> {
   success?: boolean;
@@ -22,6 +23,7 @@ async function fetchCMS<T>(
   cacheOptions?: RequestInit["cache"],
 ): Promise<T> {
   const url = `${env.API_URL}${endpoint}`;
+  const endpointPath = endpoint.split("?")[0];
 
   const options: RequestInit = {
     headers: {
@@ -44,15 +46,16 @@ async function fetchCMS<T>(
 
     if (!res.ok) {
       // Capturamos el error HTTP para facilitar el debugeo
-      throw new Error(`Error HTTP: ${res.status} al solicitar ${url}`);
+      throw new Error(`Error HTTP: ${res.status} al solicitar ${endpointPath}`);
     }
 
     return (await res.json()) as T;
   } catch (error) {
-    console.error(
-      `[CMS API Error] Fallo al obtener data de ${endpoint}:`,
-      error,
-    );
+    logError("cms_fetch_failed", error, {
+      endpoint: endpointPath,
+      tagCount: tags.length,
+      cacheMode: cacheOptions ?? "isr",
+    });
     // Relanzamos el error para que pueda ser manejado por un error.tsx en Next.js
     throw error;
   }
@@ -114,17 +117,5 @@ export const cmsApi = {
     fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, [
       "learn",
       `blog-${id}`,
-    ]),
-
-  // ─── Productos (Pendientes de desarrollo) ──────────────────────────────────
-
-  // TODO: Actualizar estas rutas cuando el equipo de Laravel termine los endpoints
-  getProducts: () =>
-    fetchCMS<CmsEnvelope>("/sections/products", ["products-list"]),
-
-  getProductDetail: (id: string | number) =>
-    fetchCMS<CmsEnvelope>(`/sections/products/${id}`, [
-      "products",
-      `product-${id}`,
     ]),
 };

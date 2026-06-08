@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+import { isSvgAsset, resolveImageAsset } from "@/lib/image-assets";
 
 export interface CmsSocialNetwork {
   id?: string | number;
@@ -9,25 +9,17 @@ export interface CmsSocialNetwork {
 }
 
 export function normalizeSocialNetworks(
-  socialNetworks?: CmsSocialNetwork[],
+  socialNetworks?: CmsSocialNetwork[] | null,
 ): CmsSocialNetwork[] {
-  return [...(socialNetworks ?? [])]
+  if (!Array.isArray(socialNetworks)) return [];
+
+  return [...socialNetworks]
     .filter((social) => Boolean(social.name && social.url))
     .sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0));
 }
 
 export function resolveCmsAsset(path?: string | null): string | null {
-  if (!path) return null;
-  if (/^https?:\/\//.test(path) || path.startsWith("data:")) return path;
-  if (path.startsWith("/")) return path;
-
-  const baseStorage = env.STORAGE_URL.endsWith("/")
-    ? env.STORAGE_URL
-    : `${env.STORAGE_URL}/`;
-
-  return `${baseStorage}${path}`;
+  return resolveImageAsset(path);
 }
 
-export function isSvgAsset(path?: string | null): boolean {
-  return Boolean(path?.split("?")[0]?.toLowerCase().endsWith(".svg"));
-}
+export { isSvgAsset };
