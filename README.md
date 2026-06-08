@@ -73,6 +73,38 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
 ## 🚀 Desarrollo
 
+### Requisitos
+
+- Node.js 24 LTS. El proyecto incluye `.nvmrc`, `.node-version` y `engine-strict=true` para bloquear instalaciones con otra version mayor de Node.
+- npm 11 o compatible.
+
+Si usas `nvm`:
+
+```bash
+nvm install
+nvm use
+```
+
+### Variables de entorno
+
+Crea un archivo `.env` tomando como base `.env.example`. No commitees `.env`; solo `.env.example` debe versionarse.
+
+| Variable | Requerida | Uso |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | No en local, sí en producción | URL pública del sitio para metadata, canonicals y Open Graph. |
+| `NEXT_PUBLIC_API_URL` | Sí | URL base del CMS/API general para secciones, blog y contenido. |
+| `NEXT_PUBLIC_STORAGE_URL` | Sí | URL base de imágenes/archivos servidos por el CMS. |
+| `REVALIDATE_SECRET` | Sí para revalidación | Secret del webhook `POST /api/revalidate`; se envía en `x-revalidate-secret`. |
+| `PRODUCTS_API_URL` | No | Endpoint server-side del catálogo real. Si está vacío, `/api/products` usa el mock local. |
+| `PRODUCTS_DETAIL_API_URL` | No | Endpoint server-side del detalle de producto. Acepta `{id}` o `:id`; si está vacío, intenta `PRODUCTS_API_URL/{id}`. |
+| `PRODUCTS_API_TOKEN` | No | Token opcional para el API de productos; solo se usa en el servidor. |
+
+Notas operativas:
+- `PRODUCTS_API_URL` puede ser una URL absoluta o una ruta relativa a `NEXT_PUBLIC_API_URL`.
+- `PRODUCTS_DETAIL_API_URL` puede ser una URL absoluta o relativa, por ejemplo `/products/{id}`.
+- `REVALIDATE_SECRET` debe ser un valor aleatorio y diferente por entorno.
+- Las variables con prefijo `NEXT_PUBLIC_` son visibles para el cliente; no guardar secretos ahí.
+
 Para iniciar el servidor local:
 
 ```bash
@@ -82,6 +114,17 @@ yarn dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000) en el navegador.
+
+### Verificación local
+
+```bash
+npm run test
+npm run lint
+./node_modules/.bin/tsc --noEmit
+npm run build
+```
+
+`npm run test` cubre los contratos críticos de revalidación, productos, normalización CMS, sanitización HTML y headers de seguridad.
 
 ## 🎨 Estilos
 
