@@ -28,6 +28,11 @@ const DEFAULT_REMOTE_IMAGE_PATTERNS = [
     protocol: "https",
     hostname: "terbol.blob.core.windows.net",
   },
+  {
+    // Miniaturas del facade de YouTube (carga diferida del player).
+    protocol: "https",
+    hostname: "i.ytimg.com",
+  },
 ] as const satisfies readonly RemotePattern[];
 
 const ENV_IMAGE_SOURCE_URLS = [

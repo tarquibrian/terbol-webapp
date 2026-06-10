@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { YouTubeFacade } from "@/components/ui/YouTubeFacade";
 
 interface AboutProps {
   data?: {
@@ -30,13 +31,10 @@ export const About = ({ data }: AboutProps) => {
 
           <AnimateOnScroll variant="fade" delay={0.4} className="aspect-video relative rounded-lg overflow-hidden bg-primary-black">
             {data?.embed_url ? (
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src={data.embed_url.replace("youtube.com", "youtube-nocookie.com")}
+              <YouTubeFacade
+                embedUrl={data.embed_url}
+                videoId={data.video_id}
                 title="Térbol Inspira Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-500">Video no disponible</div>
