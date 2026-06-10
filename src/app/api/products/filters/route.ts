@@ -7,6 +7,8 @@ import {
   logInfo,
 } from "@/lib/logger";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   const startedAt = Date.now();
   const logContext = getRequestLogContext(request, "/api/products/filters");
@@ -23,7 +25,11 @@ export async function GET(request: Request) {
       durationMs: getDurationMs(startedAt),
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(result, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     logError("product_filters_route_failed", error, {
       ...logContext,
@@ -37,7 +43,12 @@ export async function GET(request: Request) {
         focuses: [],
         source: "unavailable",
       },
-      { status: 500 },
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      },
     );
   }
 }

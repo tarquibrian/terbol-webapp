@@ -438,6 +438,7 @@ export function ProductsView() {
     appliedFocusIds,
     appliedProductTypeIds,
     currentPage,
+    isPresent,
     legacyCategories,
     reloadToken,
     searchQuery,

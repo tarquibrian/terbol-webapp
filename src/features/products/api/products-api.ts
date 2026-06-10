@@ -36,6 +36,8 @@ const MAX_LIMIT = 60;
 // El CMS revalida con { "tag": "products" } y refresca todo de una vez.
 const PRODUCTS_TAG = "products";
 const PRODUCTS_ENDPOINT = "/products";
+/** Timeout para fetches al CMS externo (ms). Evita esperas indefinidas en cold starts. */
+const CMS_FETCH_TIMEOUT_MS = 8_000;
 
 interface ProductDetailPageData {
   product: Product;
@@ -659,6 +661,7 @@ async function getExternalFilterOptions(segment: string) {
 
   const response = await fetch(url, {
     headers: createProductsHeaders(),
+    signal: AbortSignal.timeout(CMS_FETCH_TIMEOUT_MS),
     next: {
       tags: [PRODUCTS_TAG],
       revalidate: CMS_REVALIDATE_SECONDS,
@@ -721,6 +724,7 @@ async function getExternalProducts(
 
   const response = await fetch(url, {
     headers: createProductsHeaders(),
+    signal: AbortSignal.timeout(CMS_FETCH_TIMEOUT_MS),
     next: {
       tags: [PRODUCTS_TAG],
       revalidate: CMS_REVALIDATE_SECONDS,
@@ -775,6 +779,7 @@ async function getExternalProductDetail(
 
   const response = await fetch(url, {
     headers: createProductsHeaders(),
+    signal: AbortSignal.timeout(CMS_FETCH_TIMEOUT_MS),
     next: {
       tags: [PRODUCTS_TAG],
       revalidate: CMS_REVALIDATE_SECONDS,
