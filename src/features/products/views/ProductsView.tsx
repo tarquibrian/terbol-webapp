@@ -715,8 +715,10 @@ export function ProductsView() {
   );
 
   if (isPresent) {
+    // eslint-disable-next-line react-hooks/refs
     lastRenderRef.current = currentRender;
   }
 
+  // eslint-disable-next-line react-hooks/refs
   return lastRenderRef.current || currentRender;
 }

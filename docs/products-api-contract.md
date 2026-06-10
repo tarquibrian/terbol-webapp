@@ -259,15 +259,27 @@ x-revalidate-secret: <REVALIDATE_SECRET>
 Content-Type: application/json
 ```
 
-Eventos recomendados:
+El body debe incluir el tag `products`:
 
-| Evento | Tags |
+```json
+{ "tag": "products" }
+```
+
+Este tag unico purga todo el cache relacionado con productos: lista, filtros
+(types, consumption-types, focuses) y detalles individuales.
+
+| Evento | Body del webhook |
 | --- | --- |
-| Crear producto | `products-list`, `sitemap` |
-| Editar producto | `products-list`, `product-{id}` |
-| Eliminar producto | `products-list`, `product-{id}`, `sitemap` |
+| Crear producto | `{ "tag": "products" }` |
+| Editar producto | `{ "tag": "products" }` |
+| Eliminar producto | `{ "tag": "products" }` |
 
-La app ya habilita estos tags en `/api/revalidate` y usa cache `next.tags` en los fetches server-side hacia el API real de productos.
+> Si el sitemap tambien necesita actualizarse, enviar un segundo request con
+> `{ "tag": "sitemap" }` o incluir logica en el CMS para invalidar ambos.
+
+La app usa cache ISR (`next.tags: ["products"]`) en todos los fetches
+server-side al API de productos. Al recibir el webhook, `revalidateTag("products")`
+purga el Data Cache de todos estos fetches, y el proximo request obtiene data fresca.
 
 ## Manejo de errores
 
