@@ -16,7 +16,7 @@ import { ProductFeaturesSection } from "../components/ProductFeaturesSection";
 import { ProductCarouselSection } from "../components/ProductCarouselSection";
 import { CategoryCarouselSection } from "../components/CategoryCarouselSection";
 import type { Product } from "../data/products";
-import { CONSUMPTION_CATEGORIES } from "../data/products";
+import type { ProductCategoryLink } from "../api/types";
 
 /** Props del componente ProductDetailView */
 interface ProductDetailViewProps {
@@ -24,6 +24,8 @@ interface ProductDetailViewProps {
   product: Product;
   /** Productos relacionados ya resueltos en servidor */
   relatedProducts: Product[];
+  /** Enfoques sugeridos por el endpoint de detalle del producto */
+  focusCategories: ProductCategoryLink[];
 }
 
 /**
@@ -32,7 +34,11 @@ interface ProductDetailViewProps {
  * Muestra la información completa del producto. La página dinámica se encarga
  * de resolver datos y disparar `notFound()` si el producto no existe.
  */
-export function ProductDetailView({ product, relatedProducts }: ProductDetailViewProps) {
+export function ProductDetailView({
+  product,
+  relatedProducts,
+  focusCategories,
+}: ProductDetailViewProps) {
   return (
     <>
       {/* Componente principal de Übersicht del producto (Imágenes e Info) */}
@@ -42,7 +48,7 @@ export function ProductDetailView({ product, relatedProducts }: ProductDetailVie
       <ProductTargetSection product={product} />
 
       {/* Sección estática ¿Por qué elegir este producto? */}
-      <ProductFeaturesSection />
+      <ProductFeaturesSection product={product} />
 
       {/* SECCION DE CAROUSEL */}
       <ProductCarouselSection
@@ -53,9 +59,9 @@ export function ProductDetailView({ product, relatedProducts }: ProductDetailVie
       />
 
       {/* SECCION DE CATEGORIAS */}
-      <CategoryCarouselSection 
-        categories={CONSUMPTION_CATEGORIES}
-        title="Tipo de consumo"
+      <CategoryCarouselSection
+        categories={focusCategories}
+        title="Enfoques"
         autoplayIntervalMs={5000}
       />
     </>

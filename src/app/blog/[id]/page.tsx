@@ -9,6 +9,15 @@ import {
   stripHtml,
 } from "@/features/blog/data/cmsBlog";
 import { createPageMetadata } from "@/lib/seo";
+import { logError } from "@/lib/logger";
+
+/** Registra el fallo del CMS y degrada a `null` para no perder observabilidad. */
+function logCmsFailure(event: string, context: Record<string, string>) {
+  return (error: unknown) => {
+    logError(event, error, context);
+    return null;
+  };
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -16,7 +25,9 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const postResponse = await cmsApi.getBlogDetail(id).catch(() => null);
+  const postResponse = await cmsApi
+    .getBlogDetail(id)
+    .catch(logCmsFailure("blog_detail_fetch_failed", { id, scope: "metadata" }));
   const post = mapCmsBlogPost(postResponse?.data);
 
   if (!post) {
@@ -44,8 +55,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogPostPage({ params }: PageProps) {
   const { id } = await params;
   const [postResponse, latestResponse] = await Promise.all([
-    cmsApi.getBlogDetail(id).catch(() => null),
-    cmsApi.getBlogsFiltered(0, "", 1).catch(() => null),
+    cmsApi
+      .getBlogDetail(id)
+      .catch(logCmsFailure("blog_detail_fetch_failed", { id, scope: "page" })),
+    cmsApi
+      .getBlogsFiltered(0, "", 1)
+      .catch(logCmsFailure("blog_latest_fetch_failed", { id, scope: "page" })),
   ]);
 
   const post = mapCmsBlogPost(postResponse?.data);

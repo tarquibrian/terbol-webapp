@@ -24,13 +24,15 @@ const DEFAULT_REMOTE_IMAGE_PATTERNS = [
     protocol: "https",
     hostname: "cms.terbolinspira.com",
   },
+  {
+    protocol: "https",
+    hostname: "terbol.blob.core.windows.net",
+  },
 ] as const satisfies readonly RemotePattern[];
 
 const ENV_IMAGE_SOURCE_URLS = [
   process.env.NEXT_PUBLIC_STORAGE_URL,
   process.env.NEXT_PUBLIC_API_URL,
-  process.env.PRODUCTS_API_URL,
-  process.env.PRODUCTS_DETAIL_API_URL,
 ];
 
 function createRemotePatternFromUrl(urlValue: string): RemotePattern | null {

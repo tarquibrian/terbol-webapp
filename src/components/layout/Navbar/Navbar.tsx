@@ -20,8 +20,8 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
@@ -42,6 +42,13 @@ import { NAV_LINKS } from "./Navbar.constants";
  */
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isPromoterPage = pathname === "/promoter";
+  const ctaHref = isPromoterPage
+    ? "https://www.terbolinspira.com/VentaPorCatalogo/PRD"
+    : "/promoter";
+  const ctaIcon = isPromoterPage ? <ArrowUpRight /> : <ArrowRight />;
 
   return (
     // <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -104,7 +111,7 @@ export function Navbar() {
             </nav>
 
             {/* CTA Principal */}
-            <Button href="/promoter" variant="default" size="default" icon={<ArrowRight />} className="hidden md:flex" aria-label="Soy asesor de ventas">
+            <Button href={ctaHref} variant="default" size="default" icon={ctaIcon} className="hidden md:flex" aria-label="Soy asesor de ventas">
               Soy asesor de ventas
             </Button>
 

@@ -12,6 +12,11 @@
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 
 /** Represent un producto en el catálogo */
+export interface ProductInfoItem {
+  title: string;
+  description: string;
+}
+
 export interface Product {
   // ── Identificación ──
   /** Identificador único del producto */
@@ -24,8 +29,12 @@ export interface Product {
   // ── Precios & Disponibilidad ──
   /** Precio en USD */
   price: number;
+  /** Simbolo de moneda devuelto por el API */
+  currencySymbol?: string;
   /** Estado de disponibilidad */
   stockStatus?: string;
+  /** URL externa de compra, si el API la entrega */
+  purchaseUrl?: string;
 
   // ── Textos ──
   /** Descripción corta para cards del catálogo */
@@ -73,21 +82,21 @@ export interface Product {
   consumptionType: string;
   /** Si es true, el producto aparece en la sección de Destacados del Home */
   featuredProduct?: boolean;
+  /** Identificadores del CMS para filtros por ID */
+  productTypeId?: string;
+  consumptionTypeId?: string;
+  focusId?: string;
+  focusName?: string;
+
+  // ── Detalle enriquecido desde CMS ──
+  targetImage?: string;
+  targetItems?: ProductInfoItem[];
+  whyChooseImage?: string;
+  whyChooseTitle?: string;
+  whyChooseItems?: string[];
 }
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
-
-/**
- * Categorías basadas en el "Tipo de Consumo"
- */
-export const CONSUMPTION_CATEGORIES = [
-  { id: "c1", name: "Longevidad y Prevención",  imageSrc: "/categories/img1.png", href: "/products?consumptionType=Longevidad%20y%20Prevenci%C3%B3n" },
-  { id: "c2", name: "Rendimiento y Energía",    imageSrc: "/categories/img2.png", href: "/products?consumptionType=Rendimiento%20y%20Energ%C3%ADa" },
-  { id: "c3", name: "Foco y Antiestrés",         imageSrc: "/categories/img3.png", href: "/products?consumptionType=Foco%20y%20Antiestr%C3%A9s" },
-  { id: "c4", name: "Belleza y Piel",            imageSrc: "/categories/img4.png", href: "/products?consumptionType=Belleza%20y%20Piel" },
-  { id: "c5", name: "Salud Inmunológica",        imageSrc: "/categories/img1.png", href: "/products?consumptionType=Salud%20Inmunol%C3%B3gica" },
-  { id: "c6", name: "Descanso y Reparación",     imageSrc: "/categories/img2.png", href: "/products?consumptionType=Descanso%20y%20Reparaci%C3%B3n" },
-];
 
 /**
  * Array de productos base para desarrollo.
@@ -300,14 +309,6 @@ export const PRODUCTS: Product[] = Array.from({ length: 30 }).map((_, index) => 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Productos marcados como destacados para mostrar en el Home.
- * Solo se tomarán los primeros 3 con featuredProduct: true.
- */
-export const FEATURED_PRODUCTS: Product[] = BASE_PRODUCTS
-  .filter((p) => p.featuredProduct)
-  .slice(0, 3);
-
-/**
  * Busca un producto por su ID.
  */
 export function getProductById(id: string): Product | undefined {
@@ -326,9 +327,6 @@ export function getAllProductIds(): string[] {
  * Obtiene productos paginados simulando un API backend.
  */
 export async function getPaginatedProducts(page: number, limit: number) {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 900));
-
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
   const paginatedProducts = PRODUCTS.slice(startIndex, endIndex);

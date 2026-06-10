@@ -8,26 +8,27 @@ import * as React from "react";
 import { ScienceHero } from "../components/ScienceHero";
 import { ScienceDevelopmentSteps } from "../components/ScienceDevelopmentSteps";
 import { ScienceAbout } from "../components/ScienceAbout";
-import { Banner } from "@/components/layout/Banner";
+import { AdvisorBanner, getAdvisorWhatsAppUrl } from "@/components/layout/AdvisorBanner";
 
 export interface ScienceQualityPageData {
   cover_section?: React.ComponentProps<typeof ScienceHero>["data"];
   development_products?: React.ComponentProps<typeof ScienceDevelopmentSteps>["data"];
   evidence?: React.ComponentProps<typeof ScienceAbout>["data"];
-  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
 }
 
 interface ScienceQualityViewProps {
   data?: ScienceQualityPageData;
 }
 
-export function ScienceQualityView({ data }: ScienceQualityViewProps) {
+export async function ScienceQualityView({ data }: ScienceQualityViewProps) {
+  const whatsappUrl = await getAdvisorWhatsAppUrl();
+
   return (
     <>
-      <ScienceHero data={data?.cover_section} />
+      <ScienceHero data={data?.cover_section} whatsappUrl={whatsappUrl} />
       <ScienceDevelopmentSteps data={data?.development_products} />
       <ScienceAbout data={data?.evidence} />
-      <Banner data={data?.advisor_registration} />
+      <AdvisorBanner />
     </>
   );
 }

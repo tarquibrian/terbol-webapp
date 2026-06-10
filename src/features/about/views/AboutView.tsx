@@ -9,12 +9,11 @@ import * as React from "react";
 import { AboutHero } from "../components/AboutHero";
 import { WhoWeAre } from "../components/WhoWeAre";
 import { ContactForm } from "../components/ContactForm";
-import { Banner } from "@/components/layout/Banner";
+import { AdvisorBanner } from "@/components/layout/AdvisorBanner";
 
 export interface AboutPageData {
   identity?: React.ComponentProps<typeof AboutHero>["data"];
   about_us?: React.ComponentProps<typeof WhoWeAre>["data"];
-  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
 }
 
 interface AboutViewProps {
@@ -27,7 +26,7 @@ export function AboutView({ data }: AboutViewProps) {
       <AboutHero data={data?.identity} />
       <WhoWeAre data={data?.about_us} />
       <ContactForm />
-      <Banner data={data?.advisor_registration} />
+      <AdvisorBanner />
     </>
   );
 }

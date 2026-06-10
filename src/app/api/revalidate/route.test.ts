@@ -71,16 +71,16 @@ test("POST /api/revalidate deduplica tags validos y llama revalidateTag", async 
   process.env.REVALIDATE_SECRET = "secret-ok";
 
   const response = await POST(
-    createRequest({ tag: ["home", "blog-12", "home"] }, "secret-ok"),
+    createRequest({ tag: ["home", "blog", "home"] }, "secret-ok"),
   );
   const body = await response.json();
 
   assert.equal(response.status, 200);
   assert.equal(body.success, true);
-  assert.deepEqual(body.data.tags, ["home", "blog-12"]);
+  assert.deepEqual(body.data.tags, ["home", "blog"]);
   assert.deepEqual(nextCacheMock().calls, [
     ["home", "max"],
-    ["blog-12", "max"],
+    ["blog", "max"],
   ]);
 });
 
@@ -98,17 +98,33 @@ test("POST /api/revalidate rechaza tags no permitidos", async () => {
   assert.equal(nextCacheMock().calls.length, 0);
 });
 
-test("POST /api/revalidate rechaza tags legacy de productos", async () => {
+test("POST /api/revalidate acepta los tags 'products' y 'blog'", async () => {
   process.env.REVALIDATE_SECRET = "secret-ok";
 
   const response = await POST(
-    createRequest({ tag: ["products-list", "product-1"] }, "secret-ok"),
+    createRequest({ tag: ["products", "blog"] }, "secret-ok"),
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(body.success, true);
+  assert.deepEqual(body.data.tags, ["products", "blog"]);
+  assert.deepEqual(nextCacheMock().calls, [
+    ["products", "max"],
+    ["blog", "max"],
+  ]);
+});
+
+test("POST /api/revalidate rechaza los tags dinamicos antiguos", async () => {
+  process.env.REVALIDATE_SECRET = "secret-ok";
+
+  const response = await POST(
+    createRequest({ tag: ["product-1", "blog-12", "products-list"] }, "secret-ok"),
   );
   const body = await response.json();
 
   assert.equal(response.status, 400);
   assert.equal(body.success, false);
-  assert.deepEqual(body.data.invalidTags, ["products-list", "product-1"]);
-  assert.deepEqual(body.data.allowedPatterns, ["blog-{id}"]);
+  assert.deepEqual(body.data.invalidTags, ["product-1", "blog-12", "products-list"]);
   assert.equal(nextCacheMock().calls.length, 0);
 });

@@ -11,63 +11,145 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { FeaturedProductCard } from "./FeaturedProductCard";
 import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
-import { CONSUMPTION_CATEGORIES, FEATURED_PRODUCTS } from "@/features/products/data/products";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
+import type { ProductCategoryLink } from "@/features/products/api/types";
+import type { Product } from "@/features/products/data/products";
 
-export function FeaturedProducts() {
-  const plugin = React.useMemo(() => {
+interface FeaturedProductsProps {
+  featuredProducts: Product[];
+  focusCategories: ProductCategoryLink[];
+}
+
+export function FeaturedProducts({
+  featuredProducts,
+  focusCategories,
+}: FeaturedProductsProps) {
+  const productPlugins = React.useMemo(() => {
+    return [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })];
+  }, []);
+  const focusPlugins = React.useMemo(() => {
     return [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })];
   }, []);
 
-  const [api, setApi] = React.useState<CarouselApi>();
+  const [productApi, setProductApi] = React.useState<CarouselApi>();
+  const [focusApi, setFocusApi] = React.useState<CarouselApi>();
+  const hasFeaturedProducts = featuredProducts.length > 0;
+  const hasFocusCategories = focusCategories.length > 0;
+  const hasMultipleFeaturedProducts = featuredProducts.length > 1;
+  const hasFeaturedProductDesktopControls = featuredProducts.length > 3;
 
-  const handlePrev = React.useCallback(() => {
-    api?.scrollPrev();
-    api?.plugins()?.autoplay?.reset();
-  }, [api]);
+  const handleProductPrev = React.useCallback(() => {
+    productApi?.scrollPrev();
+    productApi?.plugins()?.autoplay?.reset();
+  }, [productApi]);
 
-  const handleNext = React.useCallback(() => {
-    api?.scrollNext();
-    api?.plugins()?.autoplay?.reset();
-  }, [api]);
+  const handleProductNext = React.useCallback(() => {
+    productApi?.scrollNext();
+    productApi?.plugins()?.autoplay?.reset();
+  }, [productApi]);
 
+  const handleFocusPrev = React.useCallback(() => {
+    focusApi?.scrollPrev();
+    focusApi?.plugins()?.autoplay?.reset();
+  }, [focusApi]);
+
+  const handleFocusNext = React.useCallback(() => {
+    focusApi?.scrollNext();
+    focusApi?.plugins()?.autoplay?.reset();
+  }, [focusApi]);
+
+
+  if (!hasFeaturedProducts && !hasFocusCategories) return null;
 
   return (
     <section className="wrapper-section">
       <div className="wrapper-content">
-        {/* Cabecera de la sección */}
-        <div className="flex items-center justify-between gap-4 mb-8">
-          <AnimateOnScroll variant="slide-up">
-            <h2 className="heading-h4 font-bold text-foreground whitespace-nowrap">
-              Productos Destacados
-            </h2>
-          </AnimateOnScroll>
-          <div className="w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
-        </div>
+        {hasFeaturedProducts && (
+          <Carousel
+            opts={{ loop: hasMultipleFeaturedProducts, align: "start" }}
+            plugins={hasMultipleFeaturedProducts ? productPlugins : []}
+            setApi={setProductApi}
+            className="flex flex-col gap-8"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <AnimateOnScroll variant="slide-up">
+                <h2 className="heading-h4 font-bold text-foreground whitespace-nowrap">
+                  Productos Destacados
+                </h2>
+              </AnimateOnScroll>
+              <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
 
-        {/* Grid de Productos Interactivos (máx. 3 products con featuredProduct: true) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4">
-          {FEATURED_PRODUCTS.map((product, index) => (
-            <AnimateOnScroll key={product.id} variant="slide-up" delay={(index + 1) * 0.1}>
-              <FeaturedProductCard
-                id={product.id}
-                number={String(index + 1).padStart(2, "0")}
-                name={product.shortName ?? product.name}
-                imageSrc={product.featuredCoverImage ?? product.cardImage}
-                productImageSrc={product.featuredBgImage ?? product.cardImage}
-              />
+              {hasFeaturedProductDesktopControls && (
+                <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
+                  <button
+                    onClick={handleProductPrev}
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    aria-label="Producto anterior"
+                  >
+                    <ChevronLeft size={24} strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={handleProductNext}
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    aria-label="Producto siguiente"
+                  >
+                    <ChevronRight size={24} strokeWidth={1.5} />
+                  </button>
+                </AnimateOnScroll>
+              )}
+            </div>
+
+            <AnimateOnScroll variant="slide-up" delay={0.2}>
+              <div className="relative w-full">
+                <CarouselContent>
+                  {featuredProducts.map((product, index) => (
+                    <CarouselItem
+                      key={product.id}
+                      className="w-full sm:basis-1/2 lg:basis-1/3"
+                    >
+                      <FeaturedProductCard
+                        id={product.id}
+                        number={String(index + 1).padStart(2, "0")}
+                        name={product.shortName ?? product.name}
+                        imageSrc={product.featuredCoverImage ?? product.cardImage}
+                        productImageSrc={product.featuredBgImage ?? product.cardImage}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+
+                {hasMultipleFeaturedProducts && (
+                  <div className="flex md:hidden justify-center gap-4 mt-4">
+                    <button
+                      onClick={handleProductPrev}
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      aria-label="Producto anterior"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      onClick={handleProductNext}
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      aria-label="Producto siguiente"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </div>
+                )}
+              </div>
             </AnimateOnScroll>
-          ))}
-        </div>
+          </Carousel>
+        )}
 
         {/* Sección de Categorías */}
-        <div className="mt-12 md:mt-24">
+        {hasFocusCategories && (
+        <div className={hasFeaturedProducts ? "mt-12 md:mt-24" : ""}>
           <Carousel
             opts={{ loop: true, align: "start" }}
-            plugins={plugin}
-            setApi={setApi}
+            plugins={focusPlugins}
+            setApi={setFocusApi}
             className="flex flex-col gap-8"
           >
             <div className="flex items-center justify-between gap-4">
@@ -78,17 +160,17 @@ export function FeaturedProducts() {
               </AnimateOnScroll>
               <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
 
-              {CONSUMPTION_CATEGORIES.length > 3 && (
+              {focusCategories.length > 3 && (
                 <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
                   <button
-                    onClick={handlePrev}
+                    onClick={handleFocusPrev}
                     className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                     aria-label="Anterior"
                   >
                     <ChevronLeft size={24} strokeWidth={1.5} />
                   </button>
                   <button
-                    onClick={handleNext}
+                    onClick={handleFocusNext}
                     className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                     aria-label="Siguiente"
                   >
@@ -102,7 +184,7 @@ export function FeaturedProducts() {
               <div className="relative w-full">
                 <div className="px-0 md:px-0">
                   <CarouselContent>
-                    {CONSUMPTION_CATEGORIES.map((category, index) => (
+                    {focusCategories.map((category, index) => (
                       <CarouselItem
                         key={category.id}
                         className="w-full sm:basis-1/2 lg:basis-1/4"
@@ -120,17 +202,17 @@ export function FeaturedProducts() {
                 </div>
 
                 {/* Controles para Mobile */}
-                {CONSUMPTION_CATEGORIES.length > 1 && (
+                {focusCategories.length > 1 && (
                   <div className="flex md:hidden justify-center gap-4 mt-4">
                     <button
-                      onClick={handlePrev}
+                      onClick={handleFocusPrev}
                       className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                       aria-label="Anterior"
                     >
                       <ChevronLeft size={20} />
                     </button>
                     <button
-                      onClick={handleNext}
+                      onClick={handleFocusNext}
                       className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
                       aria-label="Siguiente"
                     >
@@ -142,6 +224,7 @@ export function FeaturedProducts() {
             </AnimateOnScroll>
           </Carousel>
         </div>
+        )}
 
         <div className="w-full flex items-center justify-center">
           <Button

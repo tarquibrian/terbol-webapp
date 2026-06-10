@@ -12,7 +12,12 @@ interface ProductTargetSectionProps {
 }
 
 export function ProductTargetSection({ product }: ProductTargetSectionProps) {
-  const data = TARGET_AUDIENCES[product.consumptionType];
+  const data = product.targetItems && product.targetItems.length > 0
+    ? {
+        image: product.targetImage ?? "/images/productextra1.png",
+        items: product.targetItems,
+      }
+    : TARGET_AUDIENCES[product.consumptionType];
 
   if (!data || data.items.length === 0) {
     return null; // Fallback if no target data is provided for this type

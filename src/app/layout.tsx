@@ -5,8 +5,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { env } from "@/config/env";
 import { cmsApi } from "@/lib/cms-api";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
-import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
 import type { CmsSocialNetwork } from "@/lib/cms-social";
 import {
   createOpenGraphImage,
@@ -64,18 +62,19 @@ export const metadata: Metadata = {
   },
 };
 
-interface HomeFallbackData {
+interface FooterResponse {
   social_networks?: CmsSocialNetwork[];
 }
 
 async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined> {
-  const homeData = await getOptionalCmsPageData<HomeFallbackData>(
-    () => cmsApi.getHome(),
-    CMS_PAGE_SCHEMAS.home,
-    "layout.home",
-  );
+  try {
+    const response = await cmsApi.getFooter();
+    const data = response?.data as FooterResponse | undefined;
 
-  return homeData.social_networks;
+    return data?.social_networks;
+  } catch {
+    return undefined;
+  }
 }
 
 export default async function RootLayout({

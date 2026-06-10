@@ -15,6 +15,7 @@ import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import type { Product } from "../../data/products";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 /** Props del componente ProductCard */
 interface ProductCardProps {
@@ -37,6 +38,12 @@ interface ProductCardProps {
 export function ProductCard({ product, index = 0, animationDelay, disableAnimation = false }: ProductCardProps) {
   // Si se provee, usamos el delay custom; sino, el por defecto para grid-cols-3
   const delay = animationDelay !== undefined ? animationDelay : 0.1 * (index % 3);
+  const currencySymbol = product.currencySymbol ?? "Bs.";
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    setImageLoaded(false);
+  }, [product.cardImage]);
 
   const cardContent = (
     <Link
@@ -53,14 +60,30 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
       {/* Imagen del producto */}
       <div className="relative w-full aspect-square overflow-hidden bg-muted/30 px-8 py-4">
         <div className="relative w-full h-full flex items-center justify-center">
-          <Image
-            src={product.cardImage}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-contain transition-transform duration-300"
-            priority={index < 3}
+          <div
+            aria-hidden="true"
+            className={cn(
+              "absolute inset-4 rounded-md bg-primary-soft-gray-light transition-opacity duration-300",
+              imageLoaded ? "opacity-0" : "opacity-100 animate-pulse",
+            )}
           />
+          <div
+            className={cn(
+              "relative h-full w-full transition-[opacity,transform] duration-500 ease-out",
+              imageLoaded ? "scale-100 opacity-100" : "scale-[0.96] opacity-0",
+            )}
+          >
+            <Image
+              src={product.cardImage}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+              priority={index < 3}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageLoaded(true)}
+            />
+          </div>
         </div>
 
       </div>
@@ -77,7 +100,7 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
         </div>
         <div className="flex justify-between items-center">
           <p className="text-xl font-bold text-gray-900 mt-1">
-            Bs. {product.price.toFixed(2)}
+            {currencySymbol} {product.price.toFixed(2)}
           </p>
           <Button
             variant="default"

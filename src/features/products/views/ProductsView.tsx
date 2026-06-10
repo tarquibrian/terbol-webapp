@@ -5,32 +5,41 @@
  * La paginación se sincroniza con la URL (?page=2) para que las
  * URLs sean compartibles y navegables.
  *
- * El cliente consulta `/api/products`; la integracion con el API real se
- * configura del lado servidor con `PRODUCTS_API_URL`.
+ * El cliente consulta `/api/products`; la integracion real se resuelve del
+ * lado servidor contra los endpoints fijos de productos del CMS.
  */
 
 "use client";
 
 import * as React from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { AnimatePresence, motion, useIsPresent } from "framer-motion";
 import { ProductsHero } from "../components/ProductsHero";
 import { ProductCard, ProductCardSkeleton } from "../components/ProductCard";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import type { Product } from "../data/products";
-import { CONSUMPTION_CATEGORIES } from "../data/products";
 import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
 import { Check, Filter } from "lucide-react";
 import { EndBanner } from "@/components/layout/EndBanner";
 import { logError } from "@/lib/logger";
 import { cn } from "@/lib/utils";
-import type { ProductsListResponse } from "../api/types";
+import { getOptionIdsByName } from "../api/filter-options";
+import type {
+  ProductFilterOption,
+  ProductsFiltersResponse,
+  ProductsListResponse,
+} from "../api/types";
 
 // ─── Constantes ───
 const PRODUCTS_PER_PAGE = 9;
-const PRODUCT_TYPE_FILTERS = ["Medicamentos", "Suplementos", "Vitaminas"];
+const FILTER_SKELETON_GROUPS = [3, 3, 4] as const;
 
-type ProductFilterType = "category" | "consumptionType";
+type ProductFilterType = "productType" | "consumptionType" | "focus";
+
+function uniqueValues(values: string[]) {
+  return [...new Set(values.filter(Boolean))];
+}
 
 interface FilterCheckboxProps {
   id: string;
@@ -51,7 +60,7 @@ function FilterCheckbox({
     <label
       htmlFor={id}
       className={cn(
-        "group flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-1 py-1 text-foreground/80 transition-colors hover:text-primary-orange focus-within:text-primary-orange focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        "group flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-md px-1 py-0.5 text-foreground/80 transition-colors hover:text-primary-orange focus-within:text-primary-orange focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 lg:min-h-8",
         checked && "font-medium text-primary-orange",
       )}
     >
@@ -79,126 +88,296 @@ function FilterCheckbox({
   );
 }
 
+function FilterButtonSkeleton() {
+  return (
+    <div
+      className="w-full lg:hidden mb-6 flex justify-start"
+      aria-hidden="true"
+    >
+      <div className="h-9 w-36 rounded-md bg-primary-soft-gray-light animate-pulse" />
+    </div>
+  );
+}
+
+function FilterContentSkeleton() {
+  return (
+    <div className="flex flex-col gap-5" aria-hidden="true">
+      <div className="hidden h-7 w-24 rounded-md bg-primary-soft-gray-light animate-pulse lg:block" />
+
+      {FILTER_SKELETON_GROUPS.map((itemCount, groupIndex) => (
+        <React.Fragment key={`filter-skeleton-group-${groupIndex}`}>
+          {groupIndex > 0 && <div className="w-full h-px bg-gray-100" />}
+          <fieldset>
+            <div className="mb-2.5 h-4 w-36 rounded bg-primary-soft-gray-light animate-pulse" />
+            <ul className="space-y-1.5">
+              {Array.from({ length: itemCount }).map((_, itemIndex) => (
+                <li
+                  key={`filter-skeleton-item-${groupIndex}-${itemIndex}`}
+                  className="flex min-h-9 w-full items-center gap-2.5 px-1 py-0.5 lg:min-h-8"
+                >
+                  <span className="h-4 w-4 shrink-0 rounded-sm bg-primary-soft-gray-light animate-pulse" />
+                  <span
+                    className={cn(
+                      "h-4 rounded bg-primary-soft-gray-light animate-pulse",
+                      itemIndex % 3 === 0
+                        ? "w-40"
+                        : itemIndex % 3 === 1
+                          ? "w-32"
+                          : "w-24",
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
+          </fieldset>
+        </React.Fragment>
+      ))}
+
+      <div className="h-10 w-full rounded-md bg-primary-soft-gray-balance animate-pulse" />
+    </div>
+  );
+}
+
 // ─── Filtros (Desktop & Mobile reutilizable) ───
 const FilterContent = ({
   idPrefix,
   onApply,
-  selectedCategories,
-  selectedConsumptionTypes,
+  productTypes,
+  consumptionTypes,
+  focuses,
+  selectedProductTypeIds,
+  selectedConsumptionTypeIds,
+  selectedFocusIds,
   onFilterChange
 }: {
   idPrefix: string;
   onApply: () => void;
-  selectedCategories: string[];
-  selectedConsumptionTypes: string[];
+  productTypes: ProductFilterOption[];
+  consumptionTypes: ProductFilterOption[];
+  focuses: ProductFilterOption[];
+  selectedProductTypeIds: string[];
+  selectedConsumptionTypeIds: string[];
+  selectedFocusIds: string[];
   onFilterChange: (type: ProductFilterType, value: string) => void;
-}) => (
-  <form
-    className="flex flex-col gap-8"
-    onSubmit={(event) => {
-      event.preventDefault();
-      onApply();
-    }}
-  >
-    <h2 className="text-xl font-bold text-foreground hidden lg:block">Filtros</h2>
+}) => {
+  const hasFilters = productTypes.length > 0 || consumptionTypes.length > 0 || focuses.length > 0;
 
-    {/* Categorías (Multi-select) */}
-    <fieldset>
-      <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
-        Tipo de producto
-      </legend>
-      <ul className="space-y-3">
-        {PRODUCT_TYPE_FILTERS.map((cat) => {
-          const isSelected = selectedCategories.includes(cat);
-          const id = `${idPrefix}-category-${cat.toLowerCase()}`;
+  if (!hasFilters) return null;
 
-          return (
-            <li key={cat}>
-              <FilterCheckbox
-                id={id}
-                name={`${idPrefix}-category`}
-                label={cat}
-                checked={isSelected}
-                onChange={() => onFilterChange("category", cat)}
-              />
-            </li>
-          );
-        })}
-      </ul>
-    </fieldset>
+  return (
+    <form
+      className="flex flex-col gap-5"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onApply();
+      }}
+    >
+      <h2 className="text-xl font-bold text-foreground hidden lg:block">Filtros</h2>
 
-    <div className="w-full h-px bg-gray-100"></div>
+      {productTypes.length > 0 && (
+        <fieldset>
+          <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-2.5">
+            Tipo de producto
+          </legend>
+          <ul className="space-y-1.5">
+            {productTypes.map((type) => {
+              const isSelected = selectedProductTypeIds.includes(type.id);
+              const id = `${idPrefix}-product-type-${type.id}`;
 
-    {/* Laboratorio (Multi-select) */}
-    <fieldset>
-      <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-4">
-        Tipo de consumo
-      </legend>
-      <ul className="space-y-3">
-        {CONSUMPTION_CATEGORIES.map((categoryObj) => {
-          const lab = categoryObj.name;
-          const isSelected = selectedConsumptionTypes.includes(lab);
-          const id = `${idPrefix}-consumption-${categoryObj.id}`;
+              return (
+                <li key={type.id}>
+                  <FilterCheckbox
+                    id={id}
+                    name={`${idPrefix}-productType`}
+                    label={type.name}
+                    checked={isSelected}
+                    onChange={() => onFilterChange("productType", type.id)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </fieldset>
+      )}
 
-          return (
-            <li key={categoryObj.id}>
-              <FilterCheckbox
-                id={id}
-                name={`${idPrefix}-consumptionType`}
-                label={lab}
-                checked={isSelected}
-                onChange={() => onFilterChange("consumptionType", lab)}
-              />
-            </li>
-          );
-        })}
-      </ul>
-    </fieldset>
+      {productTypes.length > 0 && (consumptionTypes.length > 0 || focuses.length > 0) && (
+        <div className="w-full h-px bg-gray-100"></div>
+      )}
 
-    {/* Botón Aplicar */}
-    <Button size="sm" variant="secondary" className="w-full" type="submit">Aplicar Filtros</Button>
-  </form>
-);
+      {consumptionTypes.length > 0 && (
+        <fieldset>
+          <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-2.5">
+            Tipo de consumo
+          </legend>
+          <ul className="space-y-1.5">
+            {consumptionTypes.map((type) => {
+              const isSelected = selectedConsumptionTypeIds.includes(type.id);
+              const id = `${idPrefix}-consumption-type-${type.id}`;
+
+              return (
+                <li key={type.id}>
+                  <FilterCheckbox
+                    id={id}
+                    name={`${idPrefix}-consumptionType`}
+                    label={type.name}
+                    checked={isSelected}
+                    onChange={() => onFilterChange("consumptionType", type.id)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </fieldset>
+      )}
+
+      {(productTypes.length > 0 || consumptionTypes.length > 0) && focuses.length > 0 && (
+        <div className="w-full h-px bg-gray-100"></div>
+      )}
+
+      {focuses.length > 0 && (
+        <fieldset>
+          <legend className="text-body-small font-semibold uppercase tracking-wider text-gray-900 mb-2.5">
+            Enfoque
+          </legend>
+          <ul className="space-y-1.5">
+            {focuses.map((focus) => {
+              const isSelected = selectedFocusIds.includes(focus.id);
+              const id = `${idPrefix}-focus-${focus.id}`;
+
+              return (
+                <li key={focus.id}>
+                  <FilterCheckbox
+                    id={id}
+                    name={`${idPrefix}-focus`}
+                    label={focus.name}
+                    checked={isSelected}
+                    onChange={() => onFilterChange("focus", focus.id)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </fieldset>
+      )}
+
+      <Button size="sm" variant="secondary" className="w-full" type="submit">Aplicar Filtros</Button>
+    </form>
+  );
+};
 
 // ─── Vista Principal ───
 export function ProductsView() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  // Detecta si la página está en el DOM activo o en transición de salida.
+  // Cuando isPresent es false (fade-out), congelamos las animaciones internas
+  // para evitar parpadeos por conflictos entre AnimatePresence anidados.
+  const isPresent = useIsPresent();
+  const lastRenderRef = React.useRef<React.ReactNode>(null);
 
   // Leer la página actual desde la URL (?page=X)
   const currentPage = Number(searchParams.get("page")) || 1;
-  const appliedCategories = React.useMemo(
-    () => searchParams.getAll("category"),
+  const appliedProductTypeIds = React.useMemo(
+    () => [
+      ...searchParams.getAll("productTypeId"),
+      ...searchParams.getAll("product_type_ids[]"),
+    ],
     [searchParams],
   );
-  const appliedConsumptionTypes = React.useMemo(
-    () => searchParams.getAll("consumptionType"),
+  const appliedFocusIds = React.useMemo(
+    () => [
+      ...searchParams.getAll("focusId"),
+      ...searchParams.getAll("focus_ids[]"),
+    ],
     [searchParams],
   );
+  const appliedConsumptionTypeIds = React.useMemo(
+    () => [
+      ...searchParams.getAll("consumptionTypeId"),
+      ...searchParams.getAll("consumption_type_ids[]"),
+    ],
+    [searchParams],
+  );
+  const legacyCategories = React.useMemo(() => searchParams.getAll("category"), [searchParams]);
   const searchQuery = searchParams.get("search");
 
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [productTypes, setProductTypes] =
+    React.useState<ProductFilterOption[]>([]);
+  const [consumptionTypes, setConsumptionTypes] =
+    React.useState<ProductFilterOption[]>([]);
+  const [focuses, setFocuses] = React.useState<ProductFilterOption[]>([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [totalResults, setTotalResults] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [filtersLoading, setFiltersLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
   const [reloadToken, setReloadToken] = React.useState(0);
   const [isFiltersOpen, setIsFiltersOpen] = React.useState(false);
 
   // Estados locales para los filtros antes de aplicarlos
-  const [pendingCategories, setPendingCategories] = React.useState<string[]>([]);
-  const [pendingConsumptionTypes, setPendingConsumptionTypes] = React.useState<string[]>([]);
+  const [pendingProductTypeIds, setPendingProductTypeIds] = React.useState<string[]>([]);
+  const [pendingConsumptionTypeIds, setPendingConsumptionTypeIds] = React.useState<string[]>([]);
+  const [pendingFocusIds, setPendingFocusIds] = React.useState<string[]>([]);
+  const hasAvailableFilters = productTypes.length > 0 || consumptionTypes.length > 0 || focuses.length > 0;
+  const shouldReserveFiltersLayout = filtersLoading || hasAvailableFilters;
+  const productsResultKey = `products-results-${currentPage}-${products
+    .map((product) => product.id)
+    .join("-")}`;
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+
+    fetch("/api/products/filters", { signal: controller.signal })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("No pudimos cargar los filtros de productos.");
+        return (await res.json()) as ProductsFiltersResponse;
+      })
+      .then((result) => {
+        if (result.productTypes.length > 0) setProductTypes(result.productTypes);
+        if (result.consumptionTypes.length > 0) setConsumptionTypes(result.consumptionTypes);
+        if (result.focuses.length > 0) setFocuses(result.focuses);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        logError("product_filters_client_fetch_failed", err, {
+          route: "/products",
+        });
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setFiltersLoading(false);
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   // Sincronizar estado local cuando cambian los params de la URL
   React.useEffect(() => {
-    setPendingCategories(searchParams.getAll("category"));
-    setPendingConsumptionTypes(searchParams.getAll("consumptionType"));
-  }, [searchParams]);
+    setPendingProductTypeIds(
+      uniqueValues([
+        ...appliedProductTypeIds,
+        ...getOptionIdsByName(legacyCategories, productTypes),
+      ]),
+    );
+    setPendingConsumptionTypeIds(uniqueValues(appliedConsumptionTypeIds));
+    setPendingFocusIds(uniqueValues(appliedFocusIds));
+  }, [
+    appliedConsumptionTypeIds,
+    appliedFocusIds,
+    appliedProductTypeIds,
+    legacyCategories,
+    productTypes,
+  ]);
 
   // ─── Fetch de productos ───
   // Se dispara cada vez que cambia 'currentPage' o los parámetros de la URL
   React.useEffect(() => {
+    // No iniciar fetches si la página está saliendo (transición de salida)
+    if (!isPresent) return;
+
     const controller = new AbortController();
     setLoading(true);
     setFetchError(null);
@@ -206,8 +385,10 @@ export function ProductsView() {
     const params = new URLSearchParams();
     params.set("page", currentPage.toString());
     params.set("limit", PRODUCTS_PER_PAGE.toString());
-    appliedCategories.forEach((cat) => params.append("category", cat));
-    appliedConsumptionTypes.forEach((type) => params.append("consumptionType", type));
+    appliedProductTypeIds.forEach((id) => params.append("productTypeId", id));
+    appliedConsumptionTypeIds.forEach((id) => params.append("consumptionTypeId", id));
+    appliedFocusIds.forEach((id) => params.append("focusId", id));
+    legacyCategories.forEach((cat) => params.append("category", cat));
     if (searchQuery) params.set("search", searchQuery);
 
     fetch(`/api/products?${params.toString()}`, {
@@ -236,8 +417,8 @@ export function ProductsView() {
         logError("products_client_fetch_failed", err, {
           route: "/products",
           page: currentPage,
-          categoryCount: appliedCategories.length,
-          consumptionTypeCount: appliedConsumptionTypes.length,
+          productTypeIdCount: appliedProductTypeIds.length,
+          focusIdCount: appliedFocusIds.length,
           hasSearch: Boolean(searchQuery),
         });
         setProducts([]);
@@ -253,9 +434,11 @@ export function ProductsView() {
       controller.abort();
     };
   }, [
-    appliedCategories,
-    appliedConsumptionTypes,
+    appliedConsumptionTypeIds,
+    appliedFocusIds,
+    appliedProductTypeIds,
     currentPage,
+    legacyCategories,
     reloadToken,
     searchQuery,
   ]);
@@ -273,13 +456,17 @@ export function ProductsView() {
   };
 
   const handlePendingFilterChange = (type: ProductFilterType, value: string) => {
-    if (type === "category") {
-      setPendingCategories((prev) =>
-        prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]
+    if (type === "productType") {
+      setPendingProductTypeIds((prev) =>
+        prev.includes(value) ? prev.filter((id) => id !== value) : [...prev, value]
+      );
+    } else if (type === "consumptionType") {
+      setPendingConsumptionTypeIds((prev) =>
+        prev.includes(value) ? prev.filter((id) => id !== value) : [...prev, value]
       );
     } else {
-      setPendingConsumptionTypes((prev) =>
-        prev.includes(value) ? prev.filter((t) => t !== value) : [...prev, value]
+      setPendingFocusIds((prev) =>
+        prev.includes(value) ? prev.filter((id) => id !== value) : [...prev, value]
       );
     }
   };
@@ -288,11 +475,23 @@ export function ProductsView() {
     const params = new URLSearchParams(searchParams.toString());
 
     // Clear old filters and set new ones
-    params.delete("category");
-    pendingCategories.forEach((cat) => params.append("category", cat));
+    params.delete("productTypeId");
+    params.delete("product_type_ids[]");
+    pendingProductTypeIds.forEach((id) => params.append("productTypeId", id));
 
+    params.delete("consumptionTypeId");
+    params.delete("consumptionTypeIds");
+    params.delete("consumption_type_id");
+    params.delete("consumption_type_ids[]");
+    pendingConsumptionTypeIds.forEach((id) => params.append("consumptionTypeId", id));
+
+    params.delete("focusId");
+    params.delete("focus_ids[]");
+    pendingFocusIds.forEach((id) => params.append("focusId", id));
+
+    // Clear legacy filters so URLs migrate to the canonical ID params.
+    params.delete("category");
     params.delete("consumptionType");
-    pendingConsumptionTypes.forEach((type) => params.append("consumptionType", type));
 
     // Reset page to 1 on filter application
     params.set("page", "1");
@@ -304,7 +503,7 @@ export function ProductsView() {
     setReloadToken((value) => value + 1);
   };
 
-  return (
+  const currentRender = (
     <>
       <ProductsHero totalResults={totalResults} loading={loading} />
 
@@ -313,52 +512,90 @@ export function ProductsView() {
         <div className="wrapper-content">
 
           {/* Drawer Mobile de Filtros */}
-          <Drawer
-            isOpen={isFiltersOpen}
-            onClose={() => setIsFiltersOpen(false)}
-            title="Filtros"
-            side="left"
-            className="max-w-[320px]"
-          >
-            <FilterContent
-              idPrefix="mobile-products"
-              onApply={applyFilters}
-              selectedCategories={pendingCategories}
-              selectedConsumptionTypes={pendingConsumptionTypes}
-              onFilterChange={handlePendingFilterChange}
-            />
-          </Drawer>
+          {hasAvailableFilters && (
+            <Drawer
+              isOpen={isFiltersOpen}
+              onClose={() => setIsFiltersOpen(false)}
+              title="Filtros"
+              side="left"
+              className="max-w-[320px]"
+            >
+              <FilterContent
+                idPrefix="mobile-products"
+                onApply={applyFilters}
+                productTypes={productTypes}
+                consumptionTypes={consumptionTypes}
+                focuses={focuses}
+                selectedProductTypeIds={pendingProductTypeIds}
+                selectedConsumptionTypeIds={pendingConsumptionTypeIds}
+                selectedFocusIds={pendingFocusIds}
+                onFilterChange={handlePendingFilterChange}
+              />
+            </Drawer>
+          )}
 
           {/* Botón Mostrar Filtros (Mobile) */}
-          <div className="w-full lg:hidden mb-6 flex justify-start">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsFiltersOpen(true)}
-              aria-haspopup="dialog"
-              aria-expanded={isFiltersOpen}
-              className="flex items-center gap-2 px-0"
-            >
-              <Filter size={18} aria-hidden="true" />
-              Mostrar Filtros
-            </Button>
-          </div>
+          {filtersLoading ? (
+            <FilterButtonSkeleton />
+          ) : hasAvailableFilters ? (
+            <div className="w-full lg:hidden mb-6 flex justify-start">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsFiltersOpen(true)}
+                aria-haspopup="dialog"
+                aria-expanded={isFiltersOpen}
+                className="flex items-center gap-2 px-0"
+              >
+                <Filter size={18} aria-hidden="true" />
+                Mostrar Filtros
+              </Button>
+            </div>
+          ) : null}
 
           {/* Layout Principal: Filtros + Grid de Productos */}
           <div className="flex flex-col lg:flex-row gap-x-8 gap-y-8 items-start">
 
             {/* Columna Izquierda: Filtros de Búsqueda (Desktop) */}
-            <aside className="hidden lg:block w-[300px] sticky top-32 pb-[78px] shrink-0">
-              <AnimateOnScroll variant="slide-up">
-                <FilterContent
-                  idPrefix="desktop-products"
-                  onApply={applyFilters}
-                  selectedCategories={pendingCategories}
-                  selectedConsumptionTypes={pendingConsumptionTypes}
-                  onFilterChange={handlePendingFilterChange}
-                />
-              </AnimateOnScroll>
-            </aside>
+            {shouldReserveFiltersLayout && (
+              <aside className="hidden lg:block w-[300px] sticky top-32 pb-[78px] shrink-0">
+                <AnimatePresence initial={false}>
+                  {filtersLoading && isPresent ? (
+                    <motion.div
+                      key="filters-loading"
+                      initial={{ opacity: 0.92 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      <FilterContentSkeleton />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="filters-ready"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                    >
+                      <AnimateOnScroll variant="slide-up">
+                        <FilterContent
+                          idPrefix="desktop-products"
+                          onApply={applyFilters}
+                          productTypes={productTypes}
+                          consumptionTypes={consumptionTypes}
+                          focuses={focuses}
+                          selectedProductTypeIds={pendingProductTypeIds}
+                          selectedConsumptionTypeIds={pendingConsumptionTypeIds}
+                          selectedFocusIds={pendingFocusIds}
+                          onFilterChange={handlePendingFilterChange}
+                        />
+                      </AnimateOnScroll>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </aside>
+            )}
 
             {/* Columna Derecha: Grid de Productos o Empty State */}
             <div className="flex-1 w-full" aria-busy={loading}>
@@ -376,71 +613,98 @@ export function ProductsView() {
                 </div>
               ) : null}
 
-              {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
-                    <ProductCardSkeleton key={`skeleton-${i}`} />
-                  ))}
-                </div>
-              ) : products.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {products.map((product, index) => (
-                      <ProductCard key={product.id} product={product} index={index} />
-                    ))}
-                  </div>
-
-                  {/* Paginación */}
-                  {totalPages > 1 && (
-                    <div className="mt-10 flex items-center justify-between gap-4">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={currentPage <= 1 || loading}
-                        onClick={() => goToPage(currentPage - 1)}
-                      >
-                        Atrás
-                      </Button>
-
-                      <span className="text-body-small font-medium text-gray-700">
-                        {currentPage}/{totalPages}
-                      </span>
-
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={currentPage >= totalPages || loading}
-                        onClick={() => goToPage(currentPage + 1)}
-                      >
-                        Siguiente
-                      </Button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl bg-primary-soft-gray-light border border-primary-soft-gray-balance">
-                  <div className="w-16 h-16 mb-4 rounded-full flex items-center justify-center text-primary-orange">
-                    <Filter size={48} strokeWidth={1.2} aria-hidden="true" />
-                  </div>
-                  <h3 className="heading-h4 font-bold text-gray-900 mb-4">
-                    No encontramos productos
-                  </h3>
-                  <p className="text-body-medium text-gray-500 max-w-xl mb-8">
-                    Lo sentimos, no hay resultados que coincidan con los filtros seleccionados. Intenta buscar con otro tipo de producto o consumo.
-                  </p>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setPendingCategories([]);
-                      setPendingConsumptionTypes([]);
-                      updateParams(new URLSearchParams());
-                    }}
+              <AnimatePresence initial={false}>
+                {loading && isPresent ? (
+                  <motion.div
+                    key="products-loading"
+                    initial={{ opacity: 0.92 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
                   >
-                    Limpiar todos los filtros
-                  </Button>
-                </div>
-              )}
+                    {Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
+                      <ProductCardSkeleton key={`skeleton-${i}`} />
+                    ))}
+                  </motion.div>
+                ) : products.length > 0 ? (
+                  <motion.div
+                    key={productsResultKey}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                      {products.map((product, index) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          index={index}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Paginación */}
+                    {totalPages > 1 && (
+                      <div className="mt-10 flex items-center justify-between gap-4">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          disabled={currentPage <= 1 || loading}
+                          onClick={() => goToPage(currentPage - 1)}
+                        >
+                          Atrás
+                        </Button>
+
+                        <span className="text-body-small font-medium text-gray-700">
+                          {currentPage}/{totalPages}
+                        </span>
+
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          disabled={currentPage >= totalPages || loading}
+                          onClick={() => goToPage(currentPage + 1)}
+                        >
+                          Siguiente
+                        </Button>
+                      </div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="products-empty"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="w-full h-full flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl bg-primary-soft-gray-light border border-primary-soft-gray-balance"
+                  >
+                    <div className="w-16 h-16 mb-4 rounded-full flex items-center justify-center text-primary-orange">
+                      <Filter size={48} strokeWidth={1.2} aria-hidden="true" />
+                    </div>
+                    <h3 className="heading-h4 font-bold text-gray-900 mb-4">
+                      No encontramos productos
+                    </h3>
+                    <p className="text-body-medium text-gray-500 max-w-xl mb-8">
+                      Lo sentimos, no hay resultados que coincidan con los filtros seleccionados. Intenta buscar con otro tipo de producto o enfoque.
+                    </p>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        setPendingProductTypeIds([]);
+                        setPendingConsumptionTypeIds([]);
+                        setPendingFocusIds([]);
+                        updateParams(new URLSearchParams());
+                      }}
+                    >
+                      Limpiar todos los filtros
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -448,4 +712,10 @@ export function ProductsView() {
       <EndBanner />
     </>
   );
+
+  if (isPresent) {
+    lastRenderRef.current = currentRender;
+  }
+
+  return lastRenderRef.current || currentRender;
 }

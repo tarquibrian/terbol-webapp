@@ -15,6 +15,13 @@ export interface BannerData {
   image?: string;
 }
 
+/** Construye la URL de WhatsApp a partir de country_code y phone_number. */
+export function buildWhatsAppUrl(countryCode?: string, phoneNumber?: string): string | undefined {
+  if (!countryCode || !phoneNumber) return undefined;
+  const digits = `${countryCode}${phoneNumber}`.replace(/\D/g, "");
+  return digits ? `https://wa.me/${digits}` : undefined;
+}
+
 interface BannerProps {
   data?: BannerData;
 }
@@ -67,21 +74,43 @@ export function Banner({ data }: BannerProps) {
 
               {/* Información de Contacto */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-2 text-nowrap flex-wrap">
-                <div className="flex items-center gap-3 text-gray-500">
-                  <Phone size={20} />
-                  <p className="text-body-medium">
-                    {data?.country_code && data?.phone_number 
-                      ? `${data.country_code} ${data.phone_number}`
-                      : "+591 6789 1234"}
-                  </p>
-                </div>
+                {(() => {
+                  const whatsappUrl = buildWhatsAppUrl(data?.country_code, data?.phone_number);
+                  const phoneDisplay = data?.country_code && data?.phone_number
+                    ? `${data.country_code} ${data.phone_number}`
+                    : "+591 6789 1234";
+
+                  return whatsappUrl ? (
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-gray-500 hover:text-primary-orange transition-colors"
+                    >
+                      <Phone size={20} />
+                      <span className="text-body-medium">{phoneDisplay}</span>
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-3 text-gray-500">
+                      <Phone size={20} />
+                      <p className="text-body-medium">{phoneDisplay}</p>
+                    </div>
+                  );
+                })()}
                 <div className="hidden sm:block h-3 w-[2px] bg-gray-400"></div>
-                <div className="flex items-center gap-3 text-gray-500">
-                  <Mail size={20} />
-                  <p className="text-body-medium">
-                    {data?.email || "contacto@terbolinspira.com"}
-                  </p>
-                </div>
+                {(() => {
+                  const emailAddress = data?.email || "contacto@terbolinspira.com";
+
+                  return (
+                    <a
+                      href={`mailto:${emailAddress}`}
+                      className="flex items-center gap-3 text-gray-500 hover:text-primary-orange transition-colors"
+                    >
+                      <Mail size={20} />
+                      <span className="text-body-medium">{emailAddress}</span>
+                    </a>
+                  );
+                })()}
               </div>
             </AnimateOnScroll>
           </div>

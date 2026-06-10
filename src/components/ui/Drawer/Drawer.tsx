@@ -27,9 +27,18 @@ export interface DrawerProps {
  * Componente abstracto UI: Drawer (Panel deslizable lateral).
  * Escapa el árbol de React y previene problemas de Stacking Context renderizando
  * con `createPortal` hacia `document.body`.
+ *
+ * Usa un estado de renderizado en dos fases (`visible` → `animating`) para
+ * garantizar que la animación de entrada se ejecute correctamente. Sin este
+ * patrón, el browser puede optimizar el cambio `translate-x-full → translate-x-0`
+ * y renderizarlo de forma instantánea (sin transición).
  */
 export function Drawer({ isOpen, onClose, title, children, className, instantClose, side = "right" }: DrawerProps) {
   const [mounted, setMounted] = React.useState(false);
+  // `visible` controla si los elementos del Drawer están en el DOM
+  // `animating` controla si la animación de slide-in está activa (desfasada un frame)
+  const [visible, setVisible] = React.useState(false);
+  const [animating, setAnimating] = React.useState(false);
   const titleId = React.useId();
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
   const previousActiveElementRef = React.useRef<HTMLElement | null>(null);
@@ -38,6 +47,40 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Dos fases de apertura/cierre:
+  // Apertura: isOpen=true → visible=true (monta en DOM) → siguiente frame → animating=true (anima)
+  // Cierre:   isOpen=false → animating=false (anima salida) → al terminar → visible=false (desmonta)
+  React.useEffect(() => {
+    if (isOpen) {
+      // Fase 1: montar en el DOM
+      setVisible(true);
+      // Fase 2: esperar un frame para que el browser pinte la posición inicial,
+      // luego activar la animación de entrada
+      const frameId = requestAnimationFrame(() => {
+        // Forzar un segundo frame para garantizar que el layout se estabilizó
+        requestAnimationFrame(() => {
+          setAnimating(true);
+        });
+      });
+      return () => cancelAnimationFrame(frameId);
+    } else {
+      // Activar animación de salida
+      setAnimating(false);
+    }
+  }, [isOpen]);
+
+  // Cuando la animación de salida termina, desmontar del DOM
+  const handleTransitionEnd = React.useCallback(
+    (event: React.TransitionEvent<HTMLDivElement>) => {
+      // Solo respondemos al transitionend del panel, no de hijos
+      if (event.currentTarget !== event.target) return;
+      if (!isOpen && !animating) {
+        setVisible(false);
+      }
+    },
+    [isOpen, animating],
+  );
 
   // Bloquear scroll global del documento cuando está abierto
   React.useEffect(() => {
@@ -71,7 +114,10 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!mounted) return null;
+  if (!mounted || !visible) return null;
+
+  const shouldAnimate = !instantClose;
+  const isSlideIn = animating;
 
   return createPortal(
     <>
@@ -79,8 +125,8 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
       <div
         className={cn(
           "fixed inset-0 z-100 bg-black/30 backdrop-blur-sm",
-          instantClose ? "transition-none duration-0" : "transition-opacity duration-400",
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+          shouldAnimate ? "transition-opacity duration-400" : "transition-none duration-0",
+          isSlideIn ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         )}
         onClick={onClose}
         aria-hidden="true"
@@ -93,8 +139,8 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
           className={cn(
             "absolute inset-y-0 w-full bg-background shadow-2xl flex flex-col pointer-events-auto",
             side === "left" ? "left-0" : "right-0",
-            instantClose ? "transition-none duration-0" : "transition-transform duration-600 ease-in-out",
-            isOpen ? "translate-x-0" : side === "left" ? "-translate-x-full" : "translate-x-full",
+            shouldAnimate ? "transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" : "transition-none duration-0",
+            isSlideIn ? "translate-x-0" : side === "left" ? "-translate-x-full" : "translate-x-full",
             className
           )}
           role="dialog"
@@ -103,6 +149,7 @@ export function Drawer({ isOpen, onClose, title, children, className, instantClo
           aria-hidden={!isOpen}
           inert={!isOpen}
           tabIndex={-1}
+          onTransitionEnd={handleTransitionEnd}
         >
           {/* Drawer Header (Opcional, pero se asume un diseño estándar con 'X') */}
           <div className="flex items-center justify-between p-6">

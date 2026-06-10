@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { afterEach, beforeEach, test } from "node:test";
+import { afterEach, beforeEach, mock, test } from "node:test";
 import { GET } from "./route";
 
 const originalInfo = console.info;
@@ -11,14 +11,19 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  mock.restoreAll();
   console.info = originalInfo;
   console.error = originalError;
 });
 
 test("GET /api/products devuelve contrato data/meta y no-store", async () => {
+  mock.method(globalThis, "fetch", async () => {
+    throw new TypeError("fetch failed");
+  });
+
   const response = await GET(
     new Request(
-      "http://localhost/api/products?page=1&limit=3&consumptionType=Belleza%20y%20Piel",
+      "http://localhost/api/products?page=1&limit=3&productTypeId=1",
     ),
   );
   const body = await response.json();
@@ -31,8 +36,8 @@ test("GET /api/products devuelve contrato data/meta y no-store", async () => {
   assert.equal(body.data.length, 3);
   assert.ok(
     body.data.every(
-      (product: { consumptionType: string }) =>
-        product.consumptionType === "Belleza y Piel",
+      (product: { category: string }) =>
+        product.category === "Medicamentos",
     ),
   );
 });

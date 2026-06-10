@@ -7,31 +7,42 @@ import {
   BookOpen,
   Heart,
   ShieldPlus,
+  MessageCircle,
+  Users,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 interface EndBannerProps {
   variant?: "default" | "expanded" | "compact";
   title?: string;
   description?: string;
+  /** URL directa de WhatsApp (wa.me/...) para la card de contacto */
+  whatsappUrl?: string;
 }
 
 const LARGE_CARDS = [
   {
     id: 1,
     imageSrc: "/images/endbanner1.png",
+    icon: <GraduationCap size={40} strokeWidth={1.3} />,
     title: "¿Querés aprender con nosotros?",
     description:
       "Contenido educativo, guías especializadas y publicaciones para profundizar tus conocimientos.",
+    buttonLabel: "VER PUBLICACIONES",
+    buttonIcon: <ArrowRight size={20} />,
     buttonVariant: "secondary" as const,
+    href: "/blog",
   },
   {
     id: 2,
     imageSrc: "/images/endbanner2.png",
-    title: "¿Querés aprender con nosotros?",
+    icon: <Users size={40} strokeWidth={1.3} />,
+    title: "¿Querés saber más?",
     description:
-      "Contenido educativo, guías especializadas y publicaciones para profundizar tus conocimientos.",
+      "Contactá con una promotora para recibir asesoramiento personalizado sobre qué productos son ideales para vos.",
+    buttonLabel: "CONTACTAR POR WHATSAPP",
+    buttonIcon: <MessageCircle size={20} />,
     buttonVariant: "outline" as const,
-    iconClassName: "w-full",
+    href: "/promoter#advisor-registration",
   },
 ];
 
@@ -59,7 +70,8 @@ const SMALL_CARDS = [
   },
 ];
 
-export function EndBanner({ variant = "default" }: EndBannerProps) {
+export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) {
+  const whatsappHref = whatsappUrl || "/promoter#advisor-registration";
   return (
     <section className="wrapper-section pb-16 md:pb-24">
       <div className="wrapper-content flex flex-col gap-0">
@@ -83,14 +95,14 @@ export function EndBanner({ variant = "default" }: EndBannerProps) {
               >
                 <Image
                   src={card.imageSrc}
-                  alt="End Banner"
+                  alt={card.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
                 <div className="relative backdrop-blur-md bg-white/70 rounded-md p-6 flex flex-col justify-start items-start gap-8 md:gap-10">
                   <div className="w-14 h-14 rounded-md bg-primary-black flex items-center justify-center text-white">
-                    <GraduationCap size={40} strokeWidth={1.3} />
+                    {card.icon}
                   </div>
                   <div className="flex flex-col gap-2">
                     <h3 className="heading-h5">{card.title}</h3>
@@ -98,15 +110,32 @@ export function EndBanner({ variant = "default" }: EndBannerProps) {
                       {card.description}
                     </p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant={card.buttonVariant}
-                    icon={
-                      <ArrowRight size={20} className={card.iconClassName} />
-                    }
-                  >
-                    VER PUBLICACIONES
-                  </Button>
+                  {(() => {
+                    const href = card.id === 2 ? whatsappHref : card.href;
+                    const isExternal = card.id === 2 && whatsappUrl;
+
+                    return isExternal ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          size="sm"
+                          variant={card.buttonVariant}
+                          icon={card.buttonIcon}
+                        >
+                          {card.buttonLabel}
+                        </Button>
+                      </a>
+                    ) : (
+                      <Link href={href}>
+                        <Button
+                          size="sm"
+                          variant={card.buttonVariant}
+                          icon={card.buttonIcon}
+                        >
+                          {card.buttonLabel}
+                        </Button>
+                      </Link>
+                    );
+                  })()}
                 </div>
               </div>
             ))}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FaqHero } from "../components/FaqHero";
 import { EndBanner } from "@/components/layout/EndBanner";
-import { Banner } from "@/components/layout/Banner";
+import { AdvisorBanner, getAdvisorWhatsAppUrl } from "@/components/layout/AdvisorBanner";
 
 export interface FaqPageData {
   cover_section?: React.ComponentProps<typeof FaqHero>["data"] extends infer T
@@ -14,14 +14,15 @@ export interface FaqPageData {
       ? Faqs
       : never
     : never;
-  advisor_registration?: React.ComponentProps<typeof Banner>["data"];
 }
 
 interface FaqViewProps {
   data?: FaqPageData;
 }
 
-export function FaqView({ data }: FaqViewProps) {
+export async function FaqView({ data }: FaqViewProps) {
+  const whatsappUrl = await getAdvisorWhatsAppUrl();
+
   return (
     <>
       <FaqHero data={{ cover: data?.cover_section, faqs: data?.faq }} />
@@ -29,8 +30,9 @@ export function FaqView({ data }: FaqViewProps) {
         variant="expanded"
         title="¿Aún tienes dudas? Hablemos."
         description=""
+        whatsappUrl={whatsappUrl}
       />
-      <Banner data={data?.advisor_registration} />
+      <AdvisorBanner />
     </>
   );
 }

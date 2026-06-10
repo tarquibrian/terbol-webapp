@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import { serverEnv } from "@/config/env";
 import {
   getDurationMs,
   getRequestLogContext,
@@ -11,15 +12,21 @@ import {
 const VALID_TAGS = new Set([
   "home",
   "footer",
+  "advisor-registration",
   "about",
   "success-plan",
   "learn",
   "help",
   "promoter",
   "science",
+  // Tag único para todo el contenido de productos (lista, filtros y detalle).
+  "products",
+  // Tag único para el detalle de artículos del blog.
+  "blog",
+  "sitemap",
 ]);
 
-const VALID_DYNAMIC_TAG_PATTERNS = [/^blog-[1-9]\d*$/];
+const VALID_DYNAMIC_TAG_PATTERNS: RegExp[] = [];
 
 interface RevalidateRequestBody {
   tag?: unknown;
@@ -58,7 +65,7 @@ function getRevalidationTags(body: unknown): string[] {
  *   x-revalidate-secret: TU_TOKEN_SECRETO
  * Body:
  *   { "tag": "home" }
- *   { "tag": ["blog-12", "learn"] }
+ *   { "tag": ["products", "blog"] }
  */
 export async function POST(request: NextRequest) {
   const startedAt = Date.now();
@@ -68,7 +75,7 @@ export async function POST(request: NextRequest) {
     const secret = request.headers.get("x-revalidate-secret");
 
     // 1. Proteger el endpoint (definir REVALIDATE_SECRET en .env)
-    const validSecret = process.env.REVALIDATE_SECRET;
+    const validSecret = serverEnv.REVALIDATE_SECRET;
     if (!validSecret) {
       logError("revalidate_missing_secret", undefined, {
         ...logContext,
@@ -117,7 +124,6 @@ export async function POST(request: NextRequest) {
           data: {
             invalidTags,
             allowedTags: [...VALID_TAGS],
-            allowedPatterns: ["blog-{id}"],
           },
         },
         { status: 400 }

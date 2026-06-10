@@ -1,3 +1,4 @@
+import { CMS_REVALIDATE_SECONDS } from "@/config/cache";
 import { env } from "@/config/env";
 import { logError } from "@/lib/logger";
 
@@ -6,8 +7,6 @@ interface CmsEnvelope<T = unknown> {
   message?: string;
   data?: T;
 }
-
-const DEFAULT_CMS_REVALIDATE_SECONDS = 60 * 60;
 
 /**
  * Función genérica interna para realizar peticiones al CMS de Laravel.
@@ -38,7 +37,7 @@ async function fetchCMS<T>(
     options.cache = cacheOptions;
   } else {
     // Estrategia ISR: webhook por tag + revalidación temporal como fallback
-    options.next = { tags, revalidate: DEFAULT_CMS_REVALIDATE_SECONDS };
+    options.next = { tags, revalidate: CMS_REVALIDATE_SECONDS };
   }
 
   try {
@@ -68,7 +67,7 @@ async function fetchCMS<T>(
 export const cmsApi = {
   // ─── Secciones Principales Estáticas (ISR) ──────────────────────────────────
 
-  getHome: () => fetchCMS<CmsEnvelope>("/sections/home", ["home", "footer"]),
+  getHome: () => fetchCMS<CmsEnvelope>("/sections/home", ["home"]),
 
   getAbout: () => fetchCMS<CmsEnvelope>("/sections/about", ["about"]),
 
@@ -83,12 +82,20 @@ export const cmsApi = {
 
   getScience: () => fetchCMS<CmsEnvelope>("/sections/science", ["science"]),
 
+  // ─── Endpoints Globales (compartidos entre páginas) ────────────────────────
+
+  getFooter: () => fetchCMS<CmsEnvelope>("/footer", ["footer"]),
+
+  getAdvisorRegistration: () =>
+    fetchCMS<CmsEnvelope>("/advisor-registration", ["advisor-registration"]),
+
   // ─── Blog / Artículos ──────────────────────────────────────────────────────
 
   /**
    * Obtiene la lista paginada y filtrada de artículos del blog.
-   * Al depender de parámetros dinámicos, optamos por no cachear agresivamente
-   * u omitir el caché para obtener datos frescos al filtrar.
+   * ISR con tag "blog": cada combinación de filtros/búsqueda/página se cachea en
+   * el Data Cache y se revalida on-demand cuando el CMS dispara { "tag": "blog" }
+   * (más el fallback temporal). Mismo patrón que la lista de productos.
    */
   getBlogsFiltered: (
     categoryId: string | number = 0,
@@ -101,21 +108,17 @@ export const cmsApi = {
       page: String(page),
     });
 
-    // Usamos 'no-store' (SSR dinámico) para búsquedas, o configuramos un revalidate muy corto
     return fetchCMS<CmsEnvelope>(
       `/sections/learn/blogs?${queryParams.toString()}`,
-      ["learn"],
-      "no-store",
+      ["blog"],
     );
   },
 
   /**
    * Obtiene el detalle de un artículo específico.
-   * Etiquetado con un tag general y uno específico para revalidar solo este artículo.
+   * Tag único "blog": el CMS revalida con { "tag": "blog" } y refresca lista y
+   * detalle de una vez (ambos ISR con el mismo tag).
    */
   getBlogDetail: (id: string | number) =>
-    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, [
-      "learn",
-      `blog-${id}`,
-    ]),
+    fetchCMS<CmsEnvelope>(`/sections/learn/blogs/${id}`, ["blog"]),
 };

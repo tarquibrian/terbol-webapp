@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllProductIds } from "@/features/products";
+import { getProductSitemapIds } from "@/features/products/api/products-api";
 import { getAbsoluteUrl } from "@/lib/seo";
 
 type SitemapEntryConfig = {
@@ -19,7 +19,7 @@ const STATIC_ROUTES = [
   { path: "/success-plan", changeFrequency: "monthly", priority: 0.8 },
 ] as const satisfies readonly SitemapEntryConfig[];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
   const staticRoutes = STATIC_ROUTES.map((route) => ({
     url: getAbsoluteUrl(route.path),
@@ -27,7 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
-  const productRoutes = getAllProductIds().map((id) => ({
+  const productIds = await getProductSitemapIds();
+  const productRoutes = productIds.map((id) => ({
     url: getAbsoluteUrl(`/products/${encodeURIComponent(id)}`),
     lastModified,
     changeFrequency: "monthly" as const,

@@ -15,6 +15,7 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 interface SuccessPlanHeroProps {
   data?: {
@@ -22,12 +23,14 @@ interface SuccessPlanHeroProps {
     title?: string;
     description?: string;
   };
+  /** URL directa de WhatsApp (wa.me/...) para el botón de contacto */
+  whatsappUrl?: string;
 }
 
 /**
  * Hero de la sección Plan de Éxito con descripción del programa Terbol.
  */
-export function SuccessPlanHero({ data }: SuccessPlanHeroProps) {
+export function SuccessPlanHero({ data, whatsappUrl }: SuccessPlanHeroProps) {
   return (
     <section className="wrapper-section">
       <div className="wrapper-content flex flex-col items-center gap-6 min-h-[400px] justify-center">
@@ -48,12 +51,27 @@ export function SuccessPlanHero({ data }: SuccessPlanHeroProps) {
           </p>
         </AnimateOnScroll>
         <AnimateOnScroll variant="slide-up" delay={0.3} className="flex gap-4 md:flex-row flex-col w-full items-center justify-center">
-          <Button variant="default" size="default" className="w-full md:w-fit" icon={<MessageCircle strokeWidth={1.75} />}>
+          <Button
+            variant="default"
+            size="default"
+            className="w-full md:w-fit"
+            icon={<MessageCircle strokeWidth={1.75} />}
+            href={whatsappUrl}
+            target={whatsappUrl ? "_blank" : undefined}
+            rel={whatsappUrl ? "noopener noreferrer" : undefined}
+          >
             Contactar por whatsapp
           </Button>
-          <Button variant="outline" size="default" className="min-w-full min-full md:min-w-[300px]" icon={<ArrowRight strokeWidth={1.75} />}>
-            Saber más
-          </Button>
+          <Link href="/promoter" className="min-w-full md:min-w-[300px]">
+            <Button
+              variant="outline"
+              size="default"
+              className="w-full"
+              icon={<ArrowRight strokeWidth={1.75} />}
+            >
+              Saber más
+            </Button>
+          </Link>
         </AnimateOnScroll>
       </div>
     </section>

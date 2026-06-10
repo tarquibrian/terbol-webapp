@@ -13,19 +13,9 @@ export interface CategoryData {
   href: string;
 }
 
-// Datos de categorías de ejemplo
-const DEFAULT_CATEGORIES: CategoryData[] = [
-  { id: "1", name: "Energía y Vitalidad", imageSrc: "/categories/img1.png", href: "/products?category=energia" },
-  { id: "2", name: "Sistema Inmunológico", imageSrc: "/categories/img2.png", href: "/products?category=inmunologico" },
-  { id: "3", name: "Belleza y Piel", imageSrc: "/categories/img3.png", href: "/products?category=belleza" },
-  { id: "4", name: "Rendimiento Deportivo", imageSrc: "/categories/img4.png", href: "/products?category=deporte" },
-  { id: "5", name: "Longevidad", imageSrc: "/categories/img1.png", href: "/products?category=longevidad" },
-  { id: "6", name: "Descanso y Sueño", imageSrc: "/categories/img2.png", href: "/products?category=descanso" },
-];
-
 interface CategoryCarouselSectionProps {
   /** Las categorías a mostrar en el carousel */
-  categories?: CategoryData[];
+  categories: CategoryData[];
   /** Título de la sección */
   title?: string;
   /** Intervalo de auto-play en milisegundos. 0 para desactivar. */
@@ -33,8 +23,8 @@ interface CategoryCarouselSectionProps {
 }
 
 export function CategoryCarouselSection({
-  categories = DEFAULT_CATEGORIES,
-  title = "Tipo de consumo",
+  categories,
+  title = "Enfoques",
   autoplayIntervalMs = 5000,
 }: CategoryCarouselSectionProps) {
 

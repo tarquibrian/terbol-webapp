@@ -28,6 +28,12 @@ test("normalizeCmsPageData conserva secciones esperadas y descarta formas invali
         { id: 1, title: "Calidad", description: "Control" },
         "invalid",
       ],
+      featured_focuses: [
+        { id: 1, nombre: "Rendimiento", image: "products/focuses/focuses1.png" },
+      ],
+      featured_products: [
+        { id: 29, nombre: "Paracetamol", featured_image: "products/catalog/featured/image1.webp" },
+      ],
       development_products: "invalid",
       ignored_section: { title: "No debe salir" },
     },
@@ -40,6 +46,12 @@ test("normalizeCmsPageData conserva secciones esperadas y descarta formas invali
       title: "Inicio",
     },
     pillars: [{ id: 1, title: "Calidad", description: "Control" }],
+    featured_focuses: [
+      { id: 1, nombre: "Rendimiento", image: "products/focuses/focuses1.png" },
+    ],
+    featured_products: [
+      { id: 29, nombre: "Paracetamol", featured_image: "products/catalog/featured/image1.webp" },
+    ],
     development_products: [],
   });
   assert.ok(warnings.some((warning) => warning.includes("home-test.pillars")));

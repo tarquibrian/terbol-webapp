@@ -11,10 +11,11 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { ProductDetailView, getAllProductIds } from "@/features/products";
+import { ProductDetailView } from "@/features/products";
 import {
   getProductDetail,
   getProductDetailPageData,
+  getProductSitemapIds,
 } from "@/features/products/api/products-api";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -30,8 +31,8 @@ const getCachedProductDetailPageData = cache(getProductDetailPageData);
  * Genera los parámetros estáticos para pre-renderizar todas las
  * páginas de producto en tiempo de build (SSG).
  */
-export function generateStaticParams() {
-  return getAllProductIds().map((id) => ({ id }));
+export async function generateStaticParams() {
+  return (await getProductSitemapIds()).map((id) => ({ id }));
 }
 
 /**
@@ -77,6 +78,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <ProductDetailView
         product={pageData.product}
         relatedProducts={pageData.relatedProducts}
+        focusCategories={pageData.suggestedFocuses}
       />
     </PageLayout>
   );

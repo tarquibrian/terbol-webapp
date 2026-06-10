@@ -10,31 +10,27 @@ export const CMS_PAGE_SCHEMAS = {
     video_section: "object",
     pillars: "array",
     development_products: "array",
-    advisor_registration: "object",
-    social_networks: "array",
+    featured_products: "array",
+    featured_focuses: "array",
   },
   about: {
     identity: "object",
     about_us: "object",
-    advisor_registration: "object",
   },
   help: {
     cover_section: "object",
     faq: "array",
-    advisor_registration: "object",
   },
   science: {
     cover_section: "object",
     development_products: "array",
     evidence: "object",
-    advisor_registration: "object",
   },
   successPlan: {
     plan: "object",
     video_section: "object",
     our_proposal: "object",
     how_it_works: "object",
-    advisor_registration: "object",
   },
   promoter: {
     cover_section: "object",
@@ -42,8 +38,6 @@ export const CMS_PAGE_SCHEMAS = {
     why_be: "object",
     requirements: "object",
     affiliation_process: "object",
-    advisor_registration: "object",
-    social_networks: "array",
   },
   learn: {
     cover_section: "object",

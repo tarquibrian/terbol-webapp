@@ -3,7 +3,14 @@
 import * as React from "react";
 import { Eye, EyeOff, AlertCircle, CheckCircle2, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  runValidations,
+  type ValidationRule,
+  type ValidationState,
+} from "./validation";
 import "./FormInput.css";
+
+export type { ValidationRule, ValidationState };
 
 // ─── Country Dial Codes ────────────────────────────────────────────────────────
 
@@ -38,50 +45,6 @@ export const COUNTRY_CODES: CountryCode[] = [
   { code: "ES", dial: "+34", flag: "🇪🇸", name: "España" },
   { code: "US", dial: "+1", flag: "🇺🇸", name: "Estados Unidos" },
 ];
-
-// ─── Validation Types ──────────────────────────────────────────────────────────
-
-export type ValidationRule =
-  | { type: "required"; message?: string }
-  | { type: "minLength"; value: number; message?: string }
-  | { type: "maxLength"; value: number; message?: string }
-  | { type: "pattern"; value: RegExp; message?: string }
-  | { type: "email"; message?: string }
-  | { type: "custom"; validate: (v: string) => boolean; message: string };
-
-export type ValidationState = "idle" | "error" | "success";
-
-function runValidations(value: string, rules: ValidationRule[]): string | null {
-  for (const rule of rules) {
-    switch (rule.type) {
-      case "required":
-        if (!value.trim())
-          return rule.message ?? "Este campo es obligatorio.";
-        break;
-      case "minLength":
-        if (value.length < rule.value)
-          return rule.message ?? `Mínimo ${rule.value} caracteres.`;
-        break;
-      case "maxLength":
-        if (value.length > rule.value)
-          return rule.message ?? `Máximo ${rule.value} caracteres.`;
-        break;
-      case "pattern":
-        if (!rule.value.test(value))
-          return rule.message ?? "Formato inválido.";
-        break;
-      case "email":
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          return rule.message ?? "Correo electrónico inválido.";
-        break;
-      case "custom":
-        if (!rule.validate(value))
-          return rule.message;
-        break;
-    }
-  }
-  return null;
-}
 
 // ─── Phone Input Sub-component ─────────────────────────────────────────────────
 

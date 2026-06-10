@@ -7,7 +7,7 @@ import { AsesorBenefits } from "../components/AsesorBenefits/AsesorBenefits";
 import { RoleDescription } from "../components/RoleDescription/RoleDescription";
 import { AsesorRequirements } from "../components/AsesorRequirements/AsesorRequirements";
 import { AsesorSteps } from "../components/AsesorSteps/AsesorSteps";
-import { Banner } from "@/components/layout/Banner";
+import { AdvisorBanner } from "@/components/layout/AdvisorBanner";
 import type { PromoterPageData } from "../data/cmsPromoter";
 
 interface AsesorVentasViewProps {
@@ -23,7 +23,7 @@ export function AsesorVentasView({ data }: AsesorVentasViewProps) {
       <AsesorRequirements data={data?.requirements} />
       <AsesorSteps data={data?.affiliation_process} />
       <div id="advisor-registration">
-        <Banner data={data?.advisor_registration} />
+        <AdvisorBanner />
       </div>
     </>
   );

@@ -29,6 +29,8 @@ export async function GET(request: Request) {
       resultCount: result.data.length,
       source: result.meta.source,
       hasFallbackError: Boolean(result.error),
+      productTypeIdCount: query.productTypeIds.length,
+      focusIdCount: query.focusIds.length,
       durationMs: getDurationMs(startedAt),
     });
 
@@ -51,7 +53,7 @@ export async function GET(request: Request) {
           page: 1,
           limit: 9,
           totalPages: 1,
-          source: "mock",
+          source: "unavailable",
         },
         error: {
           code: "PRODUCTS_API_UNAVAILABLE",

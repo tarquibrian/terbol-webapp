@@ -4,12 +4,12 @@ import { env } from "@/config/env";
 import { getAllProductIds } from "@/features/products";
 import sitemap from "./sitemap";
 
-function getSitemapUrls() {
-  return sitemap().map((entry) => entry.url);
+async function getSitemapUrls() {
+  return (await sitemap()).map((entry) => entry.url);
 }
 
-test("sitemap incluye rutas estaticas principales", () => {
-  const urls = getSitemapUrls();
+test("sitemap incluye rutas estaticas principales", async () => {
+  const urls = await getSitemapUrls();
   const siteUrl = env.SITE_URL.replace(/\/$/, "");
 
   assert.ok(urls.includes(siteUrl));
@@ -19,8 +19,8 @@ test("sitemap incluye rutas estaticas principales", () => {
   assert.ok(urls.includes(`${siteUrl}/success-plan`));
 });
 
-test("sitemap incluye todos los detalles de producto prerenderizados", () => {
-  const urls = getSitemapUrls();
+test("sitemap incluye todos los detalles de producto prerenderizados", async () => {
+  const urls = await getSitemapUrls();
   const siteUrl = env.SITE_URL.replace(/\/$/, "");
 
   for (const productId of getAllProductIds()) {

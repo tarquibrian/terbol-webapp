@@ -30,7 +30,7 @@ export function resolveImageAsset(
   if (!assetPath) return null;
   if (isRemoteAsset(assetPath) || isLocalPublicAsset(assetPath)) return assetPath;
 
-  const cleanPath = assetPath.replace(/^\/+/, "");
+  const cleanPath = assetPath.replace(/^\/+/, "").replace(/^storage\//, "");
   const baseStorage = env.STORAGE_URL.endsWith("/")
     ? env.STORAGE_URL
     : `${env.STORAGE_URL}/`;

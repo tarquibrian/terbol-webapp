@@ -95,15 +95,16 @@ Crea un archivo `.env` tomando como base `.env.example`. No commitees `.env`; so
 | `NEXT_PUBLIC_API_URL` | Sí | URL base del CMS/API general para secciones, blog y contenido. |
 | `NEXT_PUBLIC_STORAGE_URL` | Sí | URL base de imágenes/archivos servidos por el CMS. |
 | `REVALIDATE_SECRET` | Sí para revalidación | Secret del webhook `POST /api/revalidate`; se envía en `x-revalidate-secret`. |
-| `PRODUCTS_API_URL` | No | Endpoint server-side del catálogo real. Si está vacío, `/api/products` usa el mock local. |
-| `PRODUCTS_DETAIL_API_URL` | No | Endpoint server-side del detalle de producto. Acepta `{id}` o `:id`; si está vacío, intenta `PRODUCTS_API_URL/{id}`. |
-| `PRODUCTS_API_TOKEN` | No | Token opcional para el API de productos; solo se usa en el servidor. |
+| `PRODUCTS_API_TOKEN` | No | Token opcional si el API de productos requiere Authorization Bearer. |
+| `PRODUCTS_API_KEY` | No | API key opcional si el API de productos requiere un header dedicado. |
+| `PRODUCTS_API_KEY_HEADER` | No | Nombre del header para `PRODUCTS_API_KEY`; por defecto `ApiKey`. |
 
 Notas operativas:
-- `PRODUCTS_API_URL` puede ser una URL absoluta o una ruta relativa a `NEXT_PUBLIC_API_URL`.
-- `PRODUCTS_DETAIL_API_URL` puede ser una URL absoluta o relativa, por ejemplo `/products/{id}`.
+- Productos usa por defecto los endpoints fijos del CMS: `/products`, `/products/{id}`, `/products/types`, `/products/consumption-types` y `/products/focuses`.
+- En produccion, productos y enfoques visibles no usan datos locales de fallback; si el CMS no responde, la UI muestra estado vacio/error controlado.
 - `REVALIDATE_SECRET` debe ser un valor aleatorio y diferente por entorno.
 - Las variables con prefijo `NEXT_PUBLIC_` son visibles para el cliente; no guardar secretos ahí.
+- El contrato esperado para el API real de productos esta documentado en [`docs/products-api-contract.md`](docs/products-api-contract.md).
 
 Para iniciar el servidor local:
 

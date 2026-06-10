@@ -52,17 +52,6 @@ export interface PromoterPageData {
   why_be?: PromoterSection;
   requirements?: PromoterRequirements;
   affiliation_process?: PromoterAffiliationProcess;
-  advisor_registration?: {
-    title?: string;
-    description?: string;
-    button_label?: string;
-    button_url?: string;
-    email?: string;
-    country_code?: string;
-    phone_number?: string;
-    image?: string;
-  };
-  social_networks?: PromoterSocialNetwork[];
 }
 
 export function resolvePromoterAsset(

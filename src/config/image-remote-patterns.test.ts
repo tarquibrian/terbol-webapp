@@ -20,6 +20,13 @@ test("createRemoteImagePatterns incluye defaults y URLs remotas de entorno", () 
   assert.ok(
     patterns.some(
       (pattern) =>
+        pattern.protocol === "https" &&
+        pattern.hostname === "terbol.blob.core.windows.net",
+    ),
+  );
+  assert.ok(
+    patterns.some(
+      (pattern) =>
         pattern.protocol === "https" && pattern.hostname === "cdn.example.com",
     ),
   );

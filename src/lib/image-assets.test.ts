@@ -22,7 +22,11 @@ test("resolveImageAsset resuelve rutas CMS contra STORAGE_URL", () => {
   );
   assert.equal(
     resolveImageAsset("/storage/products/image.png"),
-    `${storageUrl}storage/products/image.png`,
+    `${storageUrl}products/image.png`,
+  );
+  assert.equal(
+    resolveImageAsset("products/focuses/focuses1.png"),
+    `${storageUrl}products/focuses/focuses1.png`,
   );
 });
 

@@ -14,6 +14,7 @@ interface ProductOverviewSectionProps {
 
 export function ProductOverviewSection({ product }: ProductOverviewSectionProps) {
   const [selectedImage, setSelectedImage] = React.useState<string | undefined>(undefined);
+  const currencySymbol = product.currencySymbol ?? "Bs";
 
   return (
     <section className="wrapper-section">
@@ -140,7 +141,9 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
             <div className="flex gap-4 lg:gap-8 justify-between">
               <AnimateOnScroll variant="slide-up" delay={0.4}>
                 <div className="text-body-md text-gray-500 mb-2">Precio sugerido</div>
-                <div className="heading-h4 text-gray-900 font-bold">{product.price.toFixed(2)} Bs</div>
+                <div className="heading-h4 text-gray-900 font-bold">
+                  {currencySymbol} {product.price.toFixed(2)}
+                </div>
               </AnimateOnScroll>
 
               <AnimateOnScroll variant="slide-up" delay={0.5}>
@@ -163,7 +166,15 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
               </AnimateOnScroll>
 
               <AnimateOnScroll variant="slide-up" delay={0.6} className="shrink-0">
-                <Button variant="default" className="w-full sm:w-auto" icon={<ArrowRight />} iconPosition="right">
+                <Button
+                  variant="default"
+                  className="w-full sm:w-auto"
+                  icon={<ArrowRight />}
+                  iconPosition="right"
+                  href={product.purchaseUrl}
+                  target={product.purchaseUrl ? "_blank" : undefined}
+                  rel={product.purchaseUrl ? "noopener noreferrer" : undefined}
+                >
                   Comprar ahora
                 </Button>
               </AnimateOnScroll>

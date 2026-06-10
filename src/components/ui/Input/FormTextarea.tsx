@@ -3,40 +3,12 @@
 import * as React from "react";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ValidationRule, ValidationState } from "./FormInput";
+import {
+  runValidations,
+  type ValidationRule,
+  type ValidationState,
+} from "./validation";
 import "./FormInput.css";
-
-function runValidations(value: string, rules: ValidationRule[]): string | null {
-  for (const rule of rules) {
-    switch (rule.type) {
-      case "required":
-        if (!value.trim())
-          return rule.message ?? "Este campo es obligatorio.";
-        break;
-      case "minLength":
-        if (value.length < rule.value)
-          return rule.message ?? `Mínimo ${rule.value} caracteres.`;
-        break;
-      case "maxLength":
-        if (value.length > rule.value)
-          return rule.message ?? `Máximo ${rule.value} caracteres.`;
-        break;
-      case "pattern":
-        if (!rule.value.test(value))
-          return rule.message ?? "Formato inválido.";
-        break;
-      case "email":
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          return rule.message ?? "Correo electrónico inválido.";
-        break;
-      case "custom":
-        if (!rule.validate(value))
-          return rule.message;
-        break;
-    }
-  }
-  return null;
-}
 
 export interface FormTextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
-import { Menu, ArrowRight } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { Menu, ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
@@ -12,6 +12,13 @@ import { getFlatNavLinks } from "../Navbar.constants";
 export function MobileMenu({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isPromoterPage = pathname === "/promoter";
+  const ctaHref = isPromoterPage
+    ? "https://www.terbolinspira.com/VentaPorCatalogo/PRD"
+    : "/promoter";
+  const ctaIcon = isPromoterPage ? <ArrowUpRight /> : <ArrowRight />;
 
   // Usa la función de aplanado extraída a la capa de constantes/data
   const flatItems = React.useMemo(() => getFlatNavLinks(), []);
@@ -98,9 +105,16 @@ export function MobileMenu({ className }: { className?: string }) {
           <Button
             variant="default"
             size="default"
-            icon={<ArrowRight />}
+            icon={ctaIcon}
             className="w-full justify-between"
-            onClick={() => handleNavigation("/promoter")}
+            onClick={() => {
+              if (isPromoterPage) {
+                setIsOpen(false);
+                window.location.href = ctaHref;
+              } else {
+                handleNavigation(ctaHref);
+              }
+            }}
           >
             Soy asesor de ventas
           </Button>

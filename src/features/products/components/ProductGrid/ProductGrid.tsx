@@ -7,8 +7,10 @@ export async function ProductGrid({ page = 1 }: { page?: number }) {
   const { data: products, meta } = await getProducts({
     page,
     limit: 9,
+    productTypeIds: [],
+    consumptionTypeIds: [],
+    focusIds: [],
     categories: [],
-    consumptionTypes: [],
     search: "",
   });
 
@@ -16,7 +18,11 @@ export async function ProductGrid({ page = 1 }: { page?: number }) {
     <div className="flex-1 w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {products.map((product, index) => (
-          <ProductCard key={product.id} product={product} index={index} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            index={index}
+          />
         ))}
       </div>
       
