@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 };
 
 interface FooterResponse {
-  social_networks?: CmsSocialNetwork[];
+  items?: CmsSocialNetwork[];
 }
 
 async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined> {
@@ -86,7 +86,7 @@ async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined
     const response = await cmsApi.getFooter();
     const data = response?.data as FooterResponse | undefined;
 
-    return data?.social_networks;
+    return data?.items;
   } catch {
     return undefined;
   }
