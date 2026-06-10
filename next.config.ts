@@ -3,6 +3,7 @@ import { securityHeaders } from "./src/config/security-headers";
 import { createRemoteImagePatterns } from "./src/config/image-remote-patterns";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   reactCompiler: true,
   poweredByHeader: false,
   async headers() {
