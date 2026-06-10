@@ -111,7 +111,16 @@ export function Navbar() {
             </nav>
 
             {/* CTA Principal */}
-            <Button href={ctaHref} variant="default" size="default" icon={ctaIcon} className="hidden md:flex" aria-label="Soy asesor de ventas">
+            <Button
+              href={ctaHref}
+              variant="default"
+              size="default"
+              icon={ctaIcon}
+              className="hidden md:flex"
+              aria-label="Soy asesor de ventas"
+              target={isPromoterPage ? "_blank" : undefined}
+              rel={isPromoterPage ? "noopener noreferrer" : undefined}
+            >
               Soy asesor de ventas
             </Button>
 

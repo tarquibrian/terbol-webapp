@@ -26,6 +26,10 @@ interface BannerProps {
   data?: BannerData;
 }
 
+const isExternalUrl = (url?: string) => {
+  return url ? /^(https?:)?\/\//.test(url) : false;
+};
+
 export function Banner({ data }: BannerProps) {
   // Función para resolver la URL de la imagen del CMS
   const getImageUrl = (path?: string) => {
@@ -38,6 +42,8 @@ export function Banner({ data }: BannerProps) {
   // Aquí usaremos la descripción completa si viene del CMS.
   const description = data?.description || 
     "Súmate a una comunidad que cree en tu potencial y forma parte de la red de Asesores de Venta Independiente de térbol Inspira donde tu crecimiento personal y profesional van de la mano. Este es tu momento para inspirar, crecer y transformar tu vida.";
+
+  const isExternalButton = isExternalUrl(data?.button_url);
 
   return (
     <section className="wrapper-section">
@@ -63,6 +69,8 @@ export function Banner({ data }: BannerProps) {
                 iconPosition="right"
                 className="w-fit justify-between"
                 href={data?.button_url || "#"}
+                target={isExternalButton ? "_blank" : undefined}
+                rel={isExternalButton ? "noopener noreferrer" : undefined}
               >
                 <span className="hidden sm:block uppercase">
                   {data?.button_label || "REGISTRARSE COMO ASESOR DE VENTAS"}

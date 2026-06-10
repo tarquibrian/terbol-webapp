@@ -94,6 +94,8 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   icon={<ArrowUpRight />}
                   iconPosition="right"
                   href="https://www.terbolinspira.com/VentaPorCatalogo/PRD/incorporacionwizard"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   REGISTRARME COMO ASESOR DE VENTAS
                 </Button>
@@ -104,6 +106,8 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   icon={<ArrowUpRight />}
                   iconPosition="right"
                   href="https://www.terbolinspira.com/VentaPorCatalogo/PRD"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   SOY ASESOR DE VENTAS
                 </Button>

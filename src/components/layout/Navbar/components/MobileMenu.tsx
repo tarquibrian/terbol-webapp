@@ -110,7 +110,7 @@ export function MobileMenu({ className }: { className?: string }) {
             onClick={() => {
               if (isPromoterPage) {
                 setIsOpen(false);
-                window.location.href = ctaHref;
+                window.open(ctaHref, "_blank", "noopener,noreferrer");
               } else {
                 handleNavigation(ctaHref);
               }
