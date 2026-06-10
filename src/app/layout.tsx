@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Roboto } from "next/font/google";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Navbar } from "@/components/layout/Navbar";
@@ -100,7 +101,41 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
+      <head>
+        {/* Google Tag Manager */}
+        <Script id="gtm-base" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PFN742BB');`}
+        </Script>
+        {/* End Google Tag Manager */}
+
+        {/* Google tag (gtag.js) — Google Ads */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17065001147"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-base" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-17065001147');`}
+        </Script>
+      </head>
       <body className={`${roboto.variable} antialiased flex min-h-screen flex-col overflow-y-scroll`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PFN742BB"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
+
         <Navbar />
         <PageTransition enterDuration={0.3} exitDuration={0.3}>
           <main className="flex-1 pt-[100px]">
