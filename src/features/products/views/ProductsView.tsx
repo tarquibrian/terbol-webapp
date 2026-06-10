@@ -24,6 +24,7 @@ import { Check, Filter } from "lucide-react";
 import { EndBanner } from "@/components/layout/EndBanner";
 import { logError } from "@/lib/logger";
 import { cn } from "@/lib/utils";
+import { apiPath } from "@/lib/base-path";
 import { getOptionIdsByName } from "../api/filter-options";
 import type {
   ProductFilterOption,
@@ -329,7 +330,7 @@ export function ProductsView() {
   React.useEffect(() => {
     const controller = new AbortController();
 
-    fetch("/api/products/filters", { signal: controller.signal })
+    fetch(apiPath("/api/products/filters"), { signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("No pudimos cargar los filtros de productos.");
         return (await res.json()) as ProductsFiltersResponse;
@@ -391,7 +392,7 @@ export function ProductsView() {
     legacyCategories.forEach((cat) => params.append("category", cat));
     if (searchQuery) params.set("search", searchQuery);
 
-    fetch(`/api/products?${params.toString()}`, {
+    fetch(apiPath(`/api/products?${params.toString()}`), {
       signal: controller.signal,
     })
       .then(async (res) => {

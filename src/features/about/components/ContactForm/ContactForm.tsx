@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { FormInput, FormTextarea } from "@/components/ui/Input";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { apiPath } from "@/lib/base-path";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -33,7 +34,7 @@ export const ContactForm = () => {
     setFeedback("");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(apiPath("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
