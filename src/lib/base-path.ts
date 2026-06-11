@@ -16,3 +16,13 @@ export function apiPath(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   return `${BASE_PATH}${normalized}`;
 }
+
+/**
+ * Antepone el basePath a la ruta de un asset local de `/public`.
+ *
+ * `next/image` no aplica el basePath al `src` de imágenes locales (ni con
+ * `unoptimized`), así que los `src` de assets propios deben construirse con
+ * este helper para que carguen bajo un subpath (ej. /qas). En root devuelve la
+ * ruta sin cambios.
+ */
+export const assetPath = apiPath;

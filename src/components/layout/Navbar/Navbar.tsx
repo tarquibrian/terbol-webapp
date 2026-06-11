@@ -25,6 +25,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
+import { assetPath } from "@/lib/base-path";
 
 import { NavLink } from "./components/NavLink";
 import { NavSubmenuTrigger } from "./components/Submenu/NavSubmenuTrigger";
@@ -62,7 +63,7 @@ export function Navbar() {
             scroll={false}
             className="min-w-[180px] flex items-center gap-2 text-primary font-bold text-lg"
           >
-            <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} priority style={{ width: 'auto', height: 'auto' }} />
+            <Image src={assetPath("/logo-terbol.svg")} alt="Terbol" width={200} height={33} priority style={{ width: 'auto', height: 'auto' }} />
           </Link>
 
           {/* ─── Buscador ─── */}

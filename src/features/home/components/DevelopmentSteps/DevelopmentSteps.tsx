@@ -4,6 +4,7 @@ import { Beaker, ShieldCheck, Microscope, FlaskConical, ArrowRight } from "lucid
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
+import { assetPath } from "@/lib/base-path";
 
 interface DevelopmentStepData {
   id: string | number;
@@ -98,7 +99,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             {/* Contenedor inferior para Imagen */}
             <div className="absolute bottom-0 left-0 w-full h-80 md:h-90 overflow-hidden xl:h-96">
               <Image
-                src="/homegrid/bgcard1.png"
+                src={assetPath("/homegrid/bgcard1.png")}
                 alt="Investigación y Desarrollo"
                 fill
                 className="object-contain object-bottom-left"
@@ -193,7 +194,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             {/* Imagen Derecha */}
             <div className="relative flex border border-primary-orange rounded-lg p-6 h-64 sm:h-full sm:w-1/2 lg:w-2/5  overflow-hidden">
               <Image
-                src="/homegrid/bgcard4.png"
+                src={assetPath("/homegrid/bgcard4.png")}
                 alt="Producción y Control"
                 fill
                 className="object-cover"

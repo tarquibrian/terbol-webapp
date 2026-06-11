@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { FormInput, FormTextarea } from "@/components/ui/Input";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { apiPath } from "@/lib/base-path";
+import { apiPath, assetPath } from "@/lib/base-path";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -141,7 +141,7 @@ export const ContactForm = () => {
             </form>
           </div>
            <Image
-            src="/gradientradius.png"
+            src={assetPath("/gradientradius.png")}
             alt="Contact form background"
             className="object-cover absolute bottom-[-35%] left-0 w-full h-full z-1"
             width={1000}
@@ -149,14 +149,14 @@ export const ContactForm = () => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <Image
-            src="/about/contactform1.png"
+            src={assetPath("/about/contactform1.png")}
             alt=""
             width={365}
             height={307}
             className="hidden lg:block absolute bottom-0 left-6 xl:left-12 w-[230px] xl:w-[290px] 2xl:w-[340px] h-auto object-contain pointer-events-none z-10"
           />
           <Image
-            src="/about/contactform2.png"
+            src={assetPath("/about/contactform2.png")}
             alt=""
             width={450}
             height={334}

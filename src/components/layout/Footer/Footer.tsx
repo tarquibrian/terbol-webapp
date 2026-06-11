@@ -8,6 +8,7 @@ import {
   resolveCmsAsset,
   type CmsSocialNetwork,
 } from "@/lib/cms-social";
+import { assetPath } from "@/lib/base-path";
 
 // ─── Datos ────────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,7 @@ export function Footer({ socialNetworks }: FooterProps) {
             <div className="flex flex-col gap-3">
               <Link href="/" className="inline-block">
                 <Image
-                  src="/logo-terbol.svg"
+                  src={assetPath("/logo-terbol.svg")}
                   alt="Térbol Inspira"
                   width={230}
                   height={30}

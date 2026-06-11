@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { YouTubeFacade } from "@/components/ui/YouTubeFacade";
+import { assetPath } from "@/lib/base-path";
 
 interface AboutProps {
   data?: {
@@ -21,7 +22,7 @@ export const About = ({ data }: AboutProps) => {
               <header className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
                 <span className="text-body font-medium text-primary-orange" aria-hidden="true">NUESTRA MARCA</span>
                 <div className="w-[20px] h-px bg-gray-200"></div>
-                <Image src="/logo-terbol.svg" alt="Terbol" width={200} height={33} style={{ width: 'auto', height: 'auto' }} />
+                <Image src={assetPath("/logo-terbol.svg")} alt="Terbol" width={200} height={33} style={{ width: 'auto', height: 'auto' }} />
               </header>
               <p className="text-center text-body-medium text-gray-500">
                 {data?.description || "Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud."}
