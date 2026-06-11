@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Bajo un basePath (ej. /qas en staging) el optimizador de imágenes no
+    // antepone el prefijo al fetch interno de imágenes locales, así que estas
+    // dan 400 ("received null"). Servirlas sin optimizar hace que Next aplique
+    // el basePath al `src` directo y carguen. En root/Vercel (sin basePath) la
+    // optimización queda intacta.
+    ...(basePath ? { unoptimized: true } : {}),
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
