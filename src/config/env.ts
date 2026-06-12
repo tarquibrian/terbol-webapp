@@ -116,6 +116,18 @@ export const STORAGE_URL: string = requirePublicUrl(
   "http://localhost:8000/storage",
 );
 
+/**
+ * URL base de la app externa de "Venta por Catálogo" (registro/login de
+ * asesores), que tiene entornos separados (PRD/QAS).
+ *
+ * Por defecto apunta a producción (PRD). En el ambiente de QA se define
+ * `NEXT_PUBLIC_ASESOR_URL=https://www.terbolinspira.com/VentaPorCatalogo/QAS`
+ * para que los CTAs de asesores apunten al entorno de pruebas.
+ */
+export const ASESOR_URL: string =
+  process.env.NEXT_PUBLIC_ASESOR_URL?.trim().replace(/\/$/, "") ||
+  "https://www.terbolinspira.com/VentaPorCatalogo/PRD";
+
 // ─── Aggregated env object (uso conveniente al importar) ─────────────────────
 
 /**
@@ -132,6 +144,7 @@ export const env = {
   PRODUCTS_API_KEY,
   PRODUCTS_API_KEY_HEADER,
   STORAGE_URL,
+  ASESOR_URL,
 } as const;
 
 // ─── Server-only configuration ───────────────────────────────────────────────

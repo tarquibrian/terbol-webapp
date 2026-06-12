@@ -7,6 +7,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { env } from "@/config/env";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -93,7 +94,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   className="w-full sm:w-auto justify-between"
                   icon={<ArrowUpRight />}
                   iconPosition="right"
-                  href="https://www.terbolinspira.com/VentaPorCatalogo/PRD/incorporacionwizard"
+                  href={`${env.ASESOR_URL}/incorporacionwizard`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -105,7 +106,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   className="w-full sm:w-fit justify-between"
                   icon={<ArrowUpRight />}
                   iconPosition="right"
-                  href="https://www.terbolinspira.com/VentaPorCatalogo/PRD"
+                  href={env.ASESOR_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

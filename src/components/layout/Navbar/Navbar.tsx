@@ -26,6 +26,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { assetPath } from "@/lib/base-path";
+import { env } from "@/config/env";
 
 import { NavLink } from "./components/NavLink";
 import { NavSubmenuTrigger } from "./components/Submenu/NavSubmenuTrigger";
@@ -46,9 +47,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   const isPromoterPage = pathname === "/promoter";
-  const ctaHref = isPromoterPage
-    ? "https://www.terbolinspira.com/VentaPorCatalogo/PRD"
-    : "/promoter";
+  const ctaHref = isPromoterPage ? env.ASESOR_URL : "/promoter";
   const ctaIcon = isPromoterPage ? <ArrowUpRight /> : <ArrowRight />;
 
   return (

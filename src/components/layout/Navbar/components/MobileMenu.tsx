@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Drawer } from "@/components/ui/Drawer";
+import { env } from "@/config/env";
 import { getFlatNavLinks } from "../Navbar.constants";
 
 export function MobileMenu({ className }: { className?: string }) {
@@ -15,9 +16,7 @@ export function MobileMenu({ className }: { className?: string }) {
   const pathname = usePathname();
 
   const isPromoterPage = pathname === "/promoter";
-  const ctaHref = isPromoterPage
-    ? "https://www.terbolinspira.com/VentaPorCatalogo/PRD"
-    : "/promoter";
+  const ctaHref = isPromoterPage ? env.ASESOR_URL : "/promoter";
   const ctaIcon = isPromoterPage ? <ArrowUpRight /> : <ArrowRight />;
 
   // Usa la función de aplanado extraída a la capa de constantes/data
