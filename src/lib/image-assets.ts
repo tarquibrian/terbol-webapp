@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { BASE_PATH } from "@/lib/base-path";
 
 const LOCAL_PUBLIC_ASSET_PREFIXES = [
   "/about/",
@@ -28,7 +29,10 @@ export function resolveImageAsset(
   const assetPath = path?.trim() || fallback?.trim();
 
   if (!assetPath) return null;
-  if (isRemoteAsset(assetPath) || isLocalPublicAsset(assetPath)) return assetPath;
+  if (isRemoteAsset(assetPath)) return assetPath;
+  // Assets locales de /public: anteponer el basePath (ej. /qas) para que carguen
+  // bajo un subpath. En root, BASE_PATH es "" y queda igual.
+  if (isLocalPublicAsset(assetPath)) return `${BASE_PATH}${assetPath}`;
 
   const cleanPath = assetPath.replace(/^\/+/, "").replace(/^storage\//, "");
   const baseStorage = env.STORAGE_URL.endsWith("/")

@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 import { Product } from "../data/products";
 import { TARGET_AUDIENCES } from "../data/targetAudiences";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { resolveImageAsset } from "@/lib/image-assets";
 
 interface ProductTargetSectionProps {
   product: Product;
@@ -14,7 +15,7 @@ interface ProductTargetSectionProps {
 export function ProductTargetSection({ product }: ProductTargetSectionProps) {
   const data = product.targetItems && product.targetItems.length > 0
     ? {
-        image: product.targetImage ?? "/images/productextra1.png",
+        image: resolveImageAsset(product.targetImage, "/images/productextra1.png") ?? "",
         items: product.targetItems,
       }
     : TARGET_AUDIENCES[product.consumptionType];

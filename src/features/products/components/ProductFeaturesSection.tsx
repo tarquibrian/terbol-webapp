@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { resolveImageAsset } from "@/lib/image-assets";
 import type { Product } from "../data/products";
 
 interface ProductFeaturesSectionProps {
@@ -31,7 +32,7 @@ export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps)
         </AnimateOnScroll>
         <div className="max-w-[1024px] w-full rounded-lg bg-primary-soft-gray-balance p-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3">
           <AnimateOnScroll variant="fade" delay={0.2} className="w-full aspect-video md:aspect-square rounded-md overflow-hidden">
-            <Image src={product?.whyChooseImage ?? "/images/productextra2.png"} alt="Por qué elegir producto" width={800} height={800} className="w-full h-full object-cover" />
+            <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt="Por qué elegir producto" width={800} height={800} className="w-full h-full object-cover" />
           </AnimateOnScroll>
           <div className="w-full p-4 lg:p-8 flex flex-col justify-between gap-8">
             <div>

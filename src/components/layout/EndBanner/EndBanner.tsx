@@ -11,6 +11,8 @@ import {
   Users,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { assetPath } from "@/lib/base-path";
+
 interface EndBannerProps {
   variant?: "default" | "expanded" | "compact";
   title?: string;
@@ -94,7 +96,7 @@ export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) 
                 className="relative w-full rounded-lg overflow-hidden p-3"
               >
                 <Image
-                  src={card.imageSrc}
+                  src={assetPath(card.imageSrc)}
                   alt={card.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

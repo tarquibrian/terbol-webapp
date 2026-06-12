@@ -15,6 +15,7 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import Image from "next/image";
 import { resolveImageAsset } from "@/lib/image-assets";
+import { assetPath } from "@/lib/base-path";
 
 interface DetailItem {
   id: number | string;
@@ -97,7 +98,11 @@ export function AboutHero({ data }: AboutHeroProps) {
         <div className="flex gap-4 max-w-[1024px] flex-col md:flex-row w-full justify-center">
           {details.map((detail, index) => {
             const isFromCms = detail.image && !detail.image.startsWith("/");
-            const imgUrl = isFromCms ? getImageUrl(detail.image) : detail.image;
+            const imgUrl = isFromCms
+              ? getImageUrl(detail.image)
+              : detail.image
+                ? assetPath(detail.image)
+                : detail.image;
 
             return (
               <AnimateOnScroll
