@@ -8,6 +8,21 @@ interface CmsEnvelope<T = unknown> {
   data?: T;
 }
 
+export class CmsHttpError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly endpoint: string,
+  ) {
+    super(message);
+    this.name = "CmsHttpError";
+  }
+}
+
+export function isCmsNotFoundError(error: unknown): error is CmsHttpError {
+  return error instanceof CmsHttpError && error.status === 404;
+}
+
 /**
  * Función genérica interna para realizar peticiones al CMS de Laravel.
  * Centraliza la configuración de headers y las estrategias de caché (ISR).
@@ -45,7 +60,11 @@ async function fetchCMS<T>(
 
     if (!res.ok) {
       // Capturamos el error HTTP para facilitar el debugeo
-      throw new Error(`Error HTTP: ${res.status} al solicitar ${endpointPath}`);
+      throw new CmsHttpError(
+        `Error HTTP: ${res.status} al solicitar ${endpointPath}`,
+        res.status,
+        endpointPath,
+      );
     }
 
     return (await res.json()) as T;

@@ -12,13 +12,11 @@
 
 import { cmsApi } from "@/lib/cms-api";
 import { normalizeCmsRecordValue, type CmsRecord } from "@/lib/cms-data";
-import { logWarn } from "@/lib/logger";
 import { Banner, type BannerData, buildWhatsAppUrl } from "@/components/layout/Banner";
 
 /**
  * Server component que obtiene los datos de advisor-registration del CMS
- * y renderiza el Banner. Si el fetch falla, no renderiza nada (graceful
- * degradation — la página se muestra sin el banner).
+ * y renderiza el Banner.
  */
 export async function AdvisorBanner() {
   const data = await getAdvisorRegistrationData();
@@ -31,24 +29,16 @@ export async function AdvisorBanner() {
 // ─── Data fetching ──────────────────────────────────────────────────────────
 
 async function getAdvisorRegistrationData(): Promise<BannerData | undefined> {
-  try {
-    const response = await cmsApi.getAdvisorRegistration();
+  const response = await cmsApi.getAdvisorRegistration();
 
-    const normalized = normalizeCmsRecordValue<CmsRecord>(
-      response?.data,
-      "advisor-registration",
-    );
+  const normalized = normalizeCmsRecordValue<CmsRecord>(
+    response?.data,
+    "advisor-registration",
+  );
 
-    if (!normalized) return undefined;
+  if (!normalized) return undefined;
 
-    return normalized as unknown as BannerData;
-  } catch (error) {
-    logWarn("advisor_banner_fallback", {
-      reason: error instanceof Error ? error.message : String(error),
-    });
-
-    return undefined;
-  }
+  return normalized as unknown as BannerData;
 }
 
 /**

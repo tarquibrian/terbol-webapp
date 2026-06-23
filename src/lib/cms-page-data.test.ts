@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { CMS_PAGE_SCHEMAS } from "./cms-data";
-import { getOptionalCmsPageData } from "./cms-page-data";
+import {
+  getOptionalCmsPageData,
+  getRequiredCmsPageData,
+} from "./cms-page-data";
 
 async function captureWarnings<T>(run: () => Promise<T>) {
   const originalWarn = console.warn;
@@ -58,4 +61,40 @@ test("getOptionalCmsPageData devuelve fallback vacio si el CMS falla", async () 
   assert.equal(warning.level, "warn");
   assert.equal(warning.message, "cms_page_data_fallback");
   assert.equal(warning.context, "home-test");
+});
+
+test("getRequiredCmsPageData normaliza respuestas validas del CMS", async () => {
+  const data = await getRequiredCmsPageData(
+    async () => ({
+      data: {
+        hero_section: {
+          title: "Inicio",
+        },
+        pillars: [{ title: "Calidad" }],
+        ignored: "no debe salir",
+      },
+    }),
+    CMS_PAGE_SCHEMAS.home,
+    "home-test",
+  );
+
+  assert.deepEqual(data, {
+    hero_section: {
+      title: "Inicio",
+    },
+    pillars: [{ title: "Calidad" }],
+  });
+});
+
+test("getRequiredCmsPageData propaga errores del CMS", async () => {
+  await assert.rejects(
+    getRequiredCmsPageData(
+      async () => {
+        throw new Error("CMS offline");
+      },
+      CMS_PAGE_SCHEMAS.home,
+      "home-test",
+    ),
+    /CMS offline/,
+  );
 });

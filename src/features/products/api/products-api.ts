@@ -902,7 +902,7 @@ export async function getProductDetailPageData(
     logError("product_detail_api_failed", error, {
       productId: normalizedProductId,
     });
-    if (!canUseProductsMockFallback()) return null;
+    if (!canUseProductsMockFallback()) throw error;
 
     const product = getMockProductDetail(normalizedProductId);
     if (!product) return null;
@@ -930,6 +930,10 @@ export async function getProductSitemapIds(): Promise<string[]> {
     search: "",
   };
   const firstPage = await getProducts(baseQuery);
+  if (firstPage.meta.source === "unavailable") {
+    throw new Error("Products sitemap source is unavailable");
+  }
+
   const remainingPages = Array.from(
     { length: Math.max(0, firstPage.meta.totalPages - 1) },
     (_, index) => index + 2,
@@ -937,6 +941,12 @@ export async function getProductSitemapIds(): Promise<string[]> {
   const remainingResponses = await Promise.all(
     remainingPages.map((page) => getProducts({ ...baseQuery, page })),
   );
+  const unavailablePage = remainingResponses.find(
+    (response) => response.meta.source === "unavailable",
+  );
+  if (unavailablePage) {
+    throw new Error("Products sitemap source is unavailable");
+  }
 
   return [
     ...firstPage.data,

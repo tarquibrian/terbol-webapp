@@ -82,14 +82,10 @@ interface FooterResponse {
 }
 
 async function getFooterSocialNetworks(): Promise<CmsSocialNetwork[] | undefined> {
-  try {
-    const response = await cmsApi.getFooter();
-    const data = response?.data as FooterResponse | undefined;
+  const response = await cmsApi.getFooter();
+  const data = response?.data as FooterResponse | undefined;
 
-    return data?.items;
-  } catch {
-    return undefined;
-  }
+  return data?.items;
 }
 
 export default async function RootLayout({
@@ -103,7 +99,7 @@ export default async function RootLayout({
     <html lang="es">
       <head>
         {/* Google Tag Manager */}
-        <Script id="gtm-base" strategy="afterInteractive">
+        <Script id="gtm-base" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -111,18 +107,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PFN742BB');`}
         </Script>
         {/* End Google Tag Manager */}
-
-        {/* Google tag (gtag.js) — Google Ads */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17065001147"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-base" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'AW-17065001147');`}
-        </Script>
       </head>
       <body className={`${roboto.variable} antialiased flex min-h-screen flex-col overflow-y-scroll`}>
         {/* Google Tag Manager (noscript) */}
@@ -135,6 +119,18 @@ gtag('config', 'AW-17065001147');`}
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
+
+        {/* Google tag (gtag.js) — Google Ads */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17065001147"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-base" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-17065001147');`}
+        </Script>
 
         <Navbar />
         <PageTransition enterDuration={0.3} exitDuration={0.3}>

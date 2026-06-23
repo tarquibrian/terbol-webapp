@@ -13,7 +13,7 @@ import {
 } from "@/features/science-and-quality";
 import { cmsApi } from "@/lib/cms-api";
 import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { getRequiredCmsPageData } from "@/lib/cms-page-data";
 import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 
 /** Metadatos SEO de la página Ciencia y Calidad */
@@ -26,7 +26,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function ScienceQualityPage() {
-  const scienceData = await getOptionalCmsPageData<ScienceQualityPageData>(
+  const scienceData = await getRequiredCmsPageData<ScienceQualityPageData>(
     () => cmsApi.getScience(),
     CMS_PAGE_SCHEMAS.science,
     "science",

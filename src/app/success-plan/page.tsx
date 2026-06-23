@@ -15,7 +15,7 @@ import {
 } from "@/features/success-plan";
 import { cmsApi } from "@/lib/cms-api";
 import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { getRequiredCmsPageData } from "@/lib/cms-page-data";
 import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 
 /** Metadatos SEO de la página Plan de Éxito */
@@ -28,7 +28,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function SuccessPlanPage() {
-  const successPlanData = await getOptionalCmsPageData<SuccessPlanPageData>(
+  const successPlanData = await getRequiredCmsPageData<SuccessPlanPageData>(
     () => cmsApi.getSuccessPlan(),
     CMS_PAGE_SCHEMAS.successPlan,
     "success-plan",

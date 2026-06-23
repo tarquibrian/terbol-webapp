@@ -12,7 +12,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { AboutView, type AboutPageData } from "@/features/about";
 import { cmsApi } from "@/lib/cms-api";
 import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { getRequiredCmsPageData } from "@/lib/cms-page-data";
 import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 
 /** Metadatos SEO de la página ¿Quiénes somos? */
@@ -25,7 +25,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function AboutPage() {
-  const aboutData = await getOptionalCmsPageData<AboutPageData>(
+  const aboutData = await getRequiredCmsPageData<AboutPageData>(
     () => cmsApi.getAbout(),
     CMS_PAGE_SCHEMAS.about,
     "about",

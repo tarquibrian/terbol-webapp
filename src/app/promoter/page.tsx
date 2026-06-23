@@ -7,7 +7,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { AsesorVentasView } from "@/features/promoter/views/AsesorVentasView";
 import { cmsApi } from "@/lib/cms-api";
 import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { getRequiredCmsPageData } from "@/lib/cms-page-data";
 import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 import type { PromoterPageData } from "@/features/promoter/data/cmsPromoter";
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function PromoterPage() {
-  const promoterData = await getOptionalCmsPageData<PromoterPageData>(
+  const promoterData = await getRequiredCmsPageData<PromoterPageData>(
     () => cmsApi.getPromoter(),
     CMS_PAGE_SCHEMAS.promoter,
     "promoter",

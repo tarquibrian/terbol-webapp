@@ -24,3 +24,13 @@ export async function getOptionalCmsPageData<T extends object>(
     return {};
   }
 }
+
+export async function getRequiredCmsPageData<T extends object>(
+  fetchPage: () => Promise<CmsPageResponse | null | undefined>,
+  schema: CmsPageSchema,
+  context: string,
+): Promise<Partial<T>> {
+  const response = await fetchPage();
+
+  return normalizeCmsPageData<T>(response?.data, schema, context);
+}

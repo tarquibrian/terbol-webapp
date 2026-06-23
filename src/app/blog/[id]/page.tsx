@@ -2,32 +2,30 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { BlogDetailView } from "@/features/blog";
-import { cmsApi } from "@/lib/cms-api";
+import { cmsApi, isCmsNotFoundError } from "@/lib/cms-api";
 import {
   mapCmsBlogList,
   mapCmsBlogPost,
   stripHtml,
 } from "@/features/blog/data/cmsBlog";
 import { createPageMetadata } from "@/lib/seo";
-import { logError } from "@/lib/logger";
-
-/** Registra el fallo del CMS y degrada a `null` para no perder observabilidad. */
-function logCmsFailure(event: string, context: Record<string, string>) {
-  return (error: unknown) => {
-    logError(event, error, context);
-    return null;
-  };
-}
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+async function getBlogDetailOrNull(id: string) {
+  try {
+    return await cmsApi.getBlogDetail(id);
+  } catch (error) {
+    if (isCmsNotFoundError(error)) return null;
+    throw error;
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const postResponse = await cmsApi
-    .getBlogDetail(id)
-    .catch(logCmsFailure("blog_detail_fetch_failed", { id, scope: "metadata" }));
+  const postResponse = await getBlogDetailOrNull(id);
   const post = mapCmsBlogPost(postResponse?.data);
 
   if (!post) {
@@ -55,12 +53,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogPostPage({ params }: PageProps) {
   const { id } = await params;
   const [postResponse, latestResponse] = await Promise.all([
-    cmsApi
-      .getBlogDetail(id)
-      .catch(logCmsFailure("blog_detail_fetch_failed", { id, scope: "page" })),
-    cmsApi
-      .getBlogsFiltered(0, "", 1)
-      .catch(logCmsFailure("blog_latest_fetch_failed", { id, scope: "page" })),
+    getBlogDetailOrNull(id),
+    cmsApi.getBlogsFiltered(0, "", 1),
   ]);
 
   const post = mapCmsBlogPost(postResponse?.data);

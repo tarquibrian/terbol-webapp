@@ -3,7 +3,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { BlogView } from "@/features/blog";
 import { cmsApi } from "@/lib/cms-api";
 import { CMS_PAGE_SCHEMAS } from "@/lib/cms-data";
-import { getOptionalCmsPageData } from "@/lib/cms-page-data";
+import { getRequiredCmsPageData } from "@/lib/cms-page-data";
 import { createPageMetadata, SEO_IMAGES } from "@/lib/seo";
 import {
   mapCmsBlogCategories,
@@ -47,12 +47,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const currentPage = getPositiveNumber(getSingleSearchParam(params.page), 1);
 
   const [learnData, blogData] = await Promise.all([
-    getOptionalCmsPageData<CmsLearnData>(
+    getRequiredCmsPageData<CmsLearnData>(
       () => cmsApi.getLearn(),
       CMS_PAGE_SCHEMAS.learn,
       "learn",
     ),
-    getOptionalCmsPageData(
+    getRequiredCmsPageData(
       () => cmsApi.getBlogsFiltered(currentCategoryId, currentSearch, currentPage),
       CMS_PAGE_SCHEMAS.blogList,
       "blog-list",
