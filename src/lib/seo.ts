@@ -25,10 +25,10 @@ export const SEO_IMAGES = {
     alt: "Productos Terbol para salud y bienestar",
   },
   home: {
-    url: "/images/endbanner1.png",
-    width: 680,
-    height: 441,
-    alt: "Terbol Inspira salud y bienestar",
+    url: "/banner/productbanner.png",
+    width: 698,
+    height: 464,
+    alt: "Productos Terbol Inspira para salud y bienestar",
   },
   about: {
     url: "/about/aboutproduct.png",
