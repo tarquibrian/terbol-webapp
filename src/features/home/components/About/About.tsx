@@ -14,7 +14,7 @@ interface AboutProps {
 
 export const About = ({ data }: AboutProps) => {
   return (
-    <section className="wrapper-section">
+    <section className="w-full py-6 md:py-8 lg:py-12">
       <div className="wrapper-content">
         <div className="bg-primary-soft-gray-balance m-full max-w-[1200px] mx-auto p-3 rounded-lg">
           <AnimateOnScroll variant="slide-up">

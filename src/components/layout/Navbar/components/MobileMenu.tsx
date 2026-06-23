@@ -70,7 +70,7 @@ export function MobileMenu({ className }: { className?: string }) {
         {/* Buscador: Solo se muestra aquí en pantallas < 1024px */}
         <div className="mb-8 block lg:hidden px-3">
           <SearchInput
-            placeholder="Buscar productos..."
+            placeholder="Buscar productos…"
             className="w-full"
             onSearch={handleSearch}
           />

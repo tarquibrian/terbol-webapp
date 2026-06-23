@@ -21,7 +21,7 @@ export function AccordionItem({
     <div className="bg-primary-soft-gray-balance rounded-lg overflow-hidden flex flex-col">
       <button
         onClick={onClick}
-        className="flex items-center justify-between w-full px-6 py-6 text-left focus:outline-none"
+        className="flex items-center justify-between w-full px-5 py-5 sm:px-6 sm:py-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span className="text-[18px] font-bold text-gray-900">{question}</span>
         <ChevronRight

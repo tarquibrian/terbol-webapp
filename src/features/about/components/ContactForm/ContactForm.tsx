@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { FormInput, FormTextarea } from "@/components/ui/Input";
 import { ArrowRight } from "lucide-react";
@@ -66,43 +67,62 @@ export const ContactForm = () => {
   return (
     <section className="wrapper-section">
       <div className="wrapper-content">
-        <div className="overflow-hidden relative flex flex-col gap-16 justify-center items-center bg-primary-soft-gray-light rounded-lg py-16 px-4">
-          <div className="flex flex-col gap-4 justify-center items-center z-10">
+        <AnimateOnScroll
+          variant="fade"
+          className="overflow-hidden relative flex flex-col gap-12 md:gap-16 justify-center items-center bg-primary-soft-gray-light rounded-lg py-12 md:py-16 px-4"
+        >
+          <AnimateOnScroll
+            variant="slide-up"
+            delay={0.1}
+            className="flex flex-col gap-4 justify-center items-center z-10"
+          >
             <h3 className="heading-h3 text-center">¿Necesitas orientación?</h3>
             <p className="text-body-medium text-gray-500 max-w-[700px] text-center">Contactá con un asesor de ventas para recibir asesoramiento personalizado sobre qué productos son ideales para vos.</p>
-          </div>
-          <div className="max-w-[450px] w-full z-10">
+          </AnimateOnScroll>
+          <AnimateOnScroll
+            variant="slide-up"
+            delay={0.2}
+            className="max-w-[450px] w-full z-10"
+          >
             <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-0 md:gap-2">
-              <FormInput
-                name="nombre"
-                label="Nombre"
-                placeholder="Ingrese su nombre"
-                rules={[{ type: "required" }, { type: "minLength", value: 3 }]}
-              />
-              <FormInput
-                name="email"
-                label="Email"
-                placeholder="Ingrese su email"
-                rules={[{ type: "required" }, { type: "email" }]}
-              />
-              <FormInput
-                name="telefono"
-                label="Teléfono"
-                type="phone"
-                defaultCountry="BO"
-                // dialLocked
-                placeholder="Ingrese su teléfono"
-                rules={[{ type: "required" }, { type: "minLength", value: 7 }]}
-                onPhoneChange={({ full }) => {
-                  phoneRef.current = full;
-                }}
-              />
-              <FormTextarea
-                name="mensaje"
-                label="Mensaje"
-                placeholder="Ingrese su mensaje"
-                autoResize
-              />
+              <AnimateOnScroll variant="slide-up" delay={0.25}>
+                <FormInput
+                  name="nombre"
+                  label="Nombre"
+                  placeholder="Ingrese su nombre"
+                  rules={[{ type: "required" }, { type: "minLength", value: 3 }]}
+                />
+              </AnimateOnScroll>
+              <AnimateOnScroll variant="slide-up" delay={0.3}>
+                <FormInput
+                  name="email"
+                  label="Email"
+                  placeholder="Ingrese su email"
+                  rules={[{ type: "required" }, { type: "email" }]}
+                />
+              </AnimateOnScroll>
+              <AnimateOnScroll variant="slide-up" delay={0.35}>
+                <FormInput
+                  name="telefono"
+                  label="Teléfono"
+                  type="phone"
+                  defaultCountry="BO"
+                  // dialLocked
+                  placeholder="Ingrese su teléfono"
+                  rules={[{ type: "required" }, { type: "minLength", value: 7 }]}
+                  onPhoneChange={({ full }) => {
+                    phoneRef.current = full;
+                  }}
+                />
+              </AnimateOnScroll>
+              <AnimateOnScroll variant="slide-up" delay={0.4}>
+                <FormTextarea
+                  name="mensaje"
+                  label="Mensaje"
+                  placeholder="Ingrese su mensaje"
+                  autoResize
+                />
+              </AnimateOnScroll>
 
               {/* Honeypot anti-spam: oculto para humanos, los bots lo rellenan. */}
               <input
@@ -114,17 +134,19 @@ export const ContactForm = () => {
                 className="absolute left-[-9999px] w-px h-px opacity-0"
               />
 
-              <Button
-                type="submit"
-                variant="secondary"
-                size="default"
-                className="w-full mt-4 justify-between"
-                icon={<ArrowRight />}
-                iconPosition="right"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Enviando…" : "Enviar"}
-              </Button>
+              <AnimateOnScroll variant="slide-up" delay={0.45}>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="default"
+                  className="w-full mt-4 justify-between"
+                  icon={<ArrowRight />}
+                  iconPosition="right"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Enviando…" : "Enviar"}
+                </Button>
+              </AnimateOnScroll>
 
               {feedback && (
                 <p
@@ -139,30 +161,48 @@ export const ContactForm = () => {
                 </p>
               )}
             </form>
-          </div>
-           <Image
-            src={assetPath("/gradientradius.png")}
-            alt="Contact form background"
-            className="object-cover absolute bottom-[-35%] left-0 w-full h-full z-1"
-            width={1000}
-            height={1000}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          <Image
-            src={assetPath("/about/contactform1.png")}
-            alt=""
-            width={365}
-            height={307}
-            className="hidden lg:block absolute bottom-0 left-6 xl:left-12 w-[230px] xl:w-[290px] 2xl:w-[340px] h-auto object-contain pointer-events-none z-10"
-          />
-          <Image
-            src={assetPath("/about/contactform2.png")}
-            alt=""
-            width={450}
-            height={334}
-            className="hidden lg:block absolute bottom-0 right-6 xl:right-12 w-[270px] xl:w-[330px] 2xl:w-[380px] h-auto object-contain pointer-events-none z-10"
-          />
-        </div>
+          </AnimateOnScroll>
+          <AnimateOnScroll
+            variant="fade"
+            delay={0.15}
+            className="absolute bottom-[-35%] left-0 w-full h-full z-1"
+          >
+            <Image
+              src={assetPath("/gradientradius.png")}
+              alt="Contact form background"
+              className="object-cover w-full h-full"
+              width={1000}
+              height={1000}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </AnimateOnScroll>
+          <AnimateOnScroll
+            variant="slide-right"
+            delay={0.3}
+            className="hidden lg:block absolute bottom-0 left-6 xl:left-12 w-[230px] xl:w-[290px] 2xl:w-[340px] h-auto pointer-events-none z-10"
+          >
+            <Image
+              src={assetPath("/about/contactform1.png")}
+              alt=""
+              width={365}
+              height={307}
+              className="w-full h-auto object-contain"
+            />
+          </AnimateOnScroll>
+          <AnimateOnScroll
+            variant="slide-left"
+            delay={0.3}
+            className="hidden lg:block absolute bottom-0 right-6 xl:right-12 w-[270px] xl:w-[330px] 2xl:w-[380px] h-auto pointer-events-none z-10"
+          >
+            <Image
+              src={assetPath("/about/contactform2.png")}
+              alt=""
+              width={450}
+              height={334}
+              className="w-full h-auto object-contain"
+            />
+          </AnimateOnScroll>
+        </AnimateOnScroll>
       </div>
     </section>
   );

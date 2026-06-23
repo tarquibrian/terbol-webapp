@@ -6,6 +6,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { ArrowRight } from "lucide-react";
 import {
   sortByOrder,
   type PromoterAffiliationProcess,
@@ -115,7 +116,13 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
               {/* CTA solo para el primer paso */}
               {step.hasCTA && (
                 <div className="mt-2">
-                  <Button variant="secondary" size="sm" className="px-8">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="px-8"
+                    icon={<ArrowRight size={16} />}
+                    iconPosition="right"
+                  >
                     REGISTRARME
                   </Button>
                 </div>

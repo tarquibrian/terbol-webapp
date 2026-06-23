@@ -61,7 +61,7 @@ function FilterCheckbox({
     <label
       htmlFor={id}
       className={cn(
-        "group flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-md px-1 py-0.5 text-foreground/80 transition-colors hover:text-primary-orange focus-within:text-primary-orange focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 lg:min-h-8",
+        "group flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-md px-1 py-0.5 text-foreground/80 transition-colors hover:text-primary-orange lg:min-h-8",
         checked && "font-medium text-primary-orange",
       )}
     >
@@ -71,12 +71,12 @@ function FilterCheckbox({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="sr-only"
+        className="peer sr-only"
       />
       <span
         aria-hidden="true"
         className={cn(
-          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors",
+          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-primary-orange/40 peer-focus-visible:ring-offset-2",
           checked
             ? "border-primary-orange bg-primary-orange text-white"
             : "border-primary-light-gray bg-transparent",
@@ -547,9 +547,10 @@ export function ProductsView() {
                 onClick={() => setIsFiltersOpen(true)}
                 aria-haspopup="dialog"
                 aria-expanded={isFiltersOpen}
-                className="flex items-center gap-2 px-0"
+                className="px-0"
+                icon={<Filter size={18} aria-hidden="true" />}
+                iconPosition="right"
               >
-                <Filter size={18} aria-hidden="true" />
                 Mostrar Filtros
               </Button>
             </div>
@@ -649,7 +650,7 @@ export function ProductsView() {
 
                     {/* Paginación */}
                     {totalPages > 1 && (
-                      <div className="mt-10 flex items-center justify-between gap-4">
+                      <div className="mt-10 grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:flex sm:justify-between sm:gap-4">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -668,6 +669,7 @@ export function ProductsView() {
                           size="sm"
                           disabled={currentPage >= totalPages || loading}
                           onClick={() => goToPage(currentPage + 1)}
+                          className="justify-self-end"
                         >
                           Siguiente
                         </Button>

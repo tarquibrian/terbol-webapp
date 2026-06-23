@@ -32,7 +32,7 @@ export function Pagination({
   if (totalPages <= 1 && !alwaysShow) return null;
 
   return (
-    <div className="mt-10 flex items-center justify-between gap-4">
+    <div className="mt-10 grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:flex sm:justify-between sm:gap-4">
       <Button
         variant="secondary"
         size="sm"
@@ -51,6 +51,7 @@ export function Pagination({
         size="sm"
         disabled={currentPage >= totalPages || isPending}
         onClick={() => handlePageChange(currentPage + 1)}
+        className="justify-self-end"
       >
         Siguiente
       </Button>

@@ -11,7 +11,6 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { resolveImageAsset } from "@/lib/image-assets";
 
 interface DetailItem {
@@ -37,6 +36,8 @@ interface ScienceHeroProps {
  * Hero de la sección Ciencia y Calidad.
  */
 export function ScienceHero({ data, whatsappUrl }: ScienceHeroProps) {
+  const contactHref = whatsappUrl || "/promoter#advisor-registration";
+
   const getIconUrl = (path?: string) => {
     return resolveImageAsset(path);
   };
@@ -110,24 +111,23 @@ export function ScienceHero({ data, whatsappUrl }: ScienceHeroProps) {
           <Button
             variant="default"
             size="default"
-            className="w-full md:w-fit"
+            className="w-full md:w-auto"
             icon={<MessageCircle strokeWidth={1.75} />}
-            href={whatsappUrl}
+            href={contactHref}
             target={whatsappUrl ? "_blank" : undefined}
             rel={whatsappUrl ? "noopener noreferrer" : undefined}
           >
             Contactar por whatsapp
           </Button>
-          <Link href="/promoter" className="min-w-full md:min-w-[300px]">
-            <Button
-              variant="outline"
-              size="default"
-              className="w-full"
-              icon={<ArrowRight strokeWidth={1.75} />}
-            >
-              Saber más
-            </Button>
-          </Link>
+          <Button
+            href="/promoter"
+            variant="outline"
+            size="default"
+            className="w-full md:w-auto md:min-w-[300px]"
+            icon={<ArrowRight strokeWidth={1.75} />}
+          >
+            Saber más
+          </Button>
         </AnimateOnScroll>
       </div>
     </section>

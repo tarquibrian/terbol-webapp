@@ -12,6 +12,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import type { Product } from "../../data/products";
 import { Button } from "@/components/ui/Button";
@@ -98,13 +99,15 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
             {product.shortDescription}
           </p>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col items-stretch gap-4 min-[600px]:flex-row min-[600px]:items-center min-[600px]:justify-between">
           <p className="text-xl font-bold text-gray-900 mt-1">
             {currencySymbol} {product.price.toFixed(2)}
           </p>
           <Button
             variant="default"
             size="sm"
+            icon={<ArrowRight size={16} />}
+            iconPosition="right"
           >
             Comprar
           </Button>

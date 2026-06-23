@@ -106,6 +106,7 @@ export function ArticlesSection({
                   variant={isActive ? "secondary" : "outline"}
                   size="sm"
                   className="rounded-full text-gray-500 whitespace-nowrap"
+                  mobileFullWidth={false}
                   disabled={isPending}
                   icon={isActive ? <Check size={16} /> : undefined}
                   iconPosition="left"

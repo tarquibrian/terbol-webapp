@@ -67,7 +67,7 @@ export function Navbar() {
 
           {/* ─── Buscador ─── */}
           <SearchInput
-            placeholder="Buscar productos..."
+            placeholder="Buscar productos…"
             className="hidden lg:flex w-full min-w-[240px] desk:max-w-[400px]"
             onSearch={(query) => {
               if (query.trim()) {

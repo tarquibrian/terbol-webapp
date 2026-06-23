@@ -116,26 +116,17 @@ export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) 
                     const href = card.id === 2 ? whatsappHref : card.href;
                     const isExternal = card.id === 2 && whatsappUrl;
 
-                    return isExternal ? (
-                      <a href={href} target="_blank" rel="noopener noreferrer">
-                        <Button
-                          size="sm"
-                          variant={card.buttonVariant}
-                          icon={card.buttonIcon}
-                        >
-                          {card.buttonLabel}
-                        </Button>
-                      </a>
-                    ) : (
-                      <Link href={href}>
-                        <Button
-                          size="sm"
-                          variant={card.buttonVariant}
-                          icon={card.buttonIcon}
-                        >
-                          {card.buttonLabel}
-                        </Button>
-                      </Link>
+                    return (
+                      <Button
+                        href={href}
+                        size="sm"
+                        variant={card.buttonVariant}
+                        icon={card.buttonIcon}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                      >
+                        {card.buttonLabel}
+                      </Button>
                     );
                   })()}
                 </div>
@@ -155,7 +146,7 @@ export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) 
               >
                 <Link
                   href={card.href}
-                  className="group bg-primary-soft-gray-balance rounded-lg px-6 py-8 flex items-center gap-6 border border-transparent hover:border-primary-orange transition-all"
+                  className="group bg-primary-soft-gray-balance rounded-lg px-5 py-6 sm:px-6 sm:py-8 flex items-center gap-4 sm:gap-6 border border-transparent hover:border-primary-orange transition-[border-color,color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <div className="w-10 h-10 flex items-center justify-center text-primary-orange shrink-0 transition-colors">
                     {card.icon}

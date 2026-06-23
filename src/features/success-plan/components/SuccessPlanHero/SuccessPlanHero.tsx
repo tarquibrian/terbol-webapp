@@ -15,7 +15,6 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import Link from "next/link";
 
 interface SuccessPlanHeroProps {
   data?: {
@@ -31,6 +30,8 @@ interface SuccessPlanHeroProps {
  * Hero de la sección Plan de Éxito con descripción del programa Terbol.
  */
 export function SuccessPlanHero({ data, whatsappUrl }: SuccessPlanHeroProps) {
+  const contactHref = whatsappUrl || "/promoter#advisor-registration";
+
   return (
     <section className="wrapper-section">
       <div className="wrapper-content flex flex-col items-center gap-6 min-h-[400px] justify-center">
@@ -54,24 +55,23 @@ export function SuccessPlanHero({ data, whatsappUrl }: SuccessPlanHeroProps) {
           <Button
             variant="default"
             size="default"
-            className="w-full md:w-fit"
+            className="w-full md:w-auto"
             icon={<MessageCircle strokeWidth={1.75} />}
-            href={whatsappUrl}
+            href={contactHref}
             target={whatsappUrl ? "_blank" : undefined}
             rel={whatsappUrl ? "noopener noreferrer" : undefined}
           >
             Contactar por whatsapp
           </Button>
-          <Link href="/promoter" className="min-w-full md:min-w-[300px]">
-            <Button
-              variant="outline"
-              size="default"
-              className="w-full"
-              icon={<ArrowRight strokeWidth={1.75} />}
-            >
-              Saber más
-            </Button>
-          </Link>
+          <Button
+            href="/promoter"
+            variant="outline"
+            size="default"
+            className="w-full md:w-auto md:min-w-[300px]"
+            icon={<ArrowRight strokeWidth={1.75} />}
+          >
+            Saber más
+          </Button>
         </AnimateOnScroll>
       </div>
     </section>

@@ -85,14 +85,14 @@ export function FeaturedProducts({
                 <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
                   <button
                     onClick={handleProductPrev}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Producto anterior"
                   >
                     <ChevronLeft size={24} strokeWidth={1.5} />
                   </button>
                   <button
                     onClick={handleProductNext}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Producto siguiente"
                   >
                     <ChevronRight size={24} strokeWidth={1.5} />
@@ -124,14 +124,14 @@ export function FeaturedProducts({
                   <div className="flex md:hidden justify-center gap-4 mt-4">
                     <button
                       onClick={handleProductPrev}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Producto anterior"
                     >
                       <ChevronLeft size={20} />
                     </button>
                     <button
                       onClick={handleProductNext}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Producto siguiente"
                     >
                       <ChevronRight size={20} />
@@ -164,14 +164,14 @@ export function FeaturedProducts({
                 <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
                   <button
                     onClick={handleFocusPrev}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Anterior"
                   >
                     <ChevronLeft size={24} strokeWidth={1.5} />
                   </button>
                   <button
                     onClick={handleFocusNext}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Siguiente"
                   >
                     <ChevronRight size={24} strokeWidth={1.5} />
@@ -206,14 +206,14 @@ export function FeaturedProducts({
                   <div className="flex md:hidden justify-center gap-4 mt-4">
                     <button
                       onClick={handleFocusPrev}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Anterior"
                     >
                       <ChevronLeft size={20} />
                     </button>
                     <button
                       onClick={handleFocusNext}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus:outline-none"
+                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Siguiente"
                     >
                       <ChevronRight size={20} />

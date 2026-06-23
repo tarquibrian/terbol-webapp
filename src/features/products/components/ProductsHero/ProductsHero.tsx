@@ -61,7 +61,7 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
 
           <AnimateOnScroll variant="slide-up" delay={0.1} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:max-w-[600px] lg:justify-end">
             <span
-              className="text-body-sm text-foreground/60 whitespace-nowrap order-2 sm:order-1"
+              className="text-body-sm text-foreground/60 whitespace-nowrap order-2 sm:order-1 sm:flex sm:w-[112px] sm:shrink-0 sm:items-center sm:justify-end sm:text-right"
               aria-live="polite"
               aria-atomic="true"
             >
@@ -71,10 +71,14 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
                 `${totalResults} resultado${totalResults !== 1 ? "s" : ""}`
               )}
             </span>
+            <span
+              aria-hidden="true"
+              className="hidden sm:block order-2 h-6 w-px shrink-0 bg-gray-200"
+            />
             <SearchInput
-              placeholder="Buscar productos..."
+              placeholder="Buscar productos…"
               defaultValue={currentSearch}
-              className="w-full order-1 sm:order-2"
+              className="w-full order-1 sm:order-3 sm:flex-1 sm:min-w-0"
               onSearch={handleSearch}
             />
           </AnimateOnScroll>

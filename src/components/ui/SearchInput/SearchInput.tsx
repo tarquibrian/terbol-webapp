@@ -10,7 +10,7 @@ export interface SearchInputProps
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, placeholder = "Buscar...", onSearch, defaultValue, value: externalValue, onChange, ...props }, ref) => {
+  ({ className, placeholder = "Buscar…", onSearch, defaultValue, value: externalValue, onChange, ...props }, ref) => {
     const [value, setValue] = React.useState(defaultValue?.toString() || externalValue?.toString() || "");
 
     React.useEffect(() => {
@@ -77,7 +77,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           <button
             type="button"
             onClick={handleClear}
-            className="flex items-center justify-center text-(--grey-300) hover:text-(--grey-600) transition-colors"
+            className="flex items-center justify-center rounded-sm text-(--grey-300) hover:text-(--grey-600) transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Limpiar búsqueda"
           >
             <X />
@@ -88,7 +88,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         <button
           type="button"
           onClick={handleSearch}
-          className="flex items-center justify-center text-gray-900 hover:text-foreground transition-colors"
+          className="flex items-center justify-center rounded-sm text-gray-900 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Buscar"
         >
           <Search size={24} strokeWidth={1.75} />
@@ -101,4 +101,3 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 SearchInput.displayName = "SearchInput";
 
 export { SearchInput };
-
