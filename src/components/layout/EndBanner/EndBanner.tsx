@@ -26,9 +26,9 @@ const LARGE_CARDS = [
     id: 1,
     imageSrc: "/images/endbanner1.png",
     icon: <GraduationCap size={40} strokeWidth={1.3} />,
-    title: "¿Querés aprender con nosotros?",
+    title: "¿Quieres conocer más de nuestros productos?",
     description:
-      "Contenido educativo, guías especializadas y publicaciones para profundizar tus conocimientos.",
+      "Accede a contenido educativo, guías especializadas y publicaciones diseñadas para profundizar tus conocimientos.",
     buttonLabel: "VER PUBLICACIONES",
     buttonIcon: <ArrowRight size={20} />,
     buttonVariant: "secondary" as const,
@@ -38,9 +38,9 @@ const LARGE_CARDS = [
     id: 2,
     imageSrc: "/images/endbanner2.png",
     icon: <Users size={40} strokeWidth={1.3} />,
-    title: "¿Querés saber más?",
+    title: "Contáctanos",
     description:
-      "Contactá con una promotora para recibir asesoramiento personalizado sobre qué productos son ideales para vos.",
+      "Contacta para recibir asesoramiento y saber más de térbol Inspira.",
     buttonLabel: "CONTACTAR POR WHATSAPP",
     buttonIcon: <WhatsAppIcon className="h-5 w-5 -translate-y-px" />,
     buttonVariant: "outline" as const,
@@ -72,7 +72,10 @@ const SMALL_CARDS = [
   },
 ];
 
-export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) {
+export function EndBanner({
+  variant = "default",
+  whatsappUrl,
+}: EndBannerProps) {
   const whatsappHref = whatsappUrl || "/promoter#advisor-registration";
   return (
     <section className="wrapper-section pb-16 md:pb-24">

@@ -40,9 +40,10 @@ export const ContactForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await response.json().catch(() => null)) as
-        | { success?: boolean; message?: string }
-        | null;
+      const data = (await response.json().catch(() => null)) as {
+        success?: boolean;
+        message?: string;
+      } | null;
 
       if (!response.ok || !data?.success) {
         setStatus("error");
@@ -58,7 +59,9 @@ export const ContactForm = () => {
       phoneRef.current = "";
     } catch {
       setStatus("error");
-      setFeedback("No se pudo enviar el mensaje. Revisa tu conexión e inténtalo de nuevo.");
+      setFeedback(
+        "No se pudo enviar el mensaje. Revisa tu conexión e inténtalo de nuevo.",
+      );
     }
   };
 
@@ -77,20 +80,32 @@ export const ContactForm = () => {
             className="flex flex-col gap-4 justify-center items-center z-10"
           >
             <h3 className="heading-h3 text-center">¿Necesitas orientación?</h3>
-            <p className="text-body-medium text-gray-500 max-w-[700px] text-center">Contactá con un asesor de ventas para recibir asesoramiento personalizado sobre qué productos son ideales para vos.</p>
+            <p className="text-body-medium text-gray-500 text-center text-balance max-w-[700px]">
+              Te contactamos con un Asesor de Ventas Independiente que te brinde
+              acompañamiento personalizado y descubras cuáles productos se
+              adaptan mejor a tus necesidades.
+            </p>
           </AnimateOnScroll>
           <AnimateOnScroll
             variant="slide-up"
             delay={0.2}
             className="max-w-[450px] w-full z-10"
           >
-            <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-0 md:gap-2">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              noValidate
+              className="flex flex-col gap-0 md:gap-2"
+            >
               <AnimateOnScroll variant="slide-up" delay={0.25}>
                 <FormInput
                   name="nombre"
                   label="Nombre"
                   placeholder="Ingrese su nombre"
-                  rules={[{ type: "required" }, { type: "minLength", value: 3 }]}
+                  rules={[
+                    { type: "required" },
+                    { type: "minLength", value: 3 },
+                  ]}
                 />
               </AnimateOnScroll>
               <AnimateOnScroll variant="slide-up" delay={0.3}>
@@ -109,7 +124,10 @@ export const ContactForm = () => {
                   defaultCountry="BO"
                   // dialLocked
                   placeholder="Ingrese su teléfono"
-                  rules={[{ type: "required" }, { type: "minLength", value: 7 }]}
+                  rules={[
+                    { type: "required" },
+                    { type: "minLength", value: 7 },
+                  ]}
                   onPhoneChange={({ full }) => {
                     phoneRef.current = full;
                   }}
@@ -206,4 +224,4 @@ export const ContactForm = () => {
       </div>
     </section>
   );
-}
+};

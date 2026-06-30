@@ -98,7 +98,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  REGISTRARME COMO ASESOR DE VENTAS
+                  QUIERO SER ASESOR DE VENTAS
                 </Button>
                 <Button
                   variant="outline"
