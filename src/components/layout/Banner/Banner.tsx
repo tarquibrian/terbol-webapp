@@ -125,15 +125,17 @@ export function Banner({ data }: BannerProps) {
           </div>
 
           {/* Imagen (Derecha en desktop, Abajo en mobile) */}
-          <AnimateOnScroll variant="slide-up" delay={0.2} className="relative min-h-[260px] w-full overflow-hidden sm:min-h-[360px] lg:h-full lg:min-h-0">
-            <Image
-              src={imageUrl}
-              alt={data?.title || "Comienza tu camino hacia el bienestar"}
-              fill
-              className="object-cover object-bottom"
-              loading="lazy"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
+          <AnimateOnScroll variant="slide-up" delay={0.2} className="w-full p-3 lg:h-full">
+            <div className="relative min-h-[260px] w-full overflow-hidden rounded-md sm:min-h-[360px] lg:h-full lg:min-h-0">
+              <Image
+                src={imageUrl}
+                alt={data?.title || "Comienza tu camino hacia el bienestar"}
+                fill
+                className="object-cover object-bottom"
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
           </AnimateOnScroll>
 
         </div>

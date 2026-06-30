@@ -44,14 +44,16 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
             {/* Imagen principal */}
             <AnimateOnScroll variant="fade" delay={0.1}>
               <div className="w-full aspect-4/3 sm:aspect-square rounded-lg overflow-hidden bg-primary-soft-gray-light">
-                <Image
-                  src={selectedImage ?? product.cardImage}
-                  alt={product.name}
-                  width={800}
-                  height={800}
-                  className="w-full h-full object-contain p-4"
-                  priority
-                />
+                <div className="flex h-full w-full items-center justify-center p-4">
+                  <Image
+                    src={selectedImage ?? product.cardImage}
+                    alt={product.name}
+                    width={800}
+                    height={800}
+                    className="h-auto max-h-full w-auto max-w-full rounded-md object-contain"
+                    priority
+                  />
+                </div>
               </div>
             </AnimateOnScroll>
 
