@@ -60,9 +60,9 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
           Tablet (md): grid-cols-2 (para 2x2 donde el item 4 y 1 varíen)
           Escritorio (xl): grid-cols-3
         */}
-        <AnimateOnScroll variant="slide-up" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-auto xl:h-[650px]">
+        <AnimateOnScroll variant="slide-up" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-auto">
           {/* Card 1 - Ocupa 2 filas, 1 columna */}
-          <div className="md:row-span-2 xl:row-span-2 rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative overflow-hidden group h-[600px] md:h-[650px]">
+          <div className="md:row-span-2 xl:row-span-2 rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative overflow-hidden group min-h-[600px] md:min-h-[650px]">
             <div className="flex justify-between items-start w-full relative z-10">
               <div className="flex items-center justify-center text-primary-orange w-12 h-12 relative">
                 {getIconUrl(step1.icon) ? (
@@ -80,7 +80,11 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               <span className="text-xl font-regular text-gray-300">01</span>
             </div>
 
-            <div className="mt-8 mb-8 relative z-10 flex-1">
+            <div className="relative z-10 mt-8 mb-8">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-x-6 -top-4 -bottom-8 -z-10 bg-[linear-gradient(180deg,rgba(239,239,235,1)_0%,rgba(239,239,235,0.96)_72%,rgba(239,239,235,0)_100%)] sm:-inset-x-8"
+              />
               <h3 className="heading-h6-bold text-primary mb-3">{step1.title}</h3>
               <p className="text-body-medium text-gray-600 mb-6">
                 {step1.description}

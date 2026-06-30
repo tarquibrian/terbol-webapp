@@ -95,7 +95,7 @@ export function AboutHero({ data }: AboutHeroProps) {
           </AnimateOnScroll>
         </div>
 
-        <div className="flex gap-4 max-w-[1024px] flex-col md:flex-row w-full justify-center">
+        <div className="flex gap-4 max-w-[1024px] flex-col md:flex-row md:items-stretch w-full justify-center">
           {details.map((detail, index) => {
             const isFromCms = detail.image && !detail.image.startsWith("/");
             const imgUrl = isFromCms
@@ -109,7 +109,7 @@ export function AboutHero({ data }: AboutHeroProps) {
                 key={detail.id}
                 variant="slide-up"
                 delay={0.3 + index * 0.1}
-                className="w-full p-6 bg-primary-soft-gray-balance rounded-lg h-fit md:min-h-[230px] flex flex-col gap-6 justify-between flex-1"
+                className="w-full p-6 bg-primary-soft-gray-balance rounded-lg md:min-h-[230px] md:self-stretch flex flex-col gap-6 justify-between flex-1"
               >
                 {/* LOGO o ICONO */}
                 <div
