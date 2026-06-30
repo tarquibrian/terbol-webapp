@@ -7,10 +7,10 @@ import {
   BookOpen,
   Heart,
   ShieldPlus,
-  MessageCircle,
   Users,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { assetPath } from "@/lib/base-path";
 
 interface EndBannerProps {
@@ -42,7 +42,7 @@ const LARGE_CARDS = [
     description:
       "Contactá con una promotora para recibir asesoramiento personalizado sobre qué productos son ideales para vos.",
     buttonLabel: "CONTACTAR POR WHATSAPP",
-    buttonIcon: <MessageCircle size={20} />,
+    buttonIcon: <WhatsAppIcon className="h-5 w-5 -translate-y-px" />,
     buttonVariant: "outline" as const,
     href: "/promoter#advisor-registration",
   },
@@ -93,7 +93,7 @@ export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) 
             {LARGE_CARDS.map((card) => (
               <div
                 key={card.id}
-                className="relative w-full rounded-lg overflow-hidden p-3"
+                className="relative flex min-h-[320px] w-full rounded-lg overflow-hidden p-3 md:min-h-[335px]"
               >
                 <Image
                   src={assetPath(card.imageSrc)}
@@ -102,7 +102,7 @@ export function EndBanner({ variant = "default", whatsappUrl }: EndBannerProps) 
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
-                <div className="relative backdrop-blur-md bg-white/70 rounded-md p-6 flex flex-col justify-start items-start gap-8 md:gap-10">
+                <div className="relative z-10 flex flex-1 flex-col items-start justify-between gap-8 rounded-md bg-white/70 p-6 backdrop-blur-md md:gap-10">
                   <div className="w-14 h-14 rounded-md bg-primary-black flex items-center justify-center text-white">
                     {card.icon}
                   </div>

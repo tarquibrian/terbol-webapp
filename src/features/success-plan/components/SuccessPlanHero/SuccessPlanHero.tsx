@@ -14,7 +14,8 @@
 import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { ArrowRight } from "lucide-react";
 
 interface SuccessPlanHeroProps {
   data?: {
@@ -56,7 +57,7 @@ export function SuccessPlanHero({ data, whatsappUrl }: SuccessPlanHeroProps) {
             variant="default"
             size="default"
             className="w-full md:w-auto"
-            icon={<MessageCircle strokeWidth={1.75} />}
+            icon={<WhatsAppIcon className="h-5 w-5 -translate-y-px" />}
             href={contactHref}
             target={whatsappUrl ? "_blank" : undefined}
             rel={whatsappUrl ? "noopener noreferrer" : undefined}

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/Button";
-import { ArrowRight, Phone, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 
 export interface BannerData {
   title?: string;
@@ -67,7 +68,7 @@ export function Banner({ data }: BannerProps) {
                 size="default"
                 icon={<ArrowRight />}
                 iconPosition="right"
-                className="w-fit justify-between"
+                className="w-fit justify-between lg:min-w-[350px]"
                 href={data?.button_url || "#"}
                 target={isExternalButton ? "_blank" : undefined}
                 rel={isExternalButton ? "noopener noreferrer" : undefined}
@@ -93,14 +94,14 @@ export function Banner({ data }: BannerProps) {
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-gray-500 hover:text-primary-orange transition-colors"
+                      className="flex items-center gap-2.5 text-gray-500 hover:text-primary-orange transition-colors"
                     >
-                      <Phone size={20} />
+                      <WhatsAppIcon className="h-[22px] w-[22px] shrink-0 -translate-y-[2px]" />
                       <span className="text-body-medium">{phoneDisplay}</span>
                     </a>
                   ) : (
-                    <div className="flex items-center gap-3 text-gray-500">
-                      <Phone size={20} />
+                    <div className="flex items-center gap-2.5 text-gray-500">
+                      <WhatsAppIcon className="h-[22px] w-[22px] shrink-0 -translate-y-[2px]" />
                       <p className="text-body-medium">{phoneDisplay}</p>
                     </div>
                   );
@@ -124,13 +125,12 @@ export function Banner({ data }: BannerProps) {
           </div>
 
           {/* Imagen (Derecha en desktop, Abajo en mobile) */}
-          <AnimateOnScroll variant="slide-up" delay={0.2} className="w-full flex items-end justify-center lg:justify-end min-h-[200px] lg:min-h-0 relative">
+          <AnimateOnScroll variant="slide-up" delay={0.2} className="relative min-h-[260px] w-full overflow-hidden sm:min-h-[360px] lg:h-full lg:min-h-0">
             <Image
               src={imageUrl}
               alt={data?.title || "Comienza tu camino hacia el bienestar"}
-              width={700}
-              height={540}
-              className="object-contain object-bottom w-full h-auto lg:h-full lg:absolute lg:bottom-0 lg:right-0"
+              fill
+              className="object-cover object-bottom"
               loading="lazy"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
