@@ -67,9 +67,9 @@ export function Footer({ socialNetworks }: FooterProps) {
     <footer className="w-full mt-20">
       {/* Contenido Principal */}
       <div className="container max-w-[1512px] mx-auto px-6 md:px-16 py-12 md:py-16 bg-primary-soft-gray-balance rounded-t-lg flex flex-col gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-10 md:gap-16">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-16 md:gap-y-12 xl:grid-cols-[2fr_1fr_1fr] xl:gap-16">
           {/* ─── Columna 1: Logo + Descripción + Redes ─── */}
-          <div className="flex flex-col gap-6 max-w-[400px]">
+          <div className="flex max-w-[400px] flex-col gap-6 md:col-span-2 xl:col-span-1">
             <div className="flex flex-col gap-3">
               <Link href="/" className="inline-block">
                 <Image

@@ -38,6 +38,8 @@ export function Pagination({
         size="sm"
         disabled={currentPage <= 1 || isPending}
         onClick={() => handlePageChange(currentPage - 1)}
+        mobileFullWidth={false}
+        className="min-h-10 w-24 justify-self-start sm:min-h-0 sm:w-auto"
       >
         Atrás
       </Button>
@@ -51,7 +53,8 @@ export function Pagination({
         size="sm"
         disabled={currentPage >= totalPages || isPending}
         onClick={() => handlePageChange(currentPage + 1)}
-        className="justify-self-end"
+        mobileFullWidth={false}
+        className="min-h-10 w-24 justify-self-end sm:min-h-0 sm:w-auto"
       >
         Siguiente
       </Button>

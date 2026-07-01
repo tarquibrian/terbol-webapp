@@ -656,6 +656,8 @@ export function ProductsView() {
                           size="sm"
                           disabled={currentPage <= 1 || loading}
                           onClick={() => goToPage(currentPage - 1)}
+                          mobileFullWidth={false}
+                          className="min-h-10 w-24 justify-self-start sm:min-h-0 sm:w-auto"
                         >
                           Atrás
                         </Button>
@@ -669,7 +671,8 @@ export function ProductsView() {
                           size="sm"
                           disabled={currentPage >= totalPages || loading}
                           onClick={() => goToPage(currentPage + 1)}
-                          className="justify-self-end"
+                          mobileFullWidth={false}
+                          className="min-h-10 w-24 justify-self-end sm:min-h-0 sm:w-auto"
                         >
                           Siguiente
                         </Button>
