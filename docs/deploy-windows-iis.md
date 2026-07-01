@@ -107,6 +107,9 @@ NEXT_PUBLIC_STORAGE_URL=https://cms.terbolinspira.com/storage
 # x-revalidate-secret que envía el CMS. Sin comillas. Valor aleatorio en prod.
 REVALIDATE_SECRET=<token>
 
+# Fallback ISR en segundos cuando el webhook no se ejecuta. 86400 = 1 día.
+CMS_REVALIDATE_SECONDS=86400
+
 # Auth del API de productos, SOLO si el CMS lo exige (si /products es público,
 # dejar vacías). El header por defecto es "ApiKey".
 PRODUCTS_API_TOKEN=
@@ -137,6 +140,7 @@ NEXT_PUBLIC_SITE_URL=https://terbolinspira.com
 NEXT_PUBLIC_API_URL=https://cms.terbolinspira.com/api
 NEXT_PUBLIC_STORAGE_URL=https://cms.terbolinspira.com/storage
 REVALIDATE_SECRET=<token>
+CMS_REVALIDATE_SECONDS=86400
 "@ | Out-File -FilePath .env.production -Encoding utf8
 ```
 

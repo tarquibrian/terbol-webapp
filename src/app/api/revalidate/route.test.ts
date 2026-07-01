@@ -3,7 +3,7 @@ import { afterEach, beforeEach, test } from "node:test";
 import { POST } from "./route";
 
 interface NextCacheMock {
-  calls: Array<[tag: string, profile: string]>;
+  calls: Array<[tag: string, profile: string | { expire?: number }]>;
   reset: () => void;
 }
 
@@ -79,8 +79,8 @@ test("POST /api/revalidate deduplica tags validos y llama revalidateTag", async 
   assert.equal(body.success, true);
   assert.deepEqual(body.data.tags, ["home", "blog"]);
   assert.deepEqual(nextCacheMock().calls, [
-    ["home", "max"],
-    ["blog", "max"],
+    ["home", { expire: 0 }],
+    ["blog", { expire: 0 }],
   ]);
 });
 
@@ -110,8 +110,8 @@ test("POST /api/revalidate acepta los tags 'products' y 'blog'", async () => {
   assert.equal(body.success, true);
   assert.deepEqual(body.data.tags, ["products", "blog"]);
   assert.deepEqual(nextCacheMock().calls, [
-    ["products", "max"],
-    ["blog", "max"],
+    ["products", { expire: 0 }],
+    ["blog", { expire: 0 }],
   ]);
 });
 

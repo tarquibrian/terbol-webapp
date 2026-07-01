@@ -10,5 +10,7 @@
  * máximo cada `CMS_REVALIDATE_SECONDS`.
  */
 
+import { serverEnv } from "@/config/env";
+
 /** Fallback temporal de revalidación ISR para fetches del CMS (segundos). */
-export const CMS_REVALIDATE_SECONDS = 60 * 60; // 1 hora
+export const CMS_REVALIDATE_SECONDS = serverEnv.CMS_REVALIDATE_SECONDS;

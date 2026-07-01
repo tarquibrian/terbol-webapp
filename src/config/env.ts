@@ -56,6 +56,15 @@ function readOptional(rawValue: string | undefined): string {
   return rawValue?.trim() ?? "";
 }
 
+/** Lee un entero positivo o usa el fallback indicado. */
+function readPositiveInteger(
+  rawValue: string | undefined,
+  fallback: number,
+): number {
+  const value = Number(rawValue);
+  return Number.isSafeInteger(value) && value > 0 ? value : fallback;
+}
+
 // ─── Site Configuration ──────────────────────────────────────────────────────
 
 /**
@@ -165,6 +174,10 @@ export const serverEnv = {
   /** Secret obligatorio para autenticar POST /api/revalidate. */
   get REVALIDATE_SECRET() {
     return readOptional(process.env.REVALIDATE_SECRET);
+  },
+  /** Fallback ISR cuando el CMS no dispara el webhook. Por defecto: 1 día. */
+  get CMS_REVALIDATE_SECONDS() {
+    return readPositiveInteger(process.env.CMS_REVALIDATE_SECONDS, 60 * 60 * 24);
   },
 
   // SMTP del formulario de contacto (/about). Ver .env.example.

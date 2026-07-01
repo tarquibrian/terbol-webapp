@@ -130,8 +130,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Limpiar la caché en Next.js para la etiqueta específica
-    tags.forEach((tag) => revalidateTag(tag, "max"));
+    // El webhook requiere que el próximo request espere contenido fresco.
+    tags.forEach((tag) => revalidateTag(tag, { expire: 0 }));
     logInfo("revalidate_succeeded", {
       ...logContext,
       tags,

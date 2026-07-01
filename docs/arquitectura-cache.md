@@ -50,7 +50,7 @@ Vercel CDN / servidor
 
 **Características:**
 - El HTML llega con todo el contenido renderizado — no hay skeleton.
-- El cache se refresca por webhook (`revalidateTag`) o por tiempo (`CMS_REVALIDATE_SECONDS = 3600`).
+- El cache se refresca por webhook (`revalidateTag`) o por tiempo (`CMS_REVALIDATE_SECONDS`, `86400` por defecto).
 - Cada página tiene su propio tag ISR (`home`, `about`, `science`, etc.).
 - Después de un deploy, todas las páginas arrancan con cache caliente (pre-renderizadas en build).
 
@@ -154,7 +154,7 @@ Hay tres capas de caché que intervienen:
 │  ──────────────────────                                   │
 │  Next.js cachea cada fetch() del servidor al CMS.        │
 │  Controlado por: next.revalidate + next.tags              │
-│  Se purga con revalidateTag() o expira en 3600s.         │
+│  Se purga con revalidateTag() o expira en 86400s.        │
 │  Aplica a: todos los fetches al CMS desde Route          │
 │  Handlers y Server Components.                           │
 └──────────────────────────────────────────────────────────┘
@@ -202,7 +202,7 @@ detalles individuales) porque todos los fetches usan el mismo tag.
 | CMS envía webhook | Próximo request después del webhook |
 | Sin webhook, alguien visita la página | Stale-while-revalidate: ve data vieja, el siguiente ve la nueva |
 | Sin webhook, nadie visita | El cache no se refresca solo — se refresca cuando alguien entra |
-| Máximo delay sin webhook | ~1 hora (CMS_REVALIDATE_SECONDS = 3600) desde la última visita |
+| Máximo delay sin webhook | ~1 día (`CMS_REVALIDATE_SECONDS = 86400`) desde la última visita |
 | Nuevo deploy | Todas las páginas ISR/SSG se regeneran con data fresca |
 
 ---

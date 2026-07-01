@@ -93,6 +93,7 @@ solo `.env.example` debe versionarse.
 | `NEXT_PUBLIC_API_URL` | Sí | URL base del CMS/API general para secciones, blog y contenido. |
 | `NEXT_PUBLIC_STORAGE_URL` | Sí | URL base de imágenes/archivos servidos por el CMS. |
 | `REVALIDATE_SECRET` | Sí para revalidación | Secret del webhook `POST /api/revalidate`; se envía en `x-revalidate-secret`. |
+| `CMS_REVALIDATE_SECONDS` | No | Fallback ISR cuando el webhook no se ejecuta; por defecto `86400` (1 día). |
 | `PRODUCTS_API_TOKEN` | No | Token opcional si el API de productos requiere `Authorization: Bearer`. |
 | `PRODUCTS_API_KEY` | No | API key opcional si el API de productos requiere un header dedicado. |
 | `PRODUCTS_API_KEY_HEADER` | No | Nombre del header para `PRODUCTS_API_KEY`; por defecto `ApiKey`. |
@@ -221,7 +222,7 @@ El contenido se refresca de dos formas:
 | Mecanismo | Cómo funciona | Latencia |
 | --- | --- | --- |
 | Webhook (`POST /api/revalidate`) | El CMS notifica un cambio → se purga el cache del tag correspondiente | Próximo request |
-| Fallback temporal | Si el webhook no se dispara, ISR auto-refresca cada `CMS_REVALIDATE_SECONDS` (1 hora) | Máximo ~1 hora |
+| Fallback temporal | Si el webhook no se dispara, ISR auto-refresca según `CMS_REVALIDATE_SECONDS` (1 día por defecto) | Máximo ~1 día |
 
 ### Páginas con CSR (Client-Side)
 
@@ -316,4 +317,3 @@ para mantener un historial limpio y automatizable. Estructura del mensaje:
 
 **Regla de oro:** commits lógicos y atómicos (una unidad de trabajo por commit)
 en lugar de un macro-commit gigante.
-
