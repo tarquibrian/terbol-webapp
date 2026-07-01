@@ -5,7 +5,9 @@ import {
   ArrowRight,
   GraduationCap,
   BookOpen,
+  FlaskConical,
   Heart,
+  Package,
   ShieldPlus,
   Users,
 } from "lucide-react";
@@ -72,22 +74,66 @@ const SMALL_CARDS = [
   },
 ];
 
+const COMPACT_CARDS = [
+  {
+    href: "/products",
+    icon: <Package size={40} strokeWidth={1} />,
+    title: "Ver catálogo completo",
+    description: "Explora todos nuestros productos",
+    delay: 0.3,
+  },
+  {
+    href: "/science-and-quality",
+    icon: <FlaskConical size={40} strokeWidth={1} />,
+    title: "Ciencia y Calidad",
+    description: "Nuestro respaldo científico",
+    delay: 0.4,
+  },
+  {
+    href: "/success-plan",
+    icon: <BookOpen size={40} strokeWidth={1} />,
+    title: "Cómo funciona",
+    description: "Aprende más sobre el modelo",
+    delay: 0.5,
+  },
+];
+
 export function EndBanner({
   variant = "default",
+  title,
+  description,
   whatsappUrl,
 }: EndBannerProps) {
   const whatsappHref = whatsappUrl || "/promoter#advisor-registration";
+  const isCompact = variant === "compact";
+  const headingTitle =
+    title ??
+    (isCompact
+      ? "Continúa explorando"
+      : "¿No encontraste lo que buscabas?");
+  const headingDescription =
+    description ??
+    (isCompact
+      ? undefined
+      : "Contáctanos y te ayudaremos a encontrar el producto perfecto para ti.");
+  const smallCards = isCompact ? COMPACT_CARDS : SMALL_CARDS;
+
   return (
     <section className="wrapper-section pb-16 md:pb-24">
       <div className="wrapper-content flex flex-col gap-0">
         <div className="flex flex-col items-center justify-center text-center mb-10">
-          <h2 className="heading-h4 font-bold text-gray-900 mb-4">
-            ¿No encontraste lo que buscabas?
+          <h2
+            className={`heading-h4 font-bold text-gray-900 ${
+              headingDescription ? "mb-4" : ""
+            }`}
+          >
+            {headingTitle}
           </h2>
-          <p className="text-body-medium text-gray-500">
-            Contáctanos y te ayudaremos a encontrar el producto perfecto para
-            ti.
-          </p>
+          {headingDescription && (
+            <p className="text-body-medium text-gray-500">
+              {headingDescription}
+            </p>
+          )}
         </div>
 
         {/* Large Cards (Hidden in compact variant) */}
@@ -141,24 +187,25 @@ export function EndBanner({
         {/* 3 Small Cards (Hidden in default variant) */}
         {variant !== "default" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {SMALL_CARDS.map((card) => (
+            {smallCards.map((card) => (
               <AnimateOnScroll
                 key={card.href}
                 variant="slide-up"
                 delay={card.delay}
+                className="h-full"
               >
                 <Link
                   href={card.href}
-                  className="group bg-primary-soft-gray-balance rounded-lg px-5 py-6 sm:px-6 sm:py-8 flex items-center gap-4 sm:gap-6 border border-transparent hover:border-primary-orange transition-[border-color,color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group flex h-full items-center gap-4 rounded-lg border border-transparent bg-primary-soft-gray-balance px-5 py-6 transition-[border-color,color] duration-300 hover:border-primary-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-6 sm:px-6 sm:py-8"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center text-primary-orange shrink-0 transition-colors">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center text-primary-orange transition-colors">
                     {card.icon}
                   </div>
                   <div className="flex-1">
-                    <h4 className="heading-h6 text-gray-900 font-bold mb-1">
+                    <h4 className="heading-h6 mb-1 font-bold text-gray-900">
                       {card.title}
                     </h4>
-                    <p className="text-body-medium text-gray-500 line-clamp-1">
+                    <p className="text-body-medium line-clamp-1 text-gray-500">
                       {card.description}
                     </p>
                   </div>

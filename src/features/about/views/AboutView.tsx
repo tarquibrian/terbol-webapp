@@ -10,6 +10,7 @@ import { AboutHero } from "../components/AboutHero";
 import { WhoWeAre } from "../components/WhoWeAre";
 import { ContactForm } from "../components/ContactForm";
 import { AdvisorBanner } from "@/components/layout/AdvisorBanner";
+import { EndBanner } from "@/components/layout/EndBanner";
 
 export interface AboutPageData {
   identity?: React.ComponentProps<typeof AboutHero>["data"];
@@ -26,6 +27,7 @@ export function AboutView({ data }: AboutViewProps) {
       <AboutHero data={data?.identity} />
       <WhoWeAre data={data?.about_us} />
       <ContactForm />
+      <EndBanner variant="compact" />
       <AdvisorBanner />
     </>
   );
