@@ -61,7 +61,7 @@ export function ProductDetailView({
       {/* SECCION DE CATEGORIAS */}
       <CategoryCarouselSection
         categories={focusCategories}
-        title="Enfoques"
+        title="Productos para diferentes enfoques"
         autoplayIntervalMs={5000}
       />
     </>
