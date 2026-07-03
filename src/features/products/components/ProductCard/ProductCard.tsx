@@ -30,6 +30,13 @@ interface ProductCardProps {
   disableAnimation?: boolean;
 }
 
+function formatProductCardPrice(price: number) {
+  const hasDecimals = !Number.isInteger(price);
+  const formattedPrice = hasDecimals ? price.toFixed(2) : String(price);
+
+  return `${formattedPrice} Bs.`;
+}
+
 /**
  * Tarjeta de producto con link a la página de detalle.
  *
@@ -39,7 +46,7 @@ interface ProductCardProps {
 export function ProductCard({ product, index = 0, animationDelay, disableAnimation = false }: ProductCardProps) {
   // Si se provee, usamos el delay custom; sino, el por defecto para grid-cols-3
   const delay = animationDelay !== undefined ? animationDelay : 0.1 * (index % 3);
-  const currencySymbol = product.currencySymbol ?? "Bs.";
+  const formattedPrice = formatProductCardPrice(product.price);
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   React.useEffect(() => {
@@ -101,7 +108,7 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
         </div>
         <div className="flex flex-col items-stretch gap-4 min-[600px]:flex-row min-[600px]:items-center min-[600px]:justify-between">
           <p className="text-xl font-bold text-gray-900 mt-1">
-            {currencySymbol} {product.price.toFixed(2)}
+            {formattedPrice}
           </p>
           <Button
             variant="default"

@@ -4,7 +4,10 @@ import * as React from "react";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Product } from "../data/products";
-import { TARGET_AUDIENCES } from "../data/targetAudiences";
+import {
+  TARGET_AUDIENCES,
+  TARGET_AUDIENCE_IMAGE_FALLBACK,
+} from "../data/targetAudiences";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
 
@@ -15,7 +18,7 @@ interface ProductTargetSectionProps {
 export function ProductTargetSection({ product }: ProductTargetSectionProps) {
   const data = product.targetItems && product.targetItems.length > 0
     ? {
-        image: resolveImageAsset(product.targetImage, "/images/productextra1.png") ?? "",
+        image: resolveImageAsset(product.targetImage, TARGET_AUDIENCE_IMAGE_FALLBACK) ?? "",
         items: product.targetItems,
       }
     : TARGET_AUDIENCES[product.consumptionType];
@@ -57,7 +60,7 @@ export function ProductTargetSection({ product }: ProductTargetSectionProps) {
                             }}
                           ></div>
                         </div>
-                        <div className="flex flex-col pb-10 md:pb-12 pt-1">
+                        <div className="flex flex-col pb-10 pt-1">
                           <h3 className="heading-h6 text-gray-900 font-bold mb-2 md:mb-3">
                             {item.title}
                           </h3>

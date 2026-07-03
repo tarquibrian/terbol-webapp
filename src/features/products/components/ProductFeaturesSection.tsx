@@ -33,14 +33,14 @@ export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps)
           <AnimateOnScroll variant="fade" delay={0.2} className="w-full aspect-video md:aspect-square rounded-md overflow-hidden">
             <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt="Por qué elegir producto" width={800} height={800} className="w-full h-full object-cover" />
           </AnimateOnScroll>
-          <div className="w-full p-4 lg:p-8 flex flex-col justify-between gap-8">
+          <div className="w-full p-4 lg:p-6 flex flex-col justify-between gap-6">
             <div>
               <AnimateOnScroll variant="slide-up" delay={0.3}>
-                <h2 className="heading-h6-bold text-gray-900 text-wrap mb-4 md:mb-6">
+                <h2 className="heading-h6-bold text-gray-900 text-wrap mb-4">
                   {product?.whyChooseTitle ?? "Respaldo Térbol Inspira"}
                 </h2>
               </AnimateOnScroll>
-              <ul className="flex flex-col gap-4 md:gap-6">
+              <ul className="flex flex-col gap-4 md:gap-5">
                 {items.map((item, index) => (
                   <AnimateOnScroll
                     key={`${item}-${index}`}

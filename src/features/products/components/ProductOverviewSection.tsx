@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Product } from "../data/products";
@@ -12,9 +12,16 @@ interface ProductOverviewSectionProps {
   product: Product;
 }
 
+function formatProductDetailPrice(price: number) {
+  const hasDecimals = !Number.isInteger(price);
+  const formattedPrice = hasDecimals ? price.toFixed(2) : String(price);
+
+  return `${formattedPrice} Bs.`;
+}
+
 export function ProductOverviewSection({ product }: ProductOverviewSectionProps) {
   const [selectedImage, setSelectedImage] = React.useState<string | undefined>(undefined);
-  const currencySymbol = product.currencySymbol ?? "Bs";
+  const formattedPrice = formatProductDetailPrice(product.price);
 
   return (
     <section className="wrapper-section">
@@ -124,10 +131,10 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
                   <h2 className="text-body-lg text-gray-900 font-bold mb-4">
                     {product.detailsSubtitle}
                   </h2>
-                  <ul className="text-body-md text-gray-500 flex flex-col gap-3">
+                  <ul className="text-body-md text-gray-500 flex flex-col gap-4">
                     {product.detailsList.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-4">
-                        <span className="w-2 h-2 shrink-0 rounded-full bg-primary-orange"></span>
+                      <li key={idx} className="flex items-start gap-4">
+                        <span className="mt-2 w-2 h-2 shrink-0 rounded-full bg-primary-orange"></span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -142,9 +149,9 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
 
             <div className="flex gap-4 lg:gap-8 justify-between">
               <AnimateOnScroll variant="slide-up" delay={0.4}>
-                <div className="text-body-md text-gray-500 mb-2">Precio sugerido</div>
+                <div className="text-body-md text-gray-500 mb-2">Precio</div>
                 <div className="heading-h4 text-gray-900 font-bold">
-                  {currencySymbol} {product.price.toFixed(2)}
+                  {formattedPrice}
                 </div>
               </AnimateOnScroll>
 
@@ -202,11 +209,15 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
                   <div className="w-full h-px bg-gray-100"></div>
                 </AnimateOnScroll>
                 <AnimateOnScroll variant="slide-up" delay={0.7} className="flex flex-col gap-4">
-                  <h2 className="heading-h5 text-gray-900 font-bold">Beneficios principales</h2>
-                  <ul className="text-body-md text-gray-600 flex flex-col gap-3">
+                  <h2 className="heading-h5 text-gray-900 font-bold">Beneficios</h2>
+                  <ul className="text-body-md text-gray-600 flex flex-col gap-4">
                     {product.benefits.map((benefit, idx) => (
                       <li key={idx} className="flex items-start gap-4">
-                        <span className="w-2 h-2 mt-2 shrink-0 rounded-full bg-primary-orange"></span>
+                        <Check
+                          className="mt-0.5 h-5 w-5 shrink-0 text-primary-orange"
+                          strokeWidth={2.25}
+                          aria-hidden="true"
+                        />
                         <span>{benefit}</span>
                       </li>
                     ))}

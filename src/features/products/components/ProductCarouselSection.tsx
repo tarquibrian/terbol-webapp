@@ -20,6 +20,8 @@ interface ProductCarouselSectionProps {
 }
 
 const MIN_LOOP_ITEMS = 6;
+const ITEM_FADE_DURATION_SECONDS = 0.9;
+const ITEM_FADE_STAGGER_SECONDS = 0.14;
 
 function repeatItemsForLoop<T>(items: T[], minItems: number) {
   if (items.length <= 1 || items.length >= minItems) return items;
@@ -78,7 +80,7 @@ export function ProductCarouselSection({
   if (carouselItems.length === 0) return null;
 
   return (
-    <section className="wrapper-section overflow-hidden">
+    <section className="w-full overflow-hidden py-6 md:py-8 lg:py-12">
       <Carousel
         opts={{ loop: true, align: "start" }}
         plugins={plugin}
@@ -87,7 +89,7 @@ export function ProductCarouselSection({
       >
         {/* Header del Carousel: Título y Controles */}
         <div className="flex justify-between items-center gap-6">
-          <AnimateOnScroll variant="slide-up" className="shrink-0 whitespace-nowrap">
+          <AnimateOnScroll variant="fade" className="shrink-0 whitespace-nowrap">
             <h2 className="text-body-medium uppercase text-gray-300 font-medium">{title}</h2>
           </AnimateOnScroll>
 
@@ -114,46 +116,50 @@ export function ProductCarouselSection({
         </div>
 
         {/* Carousel Wrapper */}
-        <AnimateOnScroll variant="slide-up" delay={0.2}>
-          <div className="relative w-full">
-            <div className="px-0 md:px-0">
-              <CarouselContent>
-                {loopItems.map((product, idx) => (
-                  <CarouselItem
-                    key={`${product.id}-${idx}`}
-                    className="w-full md:basis-1/2 lg:basis-1/3"
+        <div className="relative w-full">
+          <div className="px-0 md:px-0">
+            <CarouselContent>
+              {loopItems.map((product, idx) => (
+                <CarouselItem
+                  key={`${product.id}-${idx}`}
+                  className="w-full md:basis-1/2 lg:basis-1/3"
+                >
+                  <AnimateOnScroll
+                    variant="fade"
+                    duration={ITEM_FADE_DURATION_SECONDS}
+                    delay={(idx % 3) * ITEM_FADE_STAGGER_SECONDS}
                   >
                     <ProductCard
                       product={product}
                       index={idx}
                       disableAnimation={true}
                     />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </div>
-
-            {/* Controles para Mobile */}
-            {hasMultipleItems && (
-              <div className="flex md:hidden justify-center gap-4 mt-8">
-                <button
-                  onClick={handlePrev}
-                  className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label="Anterior"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label="Siguiente"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </div>
-            )}
+                  </AnimateOnScroll>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
           </div>
-        </AnimateOnScroll>
+
+          {/* Controles para Mobile */}
+          {hasMultipleItems && (
+            <AnimateOnScroll variant="fade" className="flex md:hidden justify-center gap-4 mt-8">
+              <button
+                onClick={handlePrev}
+                className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Anterior"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={handleNext}
+                className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Siguiente"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </AnimateOnScroll>
+          )}
+        </div>
       </Carousel>
     </section>
   );

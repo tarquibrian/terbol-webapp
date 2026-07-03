@@ -1,6 +1,8 @@
+export const TARGET_AUDIENCE_IMAGE_FALLBACK = "/images/productextra.png";
+
 export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: string; description: string }[] }> = {
   "Longevidad y Prevención": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Protección y prevención.",
@@ -17,7 +19,7 @@ export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: s
     ]
   },
   "Rendimiento y Energía": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Impulso de energía sostenida.",
@@ -34,7 +36,7 @@ export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: s
     ]
   },
   "Foco y Antiestrés": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Foco y claridad cognitiva.",
@@ -51,7 +53,7 @@ export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: s
     ]
   },
   "Belleza y Piel": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Piel radiante y firme.",
@@ -68,7 +70,7 @@ export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: s
     ]
   },
   "Salud Inmunológica": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Defensas activas.",
@@ -85,7 +87,7 @@ export const TARGET_AUDIENCES: Record<string, { image: string; items: { title: s
     ]
   },
   "Descanso y Reparación": {
-    image: "/images/productextra.png",
+    image: TARGET_AUDIENCE_IMAGE_FALLBACK,
     items: [
       {
         title: "Sueño profundo.",
