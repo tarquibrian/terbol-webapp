@@ -237,6 +237,29 @@ test("getProductDetailPageData devuelve null cuando el CMS responde producto no 
   assert.equal(pageData, null);
 });
 
+test("getProductDetailPageData devuelve null si el detalle no trae producto normalizable", async () => {
+  mock.method(globalThis, "fetch", async (input: unknown) => {
+    const url = String(input);
+    assert.match(url, /\/products\/29$/);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          product: {
+            description: "Detalle sin id ni nombre",
+          },
+        },
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+  });
+
+  const pageData = await getProductDetailPageData("29");
+
+  assert.equal(pageData, null);
+});
+
 test("getProductDetail devuelve null para producto inexistente en fallback local", async () => {
   mockProductsApiFailure();
 

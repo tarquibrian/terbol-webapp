@@ -12,10 +12,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductDetailView } from "@/features/products";
-import {
-  getProductDetailPageData,
-  getProductSitemapIds,
-} from "@/features/products/api/products-api";
+import { getProductDetailPageData } from "@/features/products/api/products-api";
 import { createPageMetadata } from "@/lib/seo";
 
 /** Parámetros de la ruta dinámica */
@@ -24,14 +21,6 @@ interface ProductPageProps {
 }
 
 const getCachedProductDetailPageData = cache(getProductDetailPageData);
-
-/**
- * Genera los parámetros estáticos para pre-renderizar todas las
- * páginas de producto en tiempo de build (SSG).
- */
-export async function generateStaticParams() {
-  return (await getProductSitemapIds()).map((id) => ({ id }));
-}
 
 /**
  * Genera metadatos SEO dinámicos basados en el producto.

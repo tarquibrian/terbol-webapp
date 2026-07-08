@@ -813,7 +813,9 @@ async function getExternalProductDetail(
   const rawProduct = extractProductItem(payload);
 
   if (!rawProduct) {
-    throw new Error("La respuesta del API de detalle no contiene producto valido.");
+    throw new ProductDetailNotFoundError(
+      "Product detail payload does not contain product.",
+    );
   }
 
   if (isRecord(rawProduct) && !isCatalogItemVisible(rawProduct)) {
@@ -825,7 +827,9 @@ async function getExternalProductDetail(
   });
 
   if (!product) {
-    throw new Error("La respuesta del API de detalle no contiene producto valido.");
+    throw new ProductDetailNotFoundError(
+      "Product detail payload does not contain normalizable product.",
+    );
   }
 
   return {
