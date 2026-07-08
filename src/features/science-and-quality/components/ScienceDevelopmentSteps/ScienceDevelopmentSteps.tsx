@@ -76,7 +76,7 @@ export function ScienceDevelopmentSteps({ data }: ScienceDevelopmentStepsProps) 
 
             <div className="mt-8 mb-8 relative z-10 flex-1">
               <h3 className="heading-h6-bold text-primary mb-3">{step1.title}</h3>
-              <p className="text-body-medium text-gray-600 mb-6">
+              <p className="text-body-medium whitespace-pre-line text-gray-600 mb-6">
                 {step1.description}
               </p>
               <Button
@@ -122,7 +122,7 @@ export function ScienceDevelopmentSteps({ data }: ScienceDevelopmentStepsProps) 
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">{step2.title}</h3>
-              <p className="text-body-medium text-gray-400">
+              <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step2.description}
               </p>
             </div>
@@ -149,7 +149,7 @@ export function ScienceDevelopmentSteps({ data }: ScienceDevelopmentStepsProps) 
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">{step3.title}</h3>
-              <p className="text-body-medium text-gray-400">
+              <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step3.description}
               </p>
             </div>
@@ -177,7 +177,7 @@ export function ScienceDevelopmentSteps({ data }: ScienceDevelopmentStepsProps) 
 
               <div className="mt-8 max-w-md">
                 <h3 className="heading-h6-bold text-primary mb-3">{step4.title}</h3>
-                <p className="text-body-medium text-gray-400">
+                <p className="text-body-medium whitespace-pre-line text-gray-400">
                   {step4.description}
                 </p>
               </div>

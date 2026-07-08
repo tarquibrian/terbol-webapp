@@ -86,7 +86,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
                 className="pointer-events-none absolute -inset-x-6 -top-4 -bottom-8 -z-10 bg-[linear-gradient(180deg,rgba(239,239,235,1)_0%,rgba(239,239,235,0.96)_72%,rgba(239,239,235,0)_100%)] sm:-inset-x-8"
               />
               <h3 className="heading-h6-bold text-primary mb-3">{step1.title}</h3>
-              <p className="text-body-medium text-gray-600 mb-6">
+              <p className="text-body-medium whitespace-pre-line text-gray-600 mb-6">
                 {step1.description}
               </p>
               <Button
@@ -133,7 +133,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">{step2.title}</h3>
-              <p className="text-body-medium text-gray-400">
+              <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step2.description}
               </p>
             </div>
@@ -160,7 +160,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
 
             <div className="mt-8">
               <h3 className="heading-h6-bold text-primary mb-3">{step3.title}</h3>
-              <p className="text-body-medium text-gray-400">
+              <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step3.description}
               </p>
             </div>
@@ -189,7 +189,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
 
               <div className="mt-8 max-w-md">
                 <h3 className="heading-h6-bold text-primary mb-3">{step4.title}</h3>
-                <p className="text-body-medium text-gray-400">
+                <p className="text-body-medium whitespace-pre-line text-gray-400">
                   {step4.description}
                 </p>
               </div>

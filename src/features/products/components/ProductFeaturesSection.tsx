@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
@@ -30,8 +30,18 @@ export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps)
           <p className="text-body-medium text-gray-500 text-wrap">Calidad estricta, ingredientes certificados y respaldo científico.</p>
         </AnimateOnScroll>
         <div className="max-w-[1024px] w-full rounded-lg bg-primary-soft-gray-balance p-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3">
-          <AnimateOnScroll variant="fade" delay={0.2} className="w-full aspect-video md:aspect-square rounded-md overflow-hidden">
+          <AnimateOnScroll variant="fade" delay={0.2} className="group relative w-full aspect-video md:aspect-square rounded-md overflow-hidden">
             <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt="Por qué elegir producto" width={800} height={800} className="w-full h-full object-cover" />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-3 flex items-center justify-center rounded-md bg-white/70 backdrop-blur-md transition-all duration-300 ease-out group-hover:opacity-0 group-hover:scale-[0.98] motion-reduce:transition-none"
+            >
+              <ShieldCheck
+                size={144}
+                strokeWidth={0.5}
+                className="text-primary-orange drop-shadow-[0_10px_30px_rgba(255,103,31,0.22)] sm:size-44"
+              />
+            </div>
           </AnimateOnScroll>
           <div className="w-full p-4 lg:p-6 flex flex-col justify-between gap-6">
             <div>
