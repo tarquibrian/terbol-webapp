@@ -13,7 +13,6 @@ import { notFound } from "next/navigation";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductDetailView } from "@/features/products";
 import {
-  getProductDetail,
   getProductDetailPageData,
   getProductSitemapIds,
 } from "@/features/products/api/products-api";
@@ -24,7 +23,6 @@ interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
-const getCachedProductDetail = cache(getProductDetail);
 const getCachedProductDetailPageData = cache(getProductDetailPageData);
 
 /**
@@ -43,7 +41,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { id } = await params;
-  const product = await getCachedProductDetail(id);
+  const pageData = await getCachedProductDetailPageData(id);
+  const product = pageData?.product;
 
   if (!product) {
     return createPageMetadata({

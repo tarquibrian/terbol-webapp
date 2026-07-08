@@ -217,6 +217,26 @@ test("getProductDetailPageData usa suggested_focuses del detalle del producto", 
   ]);
 });
 
+test("getProductDetailPageData devuelve null cuando el CMS responde producto no disponible", async () => {
+  mock.method(globalThis, "fetch", async (input: unknown) => {
+    const url = String(input);
+    assert.match(url, /\/products\/30$/);
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: "Producto no disponible.",
+        data: null,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+  });
+
+  const pageData = await getProductDetailPageData("30");
+
+  assert.equal(pageData, null);
+});
+
 test("getProductDetail devuelve null para producto inexistente en fallback local", async () => {
   mockProductsApiFailure();
 

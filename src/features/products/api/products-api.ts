@@ -453,6 +453,14 @@ function extractProductItem(payload: unknown): unknown | null {
   return null;
 }
 
+function isUnavailableProductDetailPayload(payload: unknown) {
+  return (
+    isRecord(payload) &&
+    readBoolean(payload, ["success"]) === false &&
+    payload.data === null
+  );
+}
+
 function extractRelatedProducts(payload: unknown): Product[] {
   if (!isRecord(payload)) return [];
 
@@ -795,7 +803,24 @@ async function getExternalProductDetail(
   }
 
   const payload = await response.json();
-  const product = normalizeProduct(extractProductItem(payload), {
+
+  if (isUnavailableProductDetailPayload(payload)) {
+    throw new ProductDetailNotFoundError(
+      "Product detail payload indicates unavailable product.",
+    );
+  }
+
+  const rawProduct = extractProductItem(payload);
+
+  if (!rawProduct) {
+    throw new Error("La respuesta del API de detalle no contiene producto valido.");
+  }
+
+  if (isRecord(rawProduct) && !isCatalogItemVisible(rawProduct)) {
+    throw new ProductDetailNotFoundError("Product detail is not visible.");
+  }
+
+  const product = normalizeProduct(rawProduct, {
     allowFeaturedImageAsCardImage: false,
   });
 
