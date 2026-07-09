@@ -12,7 +12,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductDetailView } from "@/features/products";
-import { getProductDetailPageData } from "@/features/products/api/products-api";
+import {
+  getProductDetailPageData,
+  getProductSitemapIds,
+} from "@/features/products/api/products-api";
 import { createPageMetadata } from "@/lib/seo";
 
 /** Parámetros de la ruta dinámica */
@@ -21,6 +24,15 @@ interface ProductPageProps {
 }
 
 const getCachedProductDetailPageData = cache(getProductDetailPageData);
+
+export const dynamicParams = true;
+
+export async function generateStaticParams(): Promise<Array<{ id: string }>> {
+  const productIds = await getProductSitemapIds();
+  const uniqueProductIds = Array.from(new Set(productIds));
+
+  return uniqueProductIds.map((id) => ({ id }));
+}
 
 /**
  * Genera metadatos SEO dinámicos basados en el producto.
