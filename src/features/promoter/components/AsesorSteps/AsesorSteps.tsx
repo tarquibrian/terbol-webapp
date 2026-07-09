@@ -6,7 +6,9 @@
 
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { PROMOTER_REGISTRATION_URL } from "../../constants";
 import {
   sortByOrder,
   type PromoterAffiliationProcess,
@@ -19,7 +21,6 @@ interface AsesorStepsProps {
 
 interface StepViewModel extends PromoterDetail {
   number: string;
-  hasCTA?: boolean;
 }
 
 export function AsesorSteps({ data }: AsesorStepsProps) {
@@ -31,7 +32,6 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
       number: "1",
       title: "Contacto inicial",
       description: "Completás el formulario de afiliación o contactás al equipo para expresar tu interés.",
-      hasCTA: true,
     },
     {
       number: "2",
@@ -55,12 +55,17 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
     number: String(idx + 1),
     title: step.title,
     description: step.description,
-    hasCTA: false,
   })) : defaultSteps;
 
   const subtitle = header?.label || header?.subtitle || "Proceso de afiliación";
   const title = header?.title || "¿Cómo es el proceso para afiliarte?";
   const description = header?.description || "El proceso de afiliación se realiza a través de la plataforma oficial de Térbol. Acá te explicamos los pasos generales.";
+  const desktopColumnsClass =
+    steps.length <= 2
+      ? "lg:grid-cols-2"
+      : steps.length === 3
+        ? "lg:grid-cols-3"
+        : "lg:grid-cols-4";
 
   return (
     <section className="wrapper-section bg-white">
@@ -84,8 +89,8 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
           </AnimateOnScroll>
         </div>
 
-        {/* Grid de Pasos 1x4 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        {/* Grid de Pasos */}
+        <div className={cn("grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-8", desktopColumnsClass)}>
           {steps.map((step, idx) => (
             <AnimateOnScroll
               key={step.id ?? step.title ?? idx}
@@ -114,14 +119,17 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
               </div>
 
               {/* CTA solo para el primer paso */}
-              {step.hasCTA && (
+              {idx === 0 && (
                 <div className="mt-2">
                   <Button
                     variant="secondary"
                     size="sm"
-                    className="px-8"
+                    className="w-[196px] justify-between px-4"
                     icon={<ArrowRight size={16} />}
                     iconPosition="right"
+                    href={PROMOTER_REGISTRATION_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     REGISTRARME
                   </Button>

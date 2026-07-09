@@ -7,13 +7,16 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { env } from "@/config/env";
 import {
   ArrowUpRight,
   CheckCircle2,
   PackageCheck,
   TrendingUp,
 } from "lucide-react";
+import {
+  PROMOTER_ADVISOR_URL,
+  PROMOTER_REGISTRATION_URL,
+} from "../../constants";
 import {
   isSvgAsset,
   resolvePromoterAsset,
@@ -94,7 +97,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   className="w-full sm:w-auto justify-between"
                   icon={<ArrowUpRight />}
                   iconPosition="right"
-                  href={`${env.ASESOR_URL}/incorporacionwizard`}
+                  href={PROMOTER_REGISTRATION_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -106,7 +109,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   className="w-full sm:w-fit justify-between"
                   icon={<ArrowUpRight />}
                   iconPosition="right"
-                  href={env.ASESOR_URL}
+                  href={PROMOTER_ADVISOR_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
