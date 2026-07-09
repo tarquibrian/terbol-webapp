@@ -17,6 +17,23 @@ test("mapCmsBlogCategories filtra categorias invalidas y ordena por order", () =
   ]);
 });
 
+test("mapCmsBlogCategories acepta variantes de campo de orden del CMS", () => {
+  const categories = mapCmsBlogCategories([
+    { id: 4, title: "Sin orden" },
+    { id: 2, title: "Orden snake", sort_order: "2" },
+    { id: 1, title: "Orden mayuscula", Order: "1" },
+    { id: 3, title: "Orden camel", sortOrder: 3 },
+  ]);
+
+  assert.deepEqual(categories, [
+    { id: 0, title: "Todos" },
+    { id: 1, title: "Orden mayuscula" },
+    { id: 2, title: "Orden snake" },
+    { id: 3, title: "Orden camel" },
+    { id: 4, title: "Sin orden" },
+  ]);
+});
+
 test("mapCmsBlogPost devuelve null si faltan campos requeridos", () => {
   assert.equal(mapCmsBlogPost({ title: "Sin id" }), null);
   assert.equal(mapCmsBlogPost({ id: 10 }), null);

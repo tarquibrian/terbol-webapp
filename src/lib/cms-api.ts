@@ -93,7 +93,9 @@ export const cmsApi = {
   getSuccessPlan: () =>
     fetchCMS<CmsEnvelope>("/sections/success-plan", ["success-plan"]),
 
-  getLearn: () => fetchCMS<CmsEnvelope>("/sections/learn", ["learn"]),
+  // La seccion learn contiene las categorias del blog; el tag "blog" permite
+  // refrescarlas cuando el CMS actualiza articulos o categorias.
+  getLearn: () => fetchCMS<CmsEnvelope>("/sections/learn", ["learn", "blog"]),
 
   getHelp: () => fetchCMS<CmsEnvelope>("/sections/help", ["help"]),
 

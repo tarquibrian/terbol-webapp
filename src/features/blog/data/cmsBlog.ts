@@ -4,7 +4,12 @@ import { resolveImageAsset } from "@/lib/image-assets";
 export interface CmsBlogCategory {
   id?: number | string;
   title?: string;
-  order?: number;
+  order?: number | string;
+  Order?: number | string;
+  orden?: number | string;
+  sort_order?: number | string;
+  sortOrder?: number | string;
+  position?: number | string;
 }
 
 export interface CmsLearnData {
@@ -92,6 +97,18 @@ function toStringValue(value: unknown): string | undefined {
   return undefined;
 }
 
+function getCategoryOrder(category: Partial<CmsBlogCategory>): number {
+  return toNumber(
+    category.order ??
+      category.Order ??
+      category.orden ??
+      category.sort_order ??
+      category.sortOrder ??
+      category.position,
+    Number.MAX_SAFE_INTEGER,
+  );
+}
+
 function resolveStorageImage(path?: unknown): string {
   const imagePath = toStringValue(path);
 
@@ -118,7 +135,7 @@ export function mapCmsBlogCategories(
     .map((category) => ({
       id: toNumber(category.id),
       title: toStringValue(category.title) ?? "",
-      order: category.order ?? 0,
+      order: getCategoryOrder(category),
     }))
     .filter((category) => category.id > 0 && category.title.length > 0)
     .sort((a, b) => a.order - b.order)
