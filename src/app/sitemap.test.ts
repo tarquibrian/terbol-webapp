@@ -19,7 +19,7 @@ test("sitemap incluye rutas estaticas principales", async () => {
   assert.ok(urls.includes(`${siteUrl}/success-plan`));
 });
 
-test("sitemap incluye todos los detalles de producto prerenderizados", async () => {
+test("sitemap incluye todos los detalles de producto disponibles", async () => {
   const urls = await getSitemapUrls();
   const siteUrl = env.SITE_URL.replace(/\/$/, "");
 
