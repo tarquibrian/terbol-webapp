@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { ArticleCard } from "../components/ArticleCard";
+import { AdvisorBanner } from "@/components/layout/AdvisorBanner";
 import { EndBanner } from "@/components/layout/EndBanner";
 import { sanitizeCmsHtml } from "@/lib/html-sanitizer";
 import type { BlogPost } from "../data/cmsBlog";
@@ -45,7 +46,7 @@ export function BlogDetailView({
           <div
             className={
               hasLatestPosts
-                ? "grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16 items-start"
+                ? "grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-12 lg:gap-16 items-start"
                 : "flex justify-center"
             }
           >
@@ -53,7 +54,7 @@ export function BlogDetailView({
             <article
               className={
                 hasLatestPosts
-                  ? "flex flex-col gap-8 w-full max-w-4xl mx-auto lg:mx-0 lg:col-span-3"
+                  ? "flex flex-col gap-8 w-full max-w-4xl mx-auto lg:mx-0"
                   : "flex flex-col gap-8 w-full max-w-4xl"
               }
             >
@@ -99,15 +100,18 @@ export function BlogDetailView({
 
             {/* Columna Secundaria: Últimos Artículos */}
             {hasLatestPosts && (
-              <aside className="sticky top-32 flex flex-col gap-8 w-full lg:col-span-1">
+              <aside className="sticky top-32 flex flex-col gap-8 w-full">
                 <AnimateOnScroll variant="slide-up">
-                  <h3 className="heading-h5 font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
-                    Últimos artículos
-                  </h3>
+                  <div className="mb-6 flex items-center gap-3">
+                    <h3 className="shrink-0 text-body-medium font-medium uppercase text-gray-400">
+                      Últimos artículos
+                    </h3>
+                    <div className="h-px flex-1 bg-gray-200" />
+                  </div>
                   <div className="flex flex-col gap-8">
                     {latestPosts.map((latestPost, idx) => (
                       <AnimateOnScroll key={latestPost.id} variant="slide-up" delay={0.1 * idx}>
-                        <ArticleCard post={latestPost} />
+                        <ArticleCard post={latestPost} density="compact" />
                       </AnimateOnScroll>
                     ))}
                   </div>
@@ -120,6 +124,7 @@ export function BlogDetailView({
 
       {/* EndBanner en variante compacta (solo 3 cards pequeñas) */}
       <EndBanner variant="compact" />
+      <AdvisorBanner spacing="compact" />
     </>
   );
 }

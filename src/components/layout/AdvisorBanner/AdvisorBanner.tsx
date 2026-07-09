@@ -6,24 +6,37 @@
  * `"advisor-registration"`. Solo las páginas que incluyan este componente
  * se re-renderizan cuando el CMS dispara la revalidación de ese tag.
  *
- * Páginas que lo usan: Home, About, FAQ, Science, Success Plan, Promoter.
- * Páginas que NO lo usan: Products, Blog.
+ * Páginas que lo usan: Home, About, FAQ, Science, Success Plan, Promoter,
+ * Blog detail.
  */
 
 import { cmsApi } from "@/lib/cms-api";
 import { normalizeCmsRecordValue, type CmsRecord } from "@/lib/cms-data";
-import { Banner, type BannerData, buildWhatsAppUrl } from "@/components/layout/Banner";
+import {
+  Banner,
+  type BannerData,
+  type BannerSpacing,
+  buildWhatsAppUrl,
+} from "@/components/layout/Banner";
+
+interface AdvisorBannerProps {
+  spacing?: BannerSpacing;
+  className?: string;
+}
 
 /**
  * Server component que obtiene los datos de advisor-registration del CMS
  * y renderiza el Banner.
  */
-export async function AdvisorBanner() {
+export async function AdvisorBanner({
+  spacing,
+  className,
+}: AdvisorBannerProps = {}) {
   const data = await getAdvisorRegistrationData();
 
   if (!data) return null;
 
-  return <Banner data={data} />;
+  return <Banner data={data} spacing={spacing} className={className} />;
 }
 
 // ─── Data fetching ──────────────────────────────────────────────────────────

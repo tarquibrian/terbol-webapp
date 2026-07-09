@@ -4,6 +4,7 @@ import Image from "next/image";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { cn } from "@/lib/utils";
 
 export interface BannerData {
   title?: string;
@@ -16,6 +17,8 @@ export interface BannerData {
   image?: string;
 }
 
+export type BannerSpacing = "default" | "compact";
+
 /** Construye la URL de WhatsApp a partir de country_code y phone_number. */
 export function buildWhatsAppUrl(countryCode?: string, phoneNumber?: string): string | undefined {
   if (!countryCode || !phoneNumber) return undefined;
@@ -25,13 +28,20 @@ export function buildWhatsAppUrl(countryCode?: string, phoneNumber?: string): st
 
 interface BannerProps {
   data?: BannerData;
+  spacing?: BannerSpacing;
+  className?: string;
 }
+
+const SECTION_SPACING_CLASSES: Record<BannerSpacing, string> = {
+  default: "wrapper-section",
+  compact: "py-6 md:py-8 lg:py-12 w-full",
+};
 
 const isExternalUrl = (url?: string) => {
   return url ? /^(https?:)?\/\//.test(url) : false;
 };
 
-export function Banner({ data }: BannerProps) {
+export function Banner({ data, spacing = "default", className }: BannerProps) {
   // Función para resolver la URL de la imagen del CMS
   const getImageUrl = (path?: string) => {
     return resolveImageAsset(path, "/banner/productbanner.png") ?? "/banner/productbanner.png";
@@ -47,7 +57,7 @@ export function Banner({ data }: BannerProps) {
   const isExternalButton = isExternalUrl(data?.button_url);
 
   return (
-    <section className="wrapper-section">
+    <section className={cn(SECTION_SPACING_CLASSES[spacing], className)}>
       <div className="wrapper-content">
         <div className="flex flex-col lg:grid lg:grid-cols-2 rounded-lg bg-linear-to-b from-[#D2D2D2] to-[#EDEDE8] min-h-[540px] w-full overflow-hidden">
 
