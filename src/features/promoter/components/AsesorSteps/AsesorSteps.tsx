@@ -28,23 +28,23 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
 
   const defaultSteps: StepViewModel[] = [
     {
-      number: "01",
+      number: "1",
       title: "Contacto inicial",
       description: "Completás el formulario de afiliación o contactás al equipo para expresar tu interés.",
       hasCTA: true,
     },
     {
-      number: "02",
+      number: "2",
       title: "Registro y documentación",
       description: "Enviás la documentación requerida y completás el proceso de registro en la plataforma oficial.",
     },
     {
-      number: "03",
+      number: "3",
       title: "Primer pedido",
       description: "Realizás tu primera compra a precio de promotora para armar tu stock inicial de productos.",
     },
     {
-      number: "04",
+      number: "4",
       title: "Comenzás a promover",
       description: "Accedés a capacitaciones, materiales y empezás a compartir los productos con tu red.",
     },
@@ -52,7 +52,7 @@ export function AsesorSteps({ data }: AsesorStepsProps) {
 
   const steps = rawSteps ? rawSteps.map((step, idx) => ({
     id: step.id,
-    number: String(idx + 1).padStart(2, "0"),
+    number: String(idx + 1),
     title: step.title,
     description: step.description,
     hasCTA: false,

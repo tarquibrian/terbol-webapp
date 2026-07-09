@@ -91,13 +91,6 @@ export function RoleDescription({ data }: RoleDescriptionProps) {
           <AnimateOnScroll variant="slide-up" delay={0.1}>
             <h2 className="heading-h3 text-foreground">{title}</h2>
           </AnimateOnScroll>
-          {legend && (
-            <AnimateOnScroll variant="slide-up" delay={0.2}>
-              <p className="text-gray-500 text-body-medium max-w-[760px]">
-                {legend}
-              </p>
-            </AnimateOnScroll>
-          )}
         </div>
 
         <AnimateOnScroll variant="fade" delay={0.2}>
@@ -131,6 +124,13 @@ export function RoleDescription({ data }: RoleDescriptionProps) {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
+                {legend && (
+                  <div className="absolute inset-x-3 bottom-3 rounded-md bg-white/70 p-5 shadow-[0_18px_45px_rgba(0,0,0,0.12)] backdrop-blur-md sm:inset-x-4 sm:bottom-4 sm:p-6">
+                    <p className="text-body-medium text-center text-balance text-gray-700">
+                      {legend}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -17,9 +17,10 @@ import {
 
 interface AsesorRequirementsProps {
   data?: PromoterRequirements;
+  supportUrl?: string;
 }
 
-export function AsesorRequirements({ data }: AsesorRequirementsProps) {
+export function AsesorRequirements({ data, supportUrl }: AsesorRequirementsProps) {
   const header = data?.header;
   const items: PromoterDetail[] =
     data?.items && data.items.length > 0
@@ -127,11 +128,14 @@ export function AsesorRequirements({ data }: AsesorRequirementsProps) {
                     ¿Aún tienes dudas?, háblanos.
                   </p>
                   <Button
+                    href={supportUrl}
                     variant="secondary"
                     size="sm"
                     className="w-full lg:w-auto"
                     icon={<MessageCircle size={18} />}
                     iconPosition="right"
+                    target={supportUrl ? "_blank" : undefined}
+                    rel={supportUrl ? "noopener noreferrer" : undefined}
                   >
                     CONTACTAR CON SOPORTE
                   </Button>
