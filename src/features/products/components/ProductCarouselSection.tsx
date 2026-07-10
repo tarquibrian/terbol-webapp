@@ -13,35 +13,19 @@ interface ProductCarouselSectionProps {
   products: Product[];
   /** Título de la sección */
   title?: string;
-  /** Cantidad máxima de productos a renderizar en el carousel */
-  maxItems?: number;
   /** Intervalo de auto-play en milisegundos. 0 para desactivar. */
   autoplayIntervalMs?: number;
 }
 
-const MIN_LOOP_ITEMS = 6;
 const ITEM_FADE_DURATION_SECONDS = 0.9;
 const ITEM_FADE_STAGGER_SECONDS = 0.14;
-
-function repeatItemsForLoop<T>(items: T[], minItems: number) {
-  if (items.length <= 1 || items.length >= minItems) return items;
-
-  return Array.from({ length: minItems }, (_, index) => items[index % items.length]);
-}
 
 export function ProductCarouselSection({
   products,
   title = "Productos similares",
-  maxItems = 6,
   autoplayIntervalMs = 5000,
 }: ProductCarouselSectionProps) {
-  // Limitar productos
-  const carouselItems = React.useMemo(() => products.slice(0, maxItems), [products, maxItems]);
-  const loopItems = React.useMemo(
-    () => repeatItemsForLoop(carouselItems, MIN_LOOP_ITEMS),
-    [carouselItems],
-  );
-  const hasMultipleItems = carouselItems.length > 1;
+  const hasMultipleItems = products.length > 1;
 
   const plugin = React.useMemo(() => {
     return autoplayIntervalMs > 0
@@ -77,7 +61,7 @@ export function ProductCarouselSection({
     api?.plugins()?.autoplay?.reset();
   }, [api]);
 
-  if (carouselItems.length === 0) return null;
+  if (products.length === 0) return null;
 
   return (
     <section className="w-full overflow-hidden py-6 md:py-8 lg:py-12">
@@ -119,9 +103,9 @@ export function ProductCarouselSection({
         <div className="relative w-full">
           <div className="px-0 md:px-0">
             <CarouselContent>
-              {loopItems.map((product, idx) => (
+              {products.map((product, idx) => (
                 <CarouselItem
-                  key={`${product.id}-${idx}`}
+                  key={product.id}
                   className="w-full md:basis-1/2 lg:basis-1/3"
                 >
                   <AnimateOnScroll

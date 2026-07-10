@@ -92,7 +92,11 @@ export function BlogDetailView({
                     prose-p:text-body-large prose-p:leading-relaxed prose-p:mb-6
                     prose-a:text-primary-orange hover:prose-a:text-orange-600
                     prose-strong:text-gray-900 prose-strong:font-bold
-                    prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-li:mb-2"
+                    prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-li:mb-2
+                    prose-img:my-8 prose-img:h-auto prose-img:w-full prose-img:max-w-full prose-img:rounded-lg
+                    prose-figure:my-8 prose-figure:max-w-full prose-figcaption:mt-3 prose-figcaption:text-center
+                    [&_figure.image-style-side]:float-none [&_figure.image-style-side]:w-full
+                    md:[&_figure.image-style-side]:float-right md:[&_figure.image-style-side]:ml-8 md:[&_figure.image-style-side]:w-[min(48%,24rem)]"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
               </AnimateOnScroll>

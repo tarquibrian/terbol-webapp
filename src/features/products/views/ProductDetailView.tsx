@@ -54,7 +54,6 @@ export function ProductDetailView({
       <ProductCarouselSection
         products={relatedProducts}
         title="Productos Relacionados"
-        maxItems={9}
         autoplayIntervalMs={4000}
       />
 

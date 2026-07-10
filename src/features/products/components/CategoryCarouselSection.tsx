@@ -22,25 +22,14 @@ interface CategoryCarouselSectionProps {
   autoplayIntervalMs?: number;
 }
 
-const MIN_LOOP_ITEMS = 8;
 const ITEM_FADE_DURATION_SECONDS = 0.9;
 const ITEM_FADE_STAGGER_SECONDS = 0.14;
-
-function repeatItemsForLoop<T>(items: T[], minItems: number) {
-  if (items.length <= 1 || items.length >= minItems) return items;
-
-  return Array.from({ length: minItems }, (_, index) => items[index % items.length]);
-}
 
 export function CategoryCarouselSection({
   categories,
   title = "Enfoques",
   autoplayIntervalMs = 5000,
 }: CategoryCarouselSectionProps) {
-  const loopItems = React.useMemo(
-    () => repeatItemsForLoop(categories, MIN_LOOP_ITEMS),
-    [categories],
-  );
   const hasMultipleItems = categories.length > 1;
 
   const plugin = React.useMemo(() => {
@@ -119,9 +108,9 @@ export function CategoryCarouselSection({
         <div className="relative w-full">
           <div className="px-0 md:px-0">
             <CarouselContent>
-              {loopItems.map((category, idx) => (
+              {categories.map((category, idx) => (
                 <CarouselItem
-                  key={`${category.id}-${idx}`}
+                  key={category.id}
                   className="w-full md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                 >
                   <AnimateOnScroll
