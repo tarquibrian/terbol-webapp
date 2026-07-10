@@ -61,15 +61,15 @@ export function ScienceHero({ data, whatsappUrl }: ScienceHeroProps) {
         </div>
 
         {/* Título — slide-up inmediato */}
-        <AnimateOnScroll variant="slide-up">
-          <h1 className="heading-h2 font-semibold text-foreground text-center">
+        <AnimateOnScroll variant="slide-up" className="w-full">
+          <h1 className="heading-h2 mx-auto max-w-[1180px] text-balance text-center font-semibold text-foreground">
             {header.title}
           </h1>
         </AnimateOnScroll>
 
         {/* Descripción — slide-up con delay */}
-        <AnimateOnScroll variant="slide-up" delay={0.15}>
-          <p className="text-body-medium text-center text-gray-500 max-w-[800px] mb-2 whitespace-pre-line">
+        <AnimateOnScroll variant="slide-up" delay={0.15} className="w-full">
+          <p className="text-body-medium mx-auto mb-2 max-w-[940px] text-pretty text-center text-gray-500 whitespace-pre-line">
             {header.description}
           </p>
         </AnimateOnScroll>

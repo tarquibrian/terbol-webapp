@@ -8,7 +8,8 @@ import * as React from "react";
 import { ScienceHero } from "../components/ScienceHero";
 import { ScienceDevelopmentSteps } from "../components/ScienceDevelopmentSteps";
 import { ScienceAbout } from "../components/ScienceAbout";
-import { AdvisorBanner, getAdvisorWhatsAppUrl } from "@/components/layout/AdvisorBanner";
+import { EndBanner } from "@/components/layout/EndBanner";
+import { getAdvisorWhatsAppUrl } from "@/components/layout/AdvisorBanner";
 
 export interface ScienceQualityPageData {
   cover_section?: React.ComponentProps<typeof ScienceHero>["data"];
@@ -28,7 +29,7 @@ export async function ScienceQualityView({ data }: ScienceQualityViewProps) {
       <ScienceHero data={data?.cover_section} whatsappUrl={whatsappUrl} />
       <ScienceDevelopmentSteps data={data?.development_products} />
       <ScienceAbout data={data?.evidence} />
-      <AdvisorBanner />
+      <EndBanner />
     </>
   );
 }
