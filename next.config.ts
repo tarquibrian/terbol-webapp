@@ -6,10 +6,12 @@ import { createRemoteImagePatterns } from "./src/config/image-remote-patterns";
 // Vacío en root/Vercel; en el QA self-host se define NEXT_PUBLIC_BASE_PATH=/qas.
 // Debe empezar con "/" y no terminar en "/".
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim().replace(/\/$/, "") || undefined;
+const deploymentId = process.env.NEXT_DEPLOYMENT_ID?.trim() || undefined;
 
 const nextConfig: NextConfig = {
   output: "standalone",
   ...(basePath ? { basePath } : {}),
+  ...(deploymentId ? { deploymentId } : {}),
   reactCompiler: true,
   poweredByHeader: false,
   async headers() {

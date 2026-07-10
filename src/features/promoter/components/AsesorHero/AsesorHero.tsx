@@ -113,7 +113,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  SOY ASESOR DE VENTASS
+                  SOY ASESOR DE VENTAS
                 </Button>
               </div>
             </AnimateOnScroll>
