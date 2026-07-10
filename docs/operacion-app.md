@@ -37,13 +37,17 @@ cd C:\Terbol\webapp
 # 1. Traer cambios
 git pull
 
-# 2. Instalar dependencias (solo si cambió package.json / package-lock)
-npm ci
+# 2. Instalar dependencias solo si cambió package.json / package-lock
+git diff HEAD@{1} --name-only | findstr package
+# Si lista package.json/package-lock.json:
+# npm ci
 
 # 3. DETENER el servicio (libera el lock de .next\standalone)
 C:\Tools\nssm.exe stop TerbolWeb
 
-# 4. Build
+# 4. Build con deployment id del commit actual
+$deployId = git rev-parse --short HEAD
+$env:NEXT_DEPLOYMENT_ID = $deployId
 npm run build
 
 # 5. Completar el bundle standalone  ← ver nota del Copy-Item abajo
@@ -63,7 +67,23 @@ Start-Sleep -Seconds 2
 # 7. Verificar (la app y un asset estático)
 C:\Tools\nssm.exe status TerbolWeb                              # SERVICE_RUNNING
 curl.exe -s -o NUL -w "%{http_code}`n" http://localhost:3001   # 200
+
+# 8. Verificar deployment id (debe mostrar el SHA corto del commit)
+$html = curl.exe -s -H "Host: terbolinspira.com" "http://localhost/qas/promoter"
+if ($html -match 'data-dpl-id="([^"]+)"') { "deployment id: $($Matches[1])" }
 ```
+
+> ### Deployment ID
+>
+> Antes del build se define `NEXT_DEPLOYMENT_ID` con el SHA corto del commit.
+> Next lo inserta en el HTML como `data-dpl-id`, agrega `?dpl=<id>` a assets
+> estáticos y usa headers de navegación para detectar si el cliente intenta
+> navegar con una versión anterior del build. Si detecta mismatch, fuerza una
+> navegación completa en vez de reutilizar una navegación client-side vieja.
+>
+> Esto corrige problemas de mezcla entre builds después de un deploy. No reemplaza
+> `revalidateTag` ni `CMS_REVALIDATE_SECONDS`, que siguen controlando la frescura
+> del contenido que viene del CMS.
 
 > ### ⚠️ Bug conocido del Copy-Item (assets sin estilos)
 >

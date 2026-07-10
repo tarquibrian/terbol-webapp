@@ -10,7 +10,6 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { resolveImageAsset } from "@/lib/image-assets";
 
@@ -119,15 +118,6 @@ export function ScienceHero({ data, whatsappUrl }: ScienceHeroProps) {
             rel={whatsappUrl ? "noopener noreferrer" : undefined}
           >
             Contactar por whatsapp
-          </Button>
-          <Button
-            href="/promoter"
-            variant="outline"
-            size="default"
-            className="w-full md:w-auto md:min-w-[300px]"
-            icon={<ArrowRight strokeWidth={1.75} />}
-          >
-            Saber más
           </Button>
         </AnimateOnScroll>
       </div>

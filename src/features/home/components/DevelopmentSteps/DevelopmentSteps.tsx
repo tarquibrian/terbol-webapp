@@ -1,6 +1,12 @@
 import * as React from "react";
 import Image from "next/image";
-import { Beaker, ShieldCheck, Microscope, FlaskConical, ArrowRight } from "lucide-react";
+import {
+  Beaker,
+  ShieldCheck,
+  Microscope,
+  FlaskConical,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { resolveImageAsset } from "@/lib/image-assets";
@@ -17,6 +23,9 @@ interface DevelopmentStepsProps {
   data?: DevelopmentStepData[];
 }
 
+const HOME_PROMISE_CARD_IMAGE = "/images/science-proposito-claro.png";
+const HOME_FORMULATION_CARD_IMAGE = "/images/science-formulacion.webp";
+
 export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
   // Función para resolver la URL del icono o imagen proveniente del CMS
   const getIconUrl = (path?: string) => {
@@ -27,22 +36,26 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
   const step1: DevelopmentStepData = data?.[0] || {
     id: "investigacion",
     title: "Investigación",
-    description: "Iniciamos con investigación científica rigurosa para comprender las necesidades y formular soluciones innovadoras."
+    description:
+      "Iniciamos con investigación científica rigurosa para comprender las necesidades y formular soluciones innovadoras.",
   };
   const step2: DevelopmentStepData = data?.[1] || {
     id: "seleccion-activa",
     title: "Selección Activa",
-    description: "Seleccionamos materias primas e ingredientes de pureza certificada y calidad internacional."
+    description:
+      "Seleccionamos materias primas e ingredientes de pureza certificada y calidad internacional.",
   };
   const step3: DevelopmentStepData = data?.[2] || {
     id: "pruebas-clinicas",
     title: "Pruebas Clínicas",
-    description: "Testeamos la eficacia y seguridad de cada fórmula en nuestros laboratorios de alta tecnología antes de ser aprobada."
+    description:
+      "Testeamos la eficacia y seguridad de cada fórmula en nuestros laboratorios de alta tecnología antes de ser aprobada.",
   };
   const step4: DevelopmentStepData = data?.[3] || {
     id: "produccion-controlada",
     title: "Producción Controlada",
-    description: "Fabricamos bajo estrictos estándares de control de calidad, asegurando que cada producto final sea completamente idóneo y seguro."
+    description:
+      "Fabricamos bajo estrictos estándares de control de calidad, asegurando que cada producto final sea completamente idóneo y seguro.",
   };
 
   return (
@@ -50,7 +63,7 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
       <div className="wrapper-content">
         <AnimateOnScroll variant="slide-up" className="mb-8 sm:mb-10">
           <h2 className="heading-h4  mb-0 text-wrap">
-            ¿Cómo desarrollamos cada producto?
+            Nuestra promesa de calidad, de principio a fin
           </h2>
         </AnimateOnScroll>
 
@@ -60,7 +73,10 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
           Tablet (md): grid-cols-2 (para 2x2 donde el item 4 y 1 varíen)
           Escritorio (xl): grid-cols-3
         */}
-        <AnimateOnScroll variant="slide-up" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-auto">
+        <AnimateOnScroll
+          variant="slide-up"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 auto-rows-auto"
+        >
           {/* Card 1 - Ocupa 2 filas, 1 columna */}
           <div className="md:row-span-2 xl:row-span-2 rounded-lg bg-primary-soft-gray-balance p-6 sm:p-8 flex flex-col relative overflow-hidden group min-h-[600px] md:min-h-[650px]">
             <div className="flex justify-between items-start w-full relative z-10">
@@ -85,7 +101,9 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
                 aria-hidden="true"
                 className="pointer-events-none absolute -inset-x-6 -top-4 -bottom-8 -z-10 bg-[linear-gradient(180deg,rgba(239,239,235,1)_0%,rgba(239,239,235,0.96)_72%,rgba(239,239,235,0)_100%)] sm:-inset-x-8"
               />
-              <h3 className="heading-h6-bold text-primary mb-3">{step1.title}</h3>
+              <h3 className="heading-h6-bold text-primary mb-3">
+                {step1.title}
+              </h3>
               <p className="text-body-medium whitespace-pre-line text-gray-600 mb-6">
                 {step1.description}
               </p>
@@ -101,12 +119,12 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
 
             {/* Contenedor inferior para Imagen */}
-            <div className="absolute bottom-0 left-0 w-full h-80 md:h-90 overflow-hidden xl:h-96">
+            <div className="absolute bottom-0 left-0 h-[430px] w-[150%] overflow-hidden md:h-[470px] xl:h-[520px]">
               <Image
-                src={assetPath("/homegrid/bgcard1.png")}
-                alt="Investigación y Desarrollo"
+                src={assetPath(HOME_PROMISE_CARD_IMAGE)}
+                alt="Propósito claro"
                 fill
-                className="object-contain object-bottom-left"
+                className="object-contain object-left-bottom"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
               />
             </div>
@@ -132,7 +150,9 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
 
             <div className="mt-8">
-              <h3 className="heading-h6-bold text-primary mb-3">{step2.title}</h3>
+              <h3 className="heading-h6-bold text-primary mb-3">
+                {step2.title}
+              </h3>
               <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step2.description}
               </p>
@@ -159,7 +179,9 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             </div>
 
             <div className="mt-8">
-              <h3 className="heading-h6-bold text-primary mb-3">{step3.title}</h3>
+              <h3 className="heading-h6-bold text-primary mb-3">
+                {step3.title}
+              </h3>
               <p className="text-body-medium whitespace-pre-line text-gray-400">
                 {step3.description}
               </p>
@@ -188,7 +210,9 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               </div>
 
               <div className="mt-8 max-w-md">
-                <h3 className="heading-h6-bold text-primary mb-3">{step4.title}</h3>
+                <h3 className="heading-h6-bold text-primary mb-3">
+                  {step4.title}
+                </h3>
                 <p className="text-body-medium whitespace-pre-line text-gray-400">
                   {step4.description}
                 </p>
@@ -198,8 +222,8 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
             {/* Imagen Derecha */}
             <div className="relative flex border border-primary-orange rounded-lg p-6 h-64 sm:h-full sm:w-1/2 lg:w-2/5  overflow-hidden">
               <Image
-                src={assetPath("/homegrid/bgcard4.png")}
-                alt="Producción y Control"
+                src={assetPath(HOME_FORMULATION_CARD_IMAGE)}
+                alt="Formulación"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 40vw"

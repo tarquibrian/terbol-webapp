@@ -40,11 +40,6 @@ export const NAV_LINKS: NavLinkItem[] = [
         description: "Nuestro respaldo científico y estándares de calidad",
       },
       {
-        label: "Aprende",
-        href: "/blog",
-        description: "Artículos, noticias y novedades",
-      },
-      {
         label: "Ayuda y Contacto",
         href: "/faq",
         description: "Respuestas a tus dudas más comunes",

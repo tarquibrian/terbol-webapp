@@ -27,9 +27,7 @@ export const CMS_PAGE_SCHEMAS = {
     evidence: "object",
   },
   successPlan: {
-    plan: "object",
     video_section: "object",
-    our_proposal: "object",
     how_it_works: "object",
   },
   promoter: {

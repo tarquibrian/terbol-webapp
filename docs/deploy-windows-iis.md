@@ -154,8 +154,14 @@ La app usa `output: "standalone"` en `next.config.ts` → el build genera
 ```powershell
 cd C:\Terbol\webapp
 npm ci
+$deployId = git rev-parse --short HEAD
+$env:NEXT_DEPLOYMENT_ID = $deployId
 npm run build
 ```
+
+`NEXT_DEPLOYMENT_ID` queda embebido en el build. Usar el SHA corto del commit
+mantiene un identificador distinto por deploy y permite que Next detecte si una
+navegación client-side intenta mezclar assets/payloads de otro build.
 
 ### ⚠️ Completar el bundle standalone (paso crítico)
 
@@ -364,9 +370,10 @@ Cloudflare si hace falta.
 ## 12. Despliegues posteriores
 
 Ver [`operacion-app.md`](./operacion-app.md) §A. Resumen:
-**`nssm stop` → `git pull` → `npm ci` → `npm run build` → copiar static/public/env
-(remove + `\*`) → `nssm start`**. El servicio debe estar parado durante el build
-(lock `EBUSY`).
+**`git pull` → `nssm stop` → `$env:NEXT_DEPLOYMENT_ID = git rev-parse --short HEAD`
+→ `npm run build` → copiar static/public/env (remove + `\*`) → `nssm start`**.
+Ejecutar `npm ci` solo si cambiaron `package.json` o `package-lock.json`. El
+servicio debe estar parado durante el build (lock `EBUSY`).
 
 ---
 
@@ -377,6 +384,7 @@ Ver [`operacion-app.md`](./operacion-app.md) §A. Resumen:
 | `npm run build` → `EBUSY rmdir .next\standalone` | El servicio node bloquea la carpeta | Parar el servicio antes de buildear |
 | Sitio sin estilos, 404 en `/_next/static/*` | `Copy-Item -Recurse` anidó la carpeta al re-ejecutar | Remove destino + copiar contenido con `\*` |
 | Servicio no arranca (`err.log` vacío) | `C:\Program Files\nodejs` no existe (node es nvm) | Apuntar a la ruta versionada real de nvm |
+| Navegación muestra contenido/assets del build anterior hasta refrescar | Version skew entre cliente, HTML/RSC o assets cacheados | Definir `NEXT_DEPLOYMENT_ID` antes de `npm run build` y verificar `data-dpl-id` |
 | `choco` no existe | Sin Chocolatey en el server | Descargar `nssm.exe` directo a `C:\Tools` |
 | `Add-WebConfiguration` "duplicate entry" | Server vars ya agregadas | Error inofensivo, ignorar |
 | `www` binding "con corchetes" | El chat auto-linkeaba `www.` (no era real) | Verificar con `-replace '\.', '_DOT_'` |

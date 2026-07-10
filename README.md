@@ -292,6 +292,10 @@ La aplicación se despliega como **servidor Node**. Documentación operativa:
 > repositorio). Al ser variables de build-time, cambiar el dominio requiere un
 > nuevo deploy.
 
+> **Self-host Windows:** antes de `npm run build` se define
+> `NEXT_DEPLOYMENT_ID` con el SHA corto del commit. Next lo usa para evitar
+> mezclar assets/payloads de builds distintos durante navegaciones client-side.
+
 ---
 
 ## Convenciones de Git

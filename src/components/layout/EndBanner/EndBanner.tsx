@@ -3,12 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  GraduationCap,
-  BookOpen,
   FlaskConical,
-  Heart,
   Package,
-  ShieldPlus,
   Users,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
@@ -19,57 +15,57 @@ interface EndBannerProps {
   variant?: "default" | "expanded" | "compact";
   title?: string;
   description?: string;
-  /** URL directa de WhatsApp (wa.me/...) para la card de contacto */
-  whatsappUrl?: string;
 }
+
+const CALL_CENTER_WHATSAPP_URL = "https://wa.me/59177860555";
 
 const LARGE_CARDS = [
   {
     id: 1,
     imageSrc: "/images/endbanner1.png",
-    icon: <GraduationCap size={40} strokeWidth={1.3} />,
-    title: "¿Quieres conocer más de nuestros productos?",
-    description:
-      "Accede a contenido educativo, guías especializadas y publicaciones diseñadas para profundizar tus conocimientos.",
-    buttonLabel: "VER PUBLICACIONES",
+    icon: <Package size={40} strokeWidth={1.3} />,
+    title: "Conoce más de nuestros productos",
+    description: "Descubre todos nuestros productos y encuentra el ideal para ti.",
+    buttonLabel: "VER PRODUCTOS",
     buttonIcon: <ArrowRight size={20} />,
     buttonVariant: "secondary" as const,
-    href: "/blog",
+    href: "/products",
   },
   {
     id: 2,
     imageSrc: "/images/endbanner2.png",
     icon: <Users size={40} strokeWidth={1.3} />,
-    title: "Contáctanos",
+    title: "Tu espacio de asesoría",
     description:
-      "Contacta para recibir asesoramiento y saber más de térbol Inspira.",
-    buttonLabel: "CONTACTAR POR WHATSAPP",
+      "Recibe asesoramiento de nuestro equipo especializado. Estamos aquí para orientarte, resolver tus dudas y acompañarte en tu bienestar.",
+    buttonLabel: "Contáctanos",
     buttonIcon: <WhatsAppIcon className="h-5 w-5 -translate-y-px" />,
     buttonVariant: "outline" as const,
-    href: "/promoter#advisor-registration",
+    href: CALL_CENTER_WHATSAPP_URL,
   },
 ];
 
 const SMALL_CARDS = [
   {
-    href: "/blog",
-    icon: <BookOpen size={40} strokeWidth={1} />,
-    title: "Guías de Salud",
-    description: "Aprende más sobre tu cuerpo",
+    href: "/products",
+    icon: <Package size={40} strokeWidth={1} />,
+    title: "Ver catálogo completo",
+    description: "Descubre todos nuestros productos y encuentra el ideal para ti.",
     delay: 0.3,
   },
   {
-    href: "/about",
-    icon: <Heart size={40} strokeWidth={1} />,
-    title: "Nuestra Misión",
-    description: "Conoce el propósito de Terbol",
+    href: "/science-and-quality",
+    icon: <FlaskConical size={40} strokeWidth={1} />,
+    title: "Ciencia y calidad",
+    description: "Respaldo científico que garantiza excelencia en cada fórmula.",
     delay: 0.4,
   },
   {
     href: "/success-plan",
-    icon: <ShieldPlus size={40} strokeWidth={1} />,
-    title: "Plan de Éxito",
-    description: "Únete a nuestro programa",
+    icon: <Users size={40} strokeWidth={1} />,
+    title: "Un negocio para ti",
+    description:
+      "Sé parte de térbol Inspira: un negocio cercano que te da ingresos y propósito.",
     delay: 0.5,
   },
 ];
@@ -79,21 +75,22 @@ const COMPACT_CARDS = [
     href: "/products",
     icon: <Package size={40} strokeWidth={1} />,
     title: "Ver catálogo completo",
-    description: "Explora todos nuestros productos",
+    description: "Descubre todos nuestros productos y encuentra el ideal para ti.",
     delay: 0.3,
   },
   {
     href: "/science-and-quality",
     icon: <FlaskConical size={40} strokeWidth={1} />,
-    title: "Ciencia y Calidad",
-    description: "Nuestro respaldo científico",
+    title: "Ciencia y calidad",
+    description: "Respaldo científico que garantiza excelencia en cada fórmula.",
     delay: 0.4,
   },
   {
     href: "/success-plan",
-    icon: <BookOpen size={40} strokeWidth={1} />,
-    title: "Cómo funciona",
-    description: "Aprende más sobre el modelo",
+    icon: <Users size={40} strokeWidth={1} />,
+    title: "Un negocio para ti",
+    description:
+      "Sé parte de térbol Inspira: un negocio cercano que te da ingresos y propósito.",
     delay: 0.5,
   },
 ];
@@ -102,20 +99,12 @@ export function EndBanner({
   variant = "default",
   title,
   description,
-  whatsappUrl,
 }: EndBannerProps) {
-  const whatsappHref = whatsappUrl || "/promoter#advisor-registration";
   const isCompact = variant === "compact";
-  const headingTitle =
-    title ??
-    (isCompact
-      ? "Continúa explorando"
-      : "¿No encontraste lo que buscabas?");
+  const headingTitle = title ?? "Continúa explorando.";
   const headingDescription =
     description ??
-    (isCompact
-      ? undefined
-      : "Contáctanos y te ayudaremos a encontrar el producto perfecto para ti.");
+    (isCompact ? undefined : "Para inspirar, crecer y transformar tu vida.");
   const smallCards = isCompact ? COMPACT_CARDS : SMALL_CARDS;
 
   return (
@@ -162,12 +151,11 @@ export function EndBanner({
                     </p>
                   </div>
                   {(() => {
-                    const href = card.id === 2 ? whatsappHref : card.href;
-                    const isExternal = card.id === 2 && whatsappUrl;
+                    const isExternal = card.href.startsWith("http");
 
                     return (
                       <Button
-                        href={href}
+                        href={card.href}
                         size="sm"
                         variant={card.buttonVariant}
                         icon={card.buttonIcon}
@@ -205,7 +193,7 @@ export function EndBanner({
                     <h4 className="heading-h6 mb-1 font-bold text-gray-900">
                       {card.title}
                     </h4>
-                    <p className="text-body-medium line-clamp-1 text-gray-500">
+                    <p className="text-body-medium line-clamp-2 text-gray-500">
                       {card.description}
                     </p>
                   </div>

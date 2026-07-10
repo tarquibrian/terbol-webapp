@@ -5,9 +5,10 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { PROMOTER_REGISTRATION_URL } from "../../constants";
 import {
   resolvePromoterAsset,
   sortByOrder,
@@ -17,10 +18,9 @@ import {
 
 interface AsesorRequirementsProps {
   data?: PromoterRequirements;
-  supportUrl?: string;
 }
 
-export function AsesorRequirements({ data, supportUrl }: AsesorRequirementsProps) {
+export function AsesorRequirements({ data }: AsesorRequirementsProps) {
   const header = data?.header;
   const items: PromoterDetail[] =
     data?.items && data.items.length > 0
@@ -123,21 +123,18 @@ export function AsesorRequirements({ data, supportUrl }: AsesorRequirementsProps
                 </div>
 
                 {/* CTA de Soporte dentro de la card */}
-                <div className="flex flex-col items-end justify-end gap-4 mt-8 lg:mt-0">
-                  <p className="text-body-small text-gray-500">
-                    ¿Aún tienes dudas?, háblanos.
-                  </p>
+                <div className="flex flex-col items-end justify-end mt-8 lg:mt-0">
                   <Button
-                    href={supportUrl}
+                    href={PROMOTER_REGISTRATION_URL}
                     variant="secondary"
                     size="sm"
                     className="w-full lg:w-auto"
-                    icon={<MessageCircle size={18} />}
+                    icon={<ArrowRight size={18} />}
                     iconPosition="right"
-                    target={supportUrl ? "_blank" : undefined}
-                    rel={supportUrl ? "noopener noreferrer" : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    CONTACTAR CON SOPORTE
+                    Registrarme como Asesor de Ventas
                   </Button>
                 </div>
               </div>

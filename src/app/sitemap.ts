@@ -11,7 +11,6 @@ type SitemapEntryConfig = {
 const STATIC_ROUTES = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/about", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
   { path: "/faq", changeFrequency: "monthly", priority: 0.8 },
   { path: "/products", changeFrequency: "weekly", priority: 0.9 },
   { path: "/promoter", changeFrequency: "monthly", priority: 0.8 },
@@ -35,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Los detalles de blog no se incluyen hasta que el CMS exponga un indice
-  // liviano y estable; consultar cada articulo en build haria fragil el sitemap.
+  // Blog queda accesible por URL directa, pero no se publica en navegacion ni
+  // sitemap mientras el modulo este oculto comercialmente.
   return [...staticRoutes, ...productRoutes];
 }

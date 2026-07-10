@@ -1,7 +1,6 @@
 import { BlogHero } from "../components/BlogHero";
 import { ArticlesSection } from "../components/ArticlesSection";
 import { EndBanner } from "@/components/layout/EndBanner";
-import { getAdvisorWhatsAppUrl } from "@/components/layout/AdvisorBanner";
 import type {
   BlogCategory,
   BlogHeroContent,
@@ -18,7 +17,7 @@ interface BlogViewProps {
   currentSearch?: string;
 }
 
-export async function BlogView({
+export function BlogView({
   cover,
   categories,
   posts,
@@ -26,8 +25,6 @@ export async function BlogView({
   currentCategoryId,
   currentSearch,
 }: BlogViewProps) {
-  const whatsappUrl = await getAdvisorWhatsAppUrl();
-
   return (
     <>
       <BlogHero data={cover} />
@@ -38,7 +35,7 @@ export async function BlogView({
         currentCategoryId={currentCategoryId}
         currentSearch={currentSearch}
       />
-      <EndBanner variant="expanded" whatsappUrl={whatsappUrl} />
+      <EndBanner variant="expanded" />
     </>
   );
 }

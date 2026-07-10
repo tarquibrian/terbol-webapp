@@ -39,7 +39,7 @@ interface NavSubmenuProps {
  * @example
  * <NavSubmenu
  *   items={[
- *     { label: "Blog", href: "/blog", description: "Noticias" },
+ *     { label: "Ciencia y Calidad", href: "/science-and-quality", description: "Respaldo científico" },
  *     { label: "FAQ", href: "/faq" },
  *   ]}
  *   onItemClick={() => setIsOpen(false)}

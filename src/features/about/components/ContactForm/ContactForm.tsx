@@ -194,32 +194,6 @@ export const ContactForm = () => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </AnimateOnScroll>
-          <AnimateOnScroll
-            variant="slide-right"
-            delay={0.3}
-            className="hidden lg:block absolute bottom-0 left-6 xl:left-12 w-[230px] xl:w-[290px] 2xl:w-[340px] h-auto pointer-events-none z-10"
-          >
-            <Image
-              src={assetPath("/about/contactform1.png")}
-              alt=""
-              width={365}
-              height={307}
-              className="w-full h-auto object-contain"
-            />
-          </AnimateOnScroll>
-          <AnimateOnScroll
-            variant="slide-left"
-            delay={0.3}
-            className="hidden lg:block absolute bottom-0 right-6 xl:right-12 w-[270px] xl:w-[330px] 2xl:w-[380px] h-auto pointer-events-none z-10"
-          >
-            <Image
-              src={assetPath("/about/contactform2.png")}
-              alt=""
-              width={450}
-              height={334}
-              className="w-full h-auto object-contain"
-            />
-          </AnimateOnScroll>
         </AnimateOnScroll>
       </div>
     </section>

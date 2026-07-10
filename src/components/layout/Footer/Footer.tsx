@@ -19,7 +19,6 @@ const FOOTER_NAV_COL_1 = [
 ];
 
 const FOOTER_NAV_COL_2 = [
-  { label: "Aprende", href: "/blog" },
   { label: "Ciencia y Calidad", href: "/science-and-quality" },
   { label: "Ayuda y Contacto", href: "/faq" },
 ];

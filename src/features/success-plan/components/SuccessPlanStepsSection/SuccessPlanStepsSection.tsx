@@ -1,6 +1,9 @@
 import { SuccessPlanStep } from "../SuccessPlanStep/SuccessPlanStep";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { Button } from "@/components/ui/Button";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { resolveImageAsset } from "@/lib/image-assets";
+import { ArrowRight } from "lucide-react";
 import * as React from "react";
 import s1 from "../../../../../public/images/image15.png";
 import s2 from "../../../../../public/images/image14.png";
@@ -27,9 +30,16 @@ interface SuccessPlanStepsSectionProps {
     };
     steps?: StepItem[];
   };
+  /** URL directa de WhatsApp (wa.me/...) para el botón de contacto */
+  whatsappUrl?: string;
 }
 
-export function SuccessPlanStepsSection({ data }: SuccessPlanStepsSectionProps) {
+export function SuccessPlanStepsSection({
+  data,
+  whatsappUrl,
+}: SuccessPlanStepsSectionProps) {
+  const contactHref = whatsappUrl || "/promoter#advisor-registration";
+
   const getImageUrl = (path?: string) => {
     return resolveImageAsset(path);
   };
@@ -145,6 +155,28 @@ export function SuccessPlanStepsSection({ data }: SuccessPlanStepsSectionProps) 
             <p className="text-body-medium text-gray-500 max-w-[850px] whitespace-pre-line">
               {header.description}
             </p>
+            <div className="flex w-full flex-col items-center justify-center gap-4 pt-4 md:w-auto md:flex-row">
+              <Button
+                variant="default"
+                size="default"
+                className="w-full md:w-auto"
+                icon={<WhatsAppIcon className="h-5 w-5 -translate-y-px" />}
+                href={contactHref}
+                target={whatsappUrl ? "_blank" : undefined}
+                rel={whatsappUrl ? "noopener noreferrer" : undefined}
+              >
+                Contactar por whatsapp
+              </Button>
+              <Button
+                href="/promoter"
+                variant="outline"
+                size="default"
+                className="w-full md:w-auto md:min-w-[300px]"
+                icon={<ArrowRight strokeWidth={1.75} />}
+              >
+                Saber más
+              </Button>
+            </div>
           </div>
         </AnimateOnScroll>
         <div className="flex flex-col gap-20 max-w-[1200px] mx-auto">

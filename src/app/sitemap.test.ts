@@ -14,7 +14,6 @@ test("sitemap incluye rutas estaticas principales", async () => {
 
   assert.ok(urls.includes(siteUrl));
   assert.ok(urls.includes(`${siteUrl}/about`));
-  assert.ok(urls.includes(`${siteUrl}/blog`));
   assert.ok(urls.includes(`${siteUrl}/products`));
   assert.ok(urls.includes(`${siteUrl}/success-plan`));
 });

@@ -50,7 +50,7 @@ interface NavSubmenuTriggerProps {
  * <NavSubmenuTrigger
  *   label="Más"
  *   items={[
- *     { label: "Blog", href: "/blog" },
+ *     { label: "Ciencia y Calidad", href: "/science-and-quality" },
  *     { label: "FAQ", href: "/faq" },
  *   ]}
  * />
@@ -67,8 +67,8 @@ export function NavSubmenuTrigger({
    * El trigger se considera activo si el pathname actual coincide
    * con el `href` de alguno de sus items (exacta o parcialmente).
    *
-   * Ejemplo: si items incluye { href: "/blog" } y pathname es "/blog/post-1",
-   * el trigger se marca como activo.
+   * Ejemplo: si items incluye { href: "/products" } y pathname es
+   * "/products/1", el trigger se marca como activo.
    */
   const isActive = items.some(
     (item) =>

@@ -203,7 +203,46 @@ detalles individuales) porque todos los fetches usan el mismo tag.
 | Sin webhook, alguien visita la página | Stale-while-revalidate: ve data vieja, el siguiente ve la nueva |
 | Sin webhook, nadie visita | El cache no se refresca solo — se refresca cuando alguien entra |
 | Máximo delay sin webhook | ~1 día (`CMS_REVALIDATE_SECONDS = 86400`) desde la última visita |
-| Nuevo deploy | Todas las páginas ISR/SSG se regeneran con data fresca |
+| Nuevo deploy | Todas las páginas ISR/SSG se regeneran durante `npm run build`; el `deploymentId` evita mezclar assets/payloads de builds distintos |
+
+---
+
+## Deployment ID y version skew
+
+En self-hosting, un deploy puede dejar al navegador o a una capa intermedia con
+HTML, RSC payloads o assets de una versión anterior mientras el servidor ya corre
+otra. Ese problema se conoce como **version skew**: la app puede intentar navegar
+client-side con datos prefetched o JavaScript de un build viejo.
+
+La app lee `NEXT_DEPLOYMENT_ID` en `next.config.ts` y lo pasa a Next como
+`deploymentId`. En el proceso operativo se define con el SHA corto del commit
+antes de `npm run build`:
+
+```powershell
+$deployId = git rev-parse --short HEAD
+$env:NEXT_DEPLOYMENT_ID = $deployId
+npm run build
+```
+
+Cuando `deploymentId` está activo, Next:
+
+- Inserta `data-dpl-id="<id>"` en el `<html>`.
+- Agrega `?dpl=<id>` a URLs de assets estáticos.
+- Envía headers de navegación para comparar el deployment del cliente con el del
+  servidor.
+- Si detecta un mismatch, hace una navegación completa en lugar de seguir con una
+  navegación client-side incompatible.
+
+Esto **no** reemplaza `revalidateTag` ni `CMS_REVALIDATE_SECONDS`: esos mecanismos
+controlan la frescura del contenido del CMS. `deploymentId` controla coherencia
+entre versiones de build.
+
+Verificación rápida:
+
+```powershell
+$html = curl.exe -s -H "Host: terbolinspira.com" "http://localhost/qas/promoter"
+if ($html -match 'data-dpl-id="([^"]+)"') { "deployment id: $($Matches[1])" }
+```
 
 ---
 

@@ -20,17 +20,33 @@ export const About = ({ data }: AboutProps) => {
           <AnimateOnScroll variant="slide-up">
             <div className="flex flex-col  gap-4 py-4 md:py-8 max-w-[770px] mx-auto">
               <header className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-                <span className="text-body font-medium text-primary-orange" aria-hidden="true">NUESTRA MARCA</span>
+                <span
+                  className="text-body font-medium text-primary-orange uppercase"
+                  aria-hidden="true"
+                >
+                  Marca que transforma vidas
+                </span>
                 <div className="w-[20px] h-px bg-gray-200"></div>
-                <Image src={assetPath("/logo-terbol.svg")} alt="Terbol" width={200} height={33} style={{ width: 'auto', height: 'auto' }} />
+                <Image
+                  src={assetPath("/logo-terbol.svg")}
+                  alt="Terbol"
+                  width={200}
+                  height={33}
+                  style={{ width: "auto", height: "auto" }}
+                />
               </header>
               <p className="text-center text-body-medium text-gray-500">
-                {data?.description || "Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud."}
+                {data?.description ||
+                  "Térbol Inspira es la línea premium de vitaminas y nutracéuticos de Térbol, desarrollada con formulaciones respaldadas por evidencia científica. Nacimos para ofrecer productos de alta gama a quienes no se conforman con menos cuando se trata de su salud."}
               </p>
             </div>
           </AnimateOnScroll>
 
-          <AnimateOnScroll variant="fade" delay={0.4} className="aspect-video relative rounded-lg overflow-hidden bg-primary-black">
+          <AnimateOnScroll
+            variant="fade"
+            delay={0.4}
+            className="aspect-video relative rounded-lg overflow-hidden bg-primary-black"
+          >
             {data?.embed_url ? (
               <YouTubeFacade
                 embedUrl={data.embed_url}
@@ -38,7 +54,9 @@ export const About = ({ data }: AboutProps) => {
                 title="Térbol Inspira Video"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">Video no disponible</div>
+              <div className="w-full h-full flex items-center justify-center text-gray-500">
+                Video no disponible
+              </div>
             )}
           </AnimateOnScroll>
         </div>

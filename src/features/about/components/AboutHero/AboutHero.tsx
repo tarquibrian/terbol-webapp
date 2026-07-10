@@ -15,7 +15,6 @@ import * as React from "react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import Image from "next/image";
 import { resolveImageAsset } from "@/lib/image-assets";
-import { assetPath } from "@/lib/base-path";
 
 interface DetailItem {
   id: number | string;
@@ -97,12 +96,7 @@ export function AboutHero({ data }: AboutHeroProps) {
 
         <div className="flex gap-4 max-w-[1024px] flex-col md:flex-row md:items-stretch w-full justify-center">
           {details.map((detail, index) => {
-            const isFromCms = detail.image && !detail.image.startsWith("/");
-            const imgUrl = isFromCms
-              ? getImageUrl(detail.image)
-              : detail.image
-                ? assetPath(detail.image)
-                : detail.image;
+            const imgUrl = getImageUrl(detail.image);
 
             return (
               <AnimateOnScroll
@@ -112,16 +106,14 @@ export function AboutHero({ data }: AboutHeroProps) {
                 className="w-full p-6 bg-primary-soft-gray-balance rounded-lg md:min-h-[230px] md:self-stretch flex flex-col gap-6 justify-between flex-1"
               >
                 {/* LOGO o ICONO */}
-                <div
-                  className={`relative ${index === 0 ? "h-12" : "h-8"} w-fit`}
-                >
+                <div className="relative h-12 w-full max-w-[220px] shrink-0">
                   {imgUrl && (
                     <Image
                       src={imgUrl}
                       alt={detail.title}
-                      width={160}
-                      height={48}
-                      className="h-full w-auto object-contain"
+                      fill
+                      sizes="220px"
+                      className="object-contain object-left"
                     />
                   )}
                 </div>

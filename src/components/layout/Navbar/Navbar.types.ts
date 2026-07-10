@@ -10,9 +10,9 @@
  *
  * @example
  * const submenuItem: NavSubmenuItem = {
- *   label: "Blog",
- *   href: "/blog",
- *   description: "Artículos y noticias",
+ *   label: "Ciencia y Calidad",
+ *   href: "/science-and-quality",
+ *   description: "Respaldo científico",
  * };
  */
 export interface NavSubmenuItem {
@@ -42,7 +42,7 @@ export interface NavSubmenuItem {
  * const menuTrigger: NavLinkItem = {
  *   label: "Más",
  *   submenuItems: [
- *     { label: "Blog", href: "/blog" },
+ *     { label: "Ciencia y Calidad", href: "/science-and-quality" },
  *     { label: "FAQ", href: "/faq" },
  *   ],
  * };

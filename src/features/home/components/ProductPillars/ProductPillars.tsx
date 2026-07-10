@@ -47,6 +47,7 @@ const FALLBACK_ICONS = [
 
 export function ProductPillars({ data }: ProductPillarsProps) {
   const pillarsToRender = data && data.length > 0 ? data : FALLBACK_PILLARS;
+  const pillarsImageSrc = "/images/pilares-de-productos.png";
 
   const getIconUrl = (path?: string) => {
     return resolveImageAsset(path);
@@ -54,12 +55,21 @@ export function ProductPillars({ data }: ProductPillarsProps) {
 
   return (
     <section className="wrapper-section">
-      <div className="wrapper-content flex flex-col items-start lg:flex-row justify-between gap-10 lg:gap-12">
-        <AnimateOnScroll variant="slide-up">
-          <div className="flex flex-col items-start justify-start text-left mx-auto">
+      <div className="wrapper-content grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] lg:gap-16 xl:gap-20">
+        <AnimateOnScroll variant="slide-up" className="w-full">
+          <div className="flex w-full flex-col items-start justify-start gap-8 text-left">
             <h2 className="heading-h4 text-primary">
               Pilares de Productos
             </h2>
+            <div className="relative aspect-square w-full max-w-[520px] overflow-hidden rounded-lg bg-primary-soft-gray-balance lg:max-w-[500px]">
+              <Image
+                src={pillarsImageSrc}
+                alt="Mujer meditando junto a productos Térbol Inspira"
+                fill
+                sizes="(min-width: 1280px) 500px, (min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </AnimateOnScroll>
 
