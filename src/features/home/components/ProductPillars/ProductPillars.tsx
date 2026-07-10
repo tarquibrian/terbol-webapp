@@ -2,6 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import { Microscope, ScrollText, SunMedium, Star } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
+import { assetPath } from "@/lib/base-path";
 import { resolveImageAsset } from "@/lib/image-assets";
 
 interface PillarData {
@@ -47,7 +48,7 @@ const FALLBACK_ICONS = [
 
 export function ProductPillars({ data }: ProductPillarsProps) {
   const pillarsToRender = data && data.length > 0 ? data : FALLBACK_PILLARS;
-  const pillarsImageSrc = "/images/pilares-de-productos.png";
+  const pillarsImageSrc = assetPath("/images/pilares-de-productos.png");
 
   const getIconUrl = (path?: string) => {
     return resolveImageAsset(path);
