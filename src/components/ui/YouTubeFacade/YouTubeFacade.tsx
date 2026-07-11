@@ -3,6 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 
+const YOUTUBE_THUMBNAIL_VARIANTS = [
+  "maxresdefault",
+  "sddefault",
+  "hqdefault",
+] as const;
+
 interface YouTubeFacadeProps {
   /** URL de embed del video (ej. https://www.youtube.com/embed/ID). */
   embedUrl: string;
@@ -23,6 +29,10 @@ export function YouTubeFacade({
   title = "Video",
 }: YouTubeFacadeProps) {
   const [activated, setActivated] = useState(false);
+  const [thumbnailFallback, setThumbnailFallback] = useState({
+    videoId,
+    index: 0,
+  });
 
   const baseSrc = embedUrl.replace("youtube.com", "youtube-nocookie.com");
 
@@ -39,9 +49,27 @@ export function YouTubeFacade({
     );
   }
 
+  const thumbnailIndex =
+    thumbnailFallback.videoId === videoId ? thumbnailFallback.index : 0;
   const thumbnail = videoId
-    ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+    ? `https://i.ytimg.com/vi/${videoId}/${YOUTUBE_THUMBNAIL_VARIANTS[thumbnailIndex]}.jpg`
     : undefined;
+
+  const handleThumbnailError = () => {
+    setThumbnailFallback((current) => {
+      const currentIndex = current.videoId === videoId ? current.index : 0;
+      const nextIndex = Math.min(
+        currentIndex + 1,
+        YOUTUBE_THUMBNAIL_VARIANTS.length - 1,
+      );
+
+      if (current.videoId === videoId && current.index === nextIndex) {
+        return current;
+      }
+
+      return { videoId, index: nextIndex };
+    });
+  };
 
   return (
     <button
@@ -56,7 +84,8 @@ export function YouTubeFacade({
           alt={title}
           fill
           className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 770px"
+          sizes="(max-width: 1200px) 100vw, 1176px"
+          onError={handleThumbnailError}
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center text-gray-300">
