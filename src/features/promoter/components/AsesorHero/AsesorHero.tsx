@@ -101,7 +101,7 @@ export function AsesorHero({ data }: AsesorHeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  QUIERO SER ASESOR DE VENTAS
+                  ÚNETE AL EQUIPO INSPIRA
                 </Button>
                 <Button
                   variant="outline"

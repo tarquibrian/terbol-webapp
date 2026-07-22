@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Accordion } from "@/components/ui/Accordion/Accordion";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { FAQ_DATA } from "../data/faqData";
 
 interface FaqItemData {
@@ -74,14 +74,14 @@ export function FaqHero({ data }: FaqHeroProps) {
               <Button
                 variant="secondary"
                 size="default"
-                icon={<MessageCircle size={20} />}
+                icon={<WhatsAppIcon className="h-5 w-5 -translate-y-px" />}
                 iconPosition="right"
                 className="mt-4"
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Contactar ahora
+                Contáctanos
               </Button>
             </AnimateOnScroll>
           </div>

@@ -107,15 +107,6 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               <p className="text-body-medium whitespace-pre-line text-gray-600 mb-6">
                 {step1.description}
               </p>
-              <Button
-                size="sm"
-                className="w-full sm:w-[250px] justify-between"
-                icon={<ArrowRight />}
-                iconPosition="right"
-                href="/products"
-              >
-                Ver productos
-              </Button>
             </div>
 
             {/* Contenedor inferior para Imagen */}
@@ -230,6 +221,31 @@ export function DevelopmentSteps({ data }: DevelopmentStepsProps) {
               />
             </div>
           </div>
+        </AnimateOnScroll>
+        <AnimateOnScroll
+          variant="slide-up"
+          className="mt-6 flex justify-center"
+        >
+          <Button
+            size="default"
+            mobileFullWidth={false}
+            className="hidden w-[350px] justify-between sm:inline-flex"
+            icon={<ArrowRight />}
+            iconPosition="right"
+            href="/products"
+          >
+            Ver productos
+          </Button>
+          <Button
+            size="sm"
+            mobileFullWidth={false}
+            className="w-[250px] justify-between sm:hidden"
+            icon={<ArrowRight />}
+            iconPosition="right"
+            href="/products"
+          >
+            Ver productos
+          </Button>
         </AnimateOnScroll>
       </div>
     </section>

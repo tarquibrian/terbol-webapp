@@ -46,12 +46,12 @@ export async function HomeView({ data }: HomeViewProps) {
   return (
     <>
       <Hero data={data?.hero_section} />
-      <About data={data?.video_section} />
       <FeaturedProducts
         featuredProducts={featuredProducts}
         focusCategories={focusCategories}
       />
       <ProductPillars data={data?.pillars} />
+      <About data={data?.video_section} />
       <DevelopmentSteps data={data?.development_products} />
       <AdvisorBanner />
       {/* NUEVA SECCION AQUI */}

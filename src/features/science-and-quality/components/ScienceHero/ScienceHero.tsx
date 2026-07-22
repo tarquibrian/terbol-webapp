@@ -117,7 +117,7 @@ export function ScienceHero({ data, whatsappUrl }: ScienceHeroProps) {
             target={whatsappUrl ? "_blank" : undefined}
             rel={whatsappUrl ? "noopener noreferrer" : undefined}
           >
-            Contactar por whatsapp
+            Contáctanos
           </Button>
         </AnimateOnScroll>
       </div>
