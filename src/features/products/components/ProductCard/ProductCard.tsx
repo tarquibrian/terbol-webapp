@@ -116,7 +116,7 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
             icon={<ArrowRight size={16} />}
             iconPosition="right"
           >
-            Comprar
+            Ver más
           </Button>
         </div>
       </div>

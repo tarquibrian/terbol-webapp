@@ -51,8 +51,8 @@ export async function HomeView({ data }: HomeViewProps) {
         focusCategories={focusCategories}
       />
       <ProductPillars data={data?.pillars} />
-      <About data={data?.video_section} />
       <DevelopmentSteps data={data?.development_products} />
+      <About data={data?.video_section} />
       <AdvisorBanner />
       {/* NUEVA SECCION AQUI */}
     </>
