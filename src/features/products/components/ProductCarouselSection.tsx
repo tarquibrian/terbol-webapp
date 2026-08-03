@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard/ProductCard";
 import type { Product } from "../data/products";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 
 import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
+import { CarouselControls } from "@/components/ui/Carousel/CarouselControls";
 
 interface ProductCarouselSectionProps {
   /** Los productos a mostrar en el carousel */
@@ -35,32 +35,6 @@ export function ProductCarouselSection({
 
   const [api, setApi] = React.useState<CarouselApi>();
 
-  /** Navega al slide anterior y resetea el timer de autoplay */
-  const handlePrev = React.useCallback(() => {
-    if (!api) return;
-
-    if (api.canScrollPrev()) {
-      api.scrollPrev();
-    } else {
-      api.scrollTo(api.scrollSnapList().length - 1);
-    }
-
-    api?.plugins()?.autoplay?.reset();
-  }, [api]);
-
-  /** Navega al slide siguiente y resetea el timer de autoplay */
-  const handleNext = React.useCallback(() => {
-    if (!api) return;
-
-    if (api.canScrollNext()) {
-      api.scrollNext();
-    } else {
-      api.scrollTo(0);
-    }
-
-    api?.plugins()?.autoplay?.reset();
-  }, [api]);
-
   if (products.length === 0) return null;
 
   return (
@@ -78,25 +52,6 @@ export function ProductCarouselSection({
           </AnimateOnScroll>
 
           <div className="flex-1 h-px bg-gray-100"></div>
-
-          {hasMultipleItems && (
-            <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
-              <button
-                onClick={handlePrev}
-                className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Anterior"
-              >
-                <ChevronLeft size={24} strokeWidth={1.75} />
-              </button>
-              <button
-                onClick={handleNext}
-                className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Siguiente"
-              >
-                <ChevronRight size={24} strokeWidth={1.5} />
-              </button>
-            </AnimateOnScroll>
-          )}
         </div>
 
         {/* Carousel Wrapper */}
@@ -124,25 +79,8 @@ export function ProductCarouselSection({
             </CarouselContent>
           </div>
 
-          {/* Controles para Mobile */}
-          {hasMultipleItems && (
-            <AnimateOnScroll variant="fade" className="flex md:hidden justify-center gap-4 mt-8">
-              <button
-                onClick={handlePrev}
-                className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Anterior"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={handleNext}
-                className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Siguiente"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </AnimateOnScroll>
-          )}
+          {/* Flechas laterales (desktop) + fila de botones (mobile) */}
+          {hasMultipleItems && <CarouselControls api={api} />}
         </div>
       </Carousel>
     </section>

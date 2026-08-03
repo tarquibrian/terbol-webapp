@@ -12,8 +12,9 @@ import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { FeaturedProductCard } from "./FeaturedProductCard";
 import { CategoryCard } from "@/components/ui/CategoryCard/CategoryCard";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, Autoplay, type CarouselApi } from "@/components/ui/Carousel/Carousel";
+import { CarouselControls } from "@/components/ui/Carousel/CarouselControls";
 import type { ProductCategoryLink } from "@/features/products/api/types";
 import type { Product } from "@/features/products/data/products";
 
@@ -40,27 +41,6 @@ export function FeaturedProducts({
   const hasMultipleFeaturedProducts = featuredProducts.length > 1;
   const hasFeaturedProductDesktopControls = featuredProducts.length > 3;
 
-  const handleProductPrev = React.useCallback(() => {
-    productApi?.scrollPrev();
-    productApi?.plugins()?.autoplay?.reset();
-  }, [productApi]);
-
-  const handleProductNext = React.useCallback(() => {
-    productApi?.scrollNext();
-    productApi?.plugins()?.autoplay?.reset();
-  }, [productApi]);
-
-  const handleFocusPrev = React.useCallback(() => {
-    focusApi?.scrollPrev();
-    focusApi?.plugins()?.autoplay?.reset();
-  }, [focusApi]);
-
-  const handleFocusNext = React.useCallback(() => {
-    focusApi?.scrollNext();
-    focusApi?.plugins()?.autoplay?.reset();
-  }, [focusApi]);
-
-
   if (!hasFeaturedProducts && !hasFocusCategories) return null;
 
   return (
@@ -80,25 +60,6 @@ export function FeaturedProducts({
                 </h2>
               </AnimateOnScroll>
               <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
-
-              {hasFeaturedProductDesktopControls && (
-                <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
-                  <button
-                    onClick={handleProductPrev}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label="Producto anterior"
-                  >
-                    <ChevronLeft size={24} strokeWidth={1.5} />
-                  </button>
-                  <button
-                    onClick={handleProductNext}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label="Producto siguiente"
-                  >
-                    <ChevronRight size={24} strokeWidth={1.5} />
-                  </button>
-                </AnimateOnScroll>
-              )}
             </div>
 
             <AnimateOnScroll variant="slide-up" delay={0.2}>
@@ -120,24 +81,15 @@ export function FeaturedProducts({
                   ))}
                 </CarouselContent>
 
-                {hasMultipleFeaturedProducts && (
-                  <div className="flex md:hidden justify-center gap-4 mt-4">
-                    <button
-                      onClick={handleProductPrev}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Producto anterior"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    <button
-                      onClick={handleProductNext}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Producto siguiente"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                  </div>
-                )}
+                {/* Flechas laterales (desktop) + fila de botones (mobile) */}
+                <CarouselControls
+                  api={productApi}
+                  showSideControls={hasFeaturedProductDesktopControls}
+                  showBottomControls={hasMultipleFeaturedProducts}
+                  bottomClassName="mt-4"
+                  previousLabel="Producto anterior"
+                  nextLabel="Producto siguiente"
+                />
               </div>
             </AnimateOnScroll>
           </Carousel>
@@ -159,25 +111,6 @@ export function FeaturedProducts({
                 </h3>
               </AnimateOnScroll>
               <div className="hidden md:block w-full h-px bg-transparent border-dashed border-b border-gray-200"></div>
-
-              {focusCategories.length > 3 && (
-                <AnimateOnScroll variant="fade" className="hidden md:flex gap-3 shrink-0">
-                  <button
-                    onClick={handleFocusPrev}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label="Anterior"
-                  >
-                    <ChevronLeft size={24} strokeWidth={1.5} />
-                  </button>
-                  <button
-                    onClick={handleFocusNext}
-                    className="w-12 h-12 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label="Siguiente"
-                  >
-                    <ChevronRight size={24} strokeWidth={1.5} />
-                  </button>
-                </AnimateOnScroll>
-              )}
             </div>
 
             <AnimateOnScroll variant="slide-up" delay={0.2}>
@@ -201,25 +134,13 @@ export function FeaturedProducts({
                   </CarouselContent>
                 </div>
 
-                {/* Controles para Mobile */}
-                {focusCategories.length > 1 && (
-                  <div className="flex md:hidden justify-center gap-4 mt-4">
-                    <button
-                      onClick={handleFocusPrev}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Anterior"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    <button
-                      onClick={handleFocusNext}
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-primary-soft-gray-balance text-primary-orange transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Siguiente"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                  </div>
-                )}
+                {/* Flechas laterales (desktop) + fila de botones (mobile) */}
+                <CarouselControls
+                  api={focusApi}
+                  showSideControls={focusCategories.length > 3}
+                  showBottomControls={focusCategories.length > 1}
+                  bottomClassName="mt-4"
+                />
               </div>
             </AnimateOnScroll>
           </Carousel>
