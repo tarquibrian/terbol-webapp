@@ -105,6 +105,14 @@ export function ProductSearchBox({
   const listboxId = `${baseId}-listbox`;
   const optionId = (index: number) => `${baseId}-option-${index}`;
 
+  // El texto puede cambiar desde afuera cuando `defaultValue` sigue a la URL —
+  // el buscador de /products. SearchInput ya se resincroniza solo ante eso, y
+  // este efecto mantiene el espejo local al día para que las sugerencias no
+  // sigan consultando un término que el input dejó de mostrar.
+  React.useEffect(() => {
+    if (defaultValue !== undefined) setQuery(defaultValue);
+  }, [defaultValue]);
+
   const { suggestions, loading, idle } = useProductSuggestions(query);
   const normalizedQuery = query.trim();
 
