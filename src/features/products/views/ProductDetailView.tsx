@@ -47,7 +47,7 @@ export function ProductDetailView({
       {/* Sección dinámica ¿Para quién está diseñado? basada en el tipo de consumo */}
       <ProductTargetSection product={product} />
 
-      {/* Sección estática ¿Por qué elegir este producto? */}
+      {/* Sección ¿Por qué elegir <nombre del producto>? */}
       <ProductFeaturesSection product={product} />
 
       {/* SECCION DE CAROUSEL */}

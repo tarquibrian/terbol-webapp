@@ -13,6 +13,14 @@ interface ProductFeaturesSectionProps {
 }
 
 export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps) {
+  // El CMS no entrega este encabezado (whyChooseTitle es el h2 interno), asi que
+  // se arma en codigo: texto fijo + nombre del producto. `product` es opcional,
+  // por eso se mantiene el texto generico como fallback.
+  const productName = product?.name?.trim();
+  const heading = productName
+    ? `¿Por qué elegir ${productName}?`
+    : "¿Por qué elegir este producto?";
+
   const items = product?.whyChooseItems && product.whyChooseItems.length > 0
     ? product.whyChooseItems
     : [
@@ -26,12 +34,12 @@ export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps)
     <section className="wrapper-section">
       <div className="wrapper-content flex flex-col gap-8 md:gap-10 justify-center items-center">
         <AnimateOnScroll variant="slide-up" className="flex flex-col gap-2 justify-center items-center text-center">
-          <h2 className="heading-h4 text-gray-900 font-bold text-wrap">¿Por qué elegir este producto?</h2>
+          <h2 className="heading-h4 text-gray-900 font-bold text-wrap">{heading}</h2>
           <p className="text-body-medium text-gray-500 text-wrap">Calidad estricta, ingredientes certificados y respaldo científico.</p>
         </AnimateOnScroll>
         <div className="max-w-[1024px] w-full rounded-lg bg-primary-soft-gray-balance p-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3">
           <AnimateOnScroll variant="fade" delay={0.2} className="relative w-full aspect-video md:aspect-square rounded-md overflow-hidden">
-            <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt="Por qué elegir producto" width={800} height={800} className="w-full h-full object-cover" />
+            <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt={productName ? `Por qué elegir ${productName}` : "Por qué elegir producto"} width={800} height={800} className="w-full h-full object-cover" />
           </AnimateOnScroll>
           <div className="w-full p-4 lg:p-6 flex flex-col justify-between gap-6">
             <div>
