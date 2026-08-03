@@ -41,10 +41,20 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
   // Si se provee, usamos el delay custom; sino, el por defecto para grid-cols-3
   const delay = animationDelay !== undefined ? animationDelay : 0.1 * (index % 3);
   const formattedPrice = formatProductPrice(product.price);
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
+  // Sincroniza el estado con el DOM real al montar y ante cada cambio de `src`.
+  //
+  // Una imagen ya cacheada puede terminar de cargar antes de que React enganche
+  // `onLoad`, y entonces ese evento no llega nunca. Consultar `complete` cubre
+  // ese caso. Reemplaza además al `setImageLoaded(false)` que antes corría
+  // también al montar: si `onLoad` había disparado entre el commit y el efecto,
+  // lo pisaba y la card quedaba con la imagen en `opacity-0` para siempre.
   React.useEffect(() => {
-    setImageLoaded(false);
+    // `complete` es true tanto si cargó bien como si falló. En ambos casos hay
+    // que retirar el skeleton, igual que hace `onError`.
+    setImageLoaded(Boolean(imageRef.current?.complete));
   }, [product.cardImage]);
 
   const cardContent = (
@@ -76,6 +86,7 @@ export function ProductCard({ product, index = 0, animationDelay, disableAnimati
             )}
           >
             <Image
+              ref={imageRef}
               src={product.cardImage}
               alt={product.name}
               fill
