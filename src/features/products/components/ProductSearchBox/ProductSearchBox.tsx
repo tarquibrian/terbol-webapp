@@ -94,6 +94,10 @@ export function ProductSearchBox({
   const [query, setQuery] = React.useState(defaultValue ?? "");
   const [isOpen, setIsOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
+  // Cambiar este token remonta el SearchInput, que maneja su texto internamente
+  // y no expone forma de limpiarlo desde afuera. Es el mismo recurso que usa el
+  // buscador del blog para sincronizar el input con la búsqueda vigente.
+  const [resetToken, setResetToken] = React.useState(0);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const listRef = React.useRef<HTMLUListElement | null>(null);
@@ -147,14 +151,31 @@ export function ProductSearchBox({
 
   const isExpanded = isOpen && !idle;
 
+  /**
+   * Devuelve el input a su estado canónico: vacío en el navbar, y el término de
+   * la URL donde se pasa `defaultValue` (el buscador de /products).
+   */
+  const resetInput = () => {
+    setQuery(defaultValue ?? "");
+    setResetToken((token) => token + 1);
+  };
+
   const selectOption = (option: SuggestionOption) => {
     setIsOpen(false);
     setActiveIndex(-1);
-    onNavigate(
-      option.kind === "product"
-        ? `/products/${option.product.id}`
-        : buildSearchHref(query),
-    );
+
+    if (option.kind === "product") {
+      // Se eligió un producto concreto: la búsqueda cumplió su objetivo y el
+      // término queda obsoleto, así que el buscador vuelve a cero.
+      onNavigate(`/products/${option.product.id}`);
+      resetInput();
+      return;
+    }
+
+    // "Ver todos": se aterriza en el catálogo filtrado por ese término, así que
+    // el input lo conserva — es lo único que explica por qué la lista viene
+    // filtrada, ahora que /products no tiene buscador propio.
+    onNavigate(buildSearchHref(query));
   };
 
   const handleValueChange = (value: string) => {
@@ -205,6 +226,7 @@ export function ProductSearchBox({
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       <SearchInput
+        key={resetToken}
         className="w-full"
         placeholder={placeholder}
         defaultValue={defaultValue}
