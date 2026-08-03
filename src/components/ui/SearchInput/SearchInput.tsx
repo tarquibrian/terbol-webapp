@@ -7,10 +7,16 @@ import { cn } from "@/lib/utils";
 export interface SearchInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   onSearch?: (value: string) => void;
+  /**
+   * Notifica cada cambio del texto, tanto al tipear como al limpiar con la X.
+   * Pensado para consumidores que reaccionan mientras se escribe (por ejemplo
+   * un dropdown de sugerencias), sin tener que leer el evento crudo.
+   */
+  onValueChange?: (value: string) => void;
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, placeholder = "Buscar…", onSearch, defaultValue, value: externalValue, onChange, ...props }, ref) => {
+  ({ className, placeholder = "Buscar…", onSearch, onValueChange, defaultValue, value: externalValue, onChange, onKeyDown, ...props }, ref) => {
     const [value, setValue] = React.useState(defaultValue?.toString() || externalValue?.toString() || "");
 
     React.useEffect(() => {
@@ -39,12 +45,18 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 
     const handleClear = () => {
       setValue("");
+      onValueChange?.("");
       onSearch?.("");
       inputRef.current?.focus();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
+      // El handler del consumidor corre primero y puede cancelar el submit por
+      // Enter llamando a preventDefault() — así un dropdown de sugerencias
+      // elige la opción activa en vez de lanzar la búsqueda genérica.
+      onKeyDown?.(e);
+
+      if (e.key === "Enter" && !e.defaultPrevented) {
         handleSearch();
       }
     };
@@ -64,6 +76,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
+            onValueChange?.(e.target.value);
             onChange?.(e);
           }}
           onKeyDown={handleKeyDown}

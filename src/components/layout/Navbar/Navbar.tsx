@@ -24,7 +24,9 @@ import { useRouter, usePathname } from "next/navigation";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { SearchInput } from "@/components/ui/SearchInput";
+// Import directo (no por el barrel del feature) para no arrastrar las vistas de
+// productos al bundle del layout raíz.
+import { ProductSearchBox } from "@/features/products/components/ProductSearchBox";
 import { assetPath } from "@/lib/base-path";
 import { env } from "@/config/env";
 
@@ -65,17 +67,11 @@ export function Navbar() {
             <Image src={assetPath("/logo-terbol.svg")} alt="Terbol" width={200} height={33} priority style={{ width: 'auto', height: 'auto' }} />
           </Link>
 
-          {/* ─── Buscador ─── */}
-          <SearchInput
+          {/* ─── Buscador con sugerencias en vivo ─── */}
+          <ProductSearchBox
             placeholder="Buscar productos…"
             className="hidden lg:flex w-full min-w-[240px] desk:max-w-[400px]"
-            onSearch={(query) => {
-              if (query.trim()) {
-                router.push(`/products?search=${encodeURIComponent(query.trim())}`);
-              } else {
-                router.push(`/products`);
-              }
-            }}
+            onNavigate={(href) => router.push(href)}
           />
 
           {/* ─── Navegación + CTA ─── */}

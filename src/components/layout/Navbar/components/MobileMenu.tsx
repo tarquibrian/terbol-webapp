@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Menu, ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
-import { SearchInput } from "@/components/ui/SearchInput";
+import { ProductSearchBox } from "@/features/products/components/ProductSearchBox";
 import { Drawer } from "@/components/ui/Drawer";
 import { env } from "@/config/env";
 import { getFlatNavLinks } from "../Navbar.constants";
@@ -28,15 +28,6 @@ export function MobileMenu({ className }: { className?: string }) {
     setTimeout(() => {
       router.push(href);
     }, 400); 
-  };
-
-  const handleSearch = (query: string) => {
-    const normalizedQuery = query.trim();
-    const params = new URLSearchParams();
-    if (normalizedQuery) params.set("search", normalizedQuery);
-    const search = params.toString();
-
-    handleNavigation(`/products${search ? `?${search}` : ""}`);
   };
 
   return (
@@ -69,10 +60,10 @@ export function MobileMenu({ className }: { className?: string }) {
       >
         {/* Buscador: Solo se muestra aquí en pantallas < 1024px */}
         <div className="mb-8 block lg:hidden px-3">
-          <SearchInput
+          <ProductSearchBox
             placeholder="Buscar productos…"
             className="w-full"
-            onSearch={handleSearch}
+            onNavigate={handleNavigation}
           />
         </div>
 

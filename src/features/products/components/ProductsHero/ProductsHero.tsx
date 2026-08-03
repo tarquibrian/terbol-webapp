@@ -15,7 +15,17 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
-import { SearchInput } from "@/components/ui/SearchInput";
+import { ProductSearchBox } from "../ProductSearchBox";
+
+/**
+ * Interruptor del buscador propio de /products.
+ *
+ * Apagado a propósito para dejar un único buscador en el sitio: el del navbar,
+ * que navega a `/products?search=…`. Poner en `true` para volver a mostrarlo;
+ * no hace falta tocar nada más, porque el filtrado por `?search=` lo resuelve
+ * `ProductsView` a partir de la URL y sigue activo con el flag apagado.
+ */
+const SHOW_PRODUCTS_SEARCH: boolean = false;
 
 /**
  * Hero de la sección Productos con descripción del catálogo Terbol.
@@ -25,7 +35,9 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get("search") || "";
 
-  const handleSearch = (query: string) => {
+  // Conserva los filtros ya aplicados en la URL y vuelve a la página 1, a
+  // diferencia del buscador del navbar que arranca una búsqueda limpia.
+  const buildSearchHref = (query: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (query.trim()) {
       params.set("search", query.trim());
@@ -33,7 +45,7 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
       params.delete("search");
     }
     params.set("page", "1");
-    router.push(`/products?${params.toString()}`, { scroll: false });
+    return `/products?${params.toString()}`;
   };
 
   return (
@@ -71,16 +83,21 @@ export function ProductsHero({ totalResults, loading }: { totalResults?: number,
                 `${totalResults} resultado${totalResults !== 1 ? "s" : ""}`
               )}
             </span>
-            <span
-              aria-hidden="true"
-              className="hidden sm:block order-2 h-6 w-px shrink-0 bg-gray-200"
-            />
-            <SearchInput
-              placeholder="Buscar productos…"
-              defaultValue={currentSearch}
-              className="w-full order-1 sm:order-3 sm:flex-1 sm:min-w-0"
-              onSearch={handleSearch}
-            />
+            {SHOW_PRODUCTS_SEARCH && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="hidden sm:block order-2 h-6 w-px shrink-0 bg-gray-200"
+                />
+                <ProductSearchBox
+                  placeholder="Buscar productos…"
+                  defaultValue={currentSearch}
+                  className="w-full order-1 sm:order-3 sm:flex-1 sm:min-w-0"
+                  onNavigate={(href) => router.push(href, { scroll: false })}
+                  buildSearchHref={buildSearchHref}
+                />
+              </>
+            )}
           </AnimateOnScroll>
         </div>
       </div>

@@ -15,6 +15,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import type { Product } from "../../data/products";
+import { formatProductPrice } from "../../format";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -30,13 +31,6 @@ interface ProductCardProps {
   disableAnimation?: boolean;
 }
 
-function formatProductCardPrice(price: number) {
-  const hasDecimals = !Number.isInteger(price);
-  const formattedPrice = hasDecimals ? price.toFixed(2) : String(price);
-
-  return `${formattedPrice} Bs.`;
-}
-
 /**
  * Tarjeta de producto con link a la página de detalle.
  *
@@ -46,7 +40,7 @@ function formatProductCardPrice(price: number) {
 export function ProductCard({ product, index = 0, animationDelay, disableAnimation = false }: ProductCardProps) {
   // Si se provee, usamos el delay custom; sino, el por defecto para grid-cols-3
   const delay = animationDelay !== undefined ? animationDelay : 0.1 * (index % 3);
-  const formattedPrice = formatProductCardPrice(product.price);
+  const formattedPrice = formatProductPrice(product.price);
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   React.useEffect(() => {
