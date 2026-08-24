@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# logs del servicio en el servidor (nssm escribe out.log / err.log)
+/logs
+
 # debug
 npm-debug.log*
 yarn-debug.log*
