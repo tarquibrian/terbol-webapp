@@ -5,7 +5,8 @@ import { createRemoteImagePatterns } from "./src/config/image-remote-patterns";
 // Subpath opcional para ambientes montados bajo una ruta (ej. /qas en staging).
 // Vacío en root/Vercel; en el QA self-host se define NEXT_PUBLIC_BASE_PATH=/qas.
 // Debe empezar con "/" y no terminar en "/".
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim().replace(/\/$/, "") || undefined;
+const basePath =
+  process.env.NEXT_PUBLIC_BASE_PATH?.trim().replace(/\/$/, "") || undefined;
 const deploymentId = process.env.NEXT_DEPLOYMENT_ID?.trim() || undefined;
 
 const nextConfig: NextConfig = {
@@ -14,6 +15,16 @@ const nextConfig: NextConfig = {
   ...(deploymentId ? { deploymentId } : {}),
   reactCompiler: true,
   poweredByHeader: false,
+  // Tras el cutover a root, /qas/* queda como redirect permanente a la ruta
+  // equivalente (bookmarks y links compartidos; el ambiente nunca fue indexable).
+  // Solo aplica sin basePath: bajo un subpath el source seria /qas/qas.
+  async redirects() {
+    if (basePath) return [];
+    return [
+      { source: "/qas", destination: "/", permanent: true },
+      { source: "/qas/:path*", destination: "/:path*", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

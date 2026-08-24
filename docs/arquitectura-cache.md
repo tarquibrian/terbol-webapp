@@ -240,7 +240,7 @@ entre versiones de build.
 Verificación rápida:
 
 ```powershell
-$html = curl.exe -s -H "Host: terbolinspira.com" "http://localhost/qas/promoter"
+$html = curl.exe -s -H "Host: terbolinspira.com" "http://localhost/promoter"
 if ($html -match 'data-dpl-id="([^"]+)"') { "deployment id: $($Matches[1])" }
 ```
 
