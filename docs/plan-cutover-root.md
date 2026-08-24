@@ -87,7 +87,7 @@ Tráfico medido en los logs de `W3SVC1` (3 días, 18.933 líneas):
 | `/ServicioVPC/QAS` | ~18 | — | `DefaultAppPool` | ❌ **falta** | ✅ sí |
 | `/ServicioECO/QAS` | 53 | sí | `DefaultAppPool` | ❌ **falta** | ❌ **falta** |
 | `/ServicioECO/PRD` | ~5 | — | `DefaultAppPool` | ❌ **falta** | ❌ **falta** |
-| `/VentaPorCatalogoApi/*` | 12 | server-to-server | `VentaCatalogoPRDApi` / `VentaCatalogoQASApi` | ❌ **falta** | ❌ **falta** |
+| `/VentaPorCatalogoApi/*` | 12 | **sí, vía Cloudflare** (integración externa con RestSharp) | `VentaCatalogoPRDApi` / `VentaCatalogoQASApi` | ❌ **falta** | ❌ **falta** |
 | `/VentaCatalogo`, `/ServicioN8N`, `/ecommerce` | 0 | — | `DefaultAppPool` | no | ❌ **falta** |
 | `/qas` | 180 | sí | `DefaultAppPool` | no (a propósito) | no (va a 301) |
 
@@ -127,7 +127,7 @@ dan 404 contra el Astro y después darán 404 contra Next. Sin impacto en el cut
 
 | Servicio | Regla |
 |---|---|
-| `Default Web Site` y sus 19 aplicaciones | No cambiar contenido, bindings, app pools ni `web.config`. Lo único nuestro es la app `/qas`, que se retira en la Fase 7. |
+| `Default Web Site` y sus 19 aplicaciones | No cambiar contenido, app pools ni `web.config`. Único cambio permitido: **agregar** el binding loopback `127.0.0.1:8080` (ver 3.1-bis), que es aditivo y reversible. Lo único nuestro ahí es la app `/qas`, que se retira en la Fase 7. |
 | Carpetas físicas de las apps ajenas (`C:\inetpub\wwwroot\VentaPorCatalogo`, `ServicioVPC`, `ServicioECO`, `VentaPorCatalogoApi`, …) | **Solo lectura.** Están compartidas entre dos sitios: cualquier edición impacta a los dos. |
 | Sitio del CMS (`cms.terbolinspira.com`) | Intocable, salvo la URL del webhook (Fase 6). |
 | App pools `VentaCatalogoPRD`, `VentaCatalogoQAS`, `VentaCatalogoPRDApi`, `VentaCatalogoQASApi`, `DefaultAppPool` | No modificar configuración ni reciclarlos. Solo se **referencian** al registrar aplicaciones. |
@@ -232,27 +232,64 @@ git add -A && git commit -m "feat(deploy): redirect /qas to root and document ba
 ### 2.1 Punto de retorno
 
 ```powershell
+New-Item -ItemType Directory -Force C:\Terbol\backups | Out-Null
 cd C:\Terbol\webapp
 Copy-Item .env.production .env.production.qas.bak -Force
-git rev-parse --short HEAD | Out-File C:\Terbol\commit-antes-del-cutover.txt -Encoding utf8
-Copy-Item C:\Terbol\webapp-proxy\web.config C:\Terbol\webapp-proxy\web.config.bak -Force
+git rev-parse --short HEAD | Out-File C:\Terbol\backups\commit-antes-del-cutover.txt -Encoding utf8
+Copy-Item C:\Terbol\webapp-proxy\web.config C:\Terbol\backups\webapp-proxy-web.config.bak -Force
 Backup-WebConfiguration -Name "antes-cutover-root"
 Get-WebConfigurationBackup | Select-Object Name, CreationDate
 ```
+
+> El backup del `web.config` va **fuera** de `C:\Terbol\webapp-proxy`: esa carpeta
+> es la raíz física del sitio IIS y no conviene dejar copias de configuración
+> adentro. El `.env.production.qas.bak` sí puede quedar en `C:\Terbol\webapp`,
+> que no está servida por ningún sitio.
 
 ### 2.2 Línea base de los servicios ajenos — **paso clave**
 
 Capturar cómo responde hoy cada ruta a preservar, para comparar después del cutover:
 
 ```powershell
-$paths = @('/','/VentaPorCatalogo/PRD','/VentaPorCatalogo/QAS','/VentaPorCatalogoApi/PRD','/VentaPorCatalogoApi/QAS','/ServicioVPC/PRD','/ServicioVPC/QAS','/ServicioECO/PRD','/ServicioECO/QAS','/qas')
-$base = foreach ($p in $paths) { $c = curl.exe -s -o NUL -w "%{http_code}" -H "Host: terbolinspira.com" "http://localhost$p"; [pscustomobject]@{ Path = $p; Antes = $c } }
+$paths = @('/','/VentaPorCatalogo/PRD','/VentaPorCatalogo/QAS','/VentaPorCatalogoApi/PRD','/VentaPorCatalogoApi/QAS','/VentaPorCatalogoApi/PRD/api/Auth/login','/VentaPorCatalogoApi/QAS/api/Auth/login','/ServicioVPC/PRD','/ServicioVPC/QAS','/ServicioECO/PRD','/ServicioECO/QAS','/qas')
+$base = foreach ($p in $paths) {
+  $code = curl.exe -s -o NUL -w "%{http_code}" -H "Host: terbolinspira.com" "http://localhost$p"
+  $body = curl.exe -s -H "Host: terbolinspira.com" "http://localhost$p"
+  $next = if ($body -match '_next|__NEXT_DATA__') { 'SI' } else { 'no' }
+  [pscustomobject]@{ Path = $p; Codigo = $code; PorNext = $next }
+}
 $base | Format-Table -AutoSize
-$base | Export-Csv C:\Terbol\baseline-cutover.csv -NoTypeInformation
+$base | Export-Csv C:\Terbol\backups\baseline-cutover.csv -NoTypeInformation
 ```
 
-Guardá esa tabla. En la Fase 5 se repite y se compara: **cualquier código que
-empeore respecto de la línea base es un problema a resolver antes de seguir.**
+> ### Por qué no alcanza con el código HTTP
+>
+> `/VentaPorCatalogoApi/PRD` devuelve **404 ya hoy**: es la raíz de un API, sin
+> endpoint. El tráfico real va a rutas más profundas. Si después del cutover esa
+> app quedara mal enrutada hacia Next, Next **también** devolvería 404 y la
+> comparación por código diría `OK` con la API rota.
+>
+> Por eso la línea base registra además **quién responde**: se busca `_next` en el
+> cuerpo, que aparece en cualquier respuesta de Next (incluida su página 404) y en
+> ninguna respuesta de IIS o .NET.
+>
+> Regla de lectura: **toda ruta ajena debe tener `PorNext = no`, antes y después.**
+> Un `no` que se convierte en `SI` es el proxy comiéndose una ruta que no le
+> corresponde, aunque el código HTTP no haya cambiado.
+>
+> ### La sonda real de la API
+>
+> Los logs muestran tráfico real a `POST /VentaPorCatalogoApi/PRD/api/Auth/login` y
+> `/api/Pedido/estado`, con IPs de cliente en rangos de **Cloudflare**
+> (`172.71.x`, `162.158.x`) y user agent `RestSharp/106.11.4.0`: **hay un sistema
+> externo integrado contra `https://terbolinspira.com/VentaPorCatalogoApi/PRD`.**
+> No es tráfico interno — se rompe si la app no queda registrada y excluida.
+>
+> Por eso la línea base incluye `/api/Auth/login`. Es POST-only, así que un **GET**
+> devuelve `405` desde .NET y `404` desde Next: discriminador limpio, sin necesidad
+> de enviar credenciales. **Nunca probar este endpoint con credenciales reales.**
+
+Guardá esa tabla. En la Fase 5 se repite y se compara.
 
 ---
 
@@ -267,8 +304,6 @@ Cada una apunta a la **misma carpeta física y el mismo app pool** que en
 
 ```powershell
 New-WebApplication -Site "TerbolWeb" -Name "VentaPorCatalogo/QAS"    -PhysicalPath "C:\inetpub\wwwroot\VentaPorCatalogo\QAS"    -ApplicationPool "VentaCatalogoQAS"
-New-WebApplication -Site "TerbolWeb" -Name "VentaPorCatalogoApi/PRD" -PhysicalPath "C:\inetpub\wwwroot\VentaPorCatalogoApi\PRD" -ApplicationPool "VentaCatalogoPRDApi"
-New-WebApplication -Site "TerbolWeb" -Name "VentaPorCatalogoApi/QAS" -PhysicalPath "C:\inetpub\wwwroot\VentaPorCatalogoApi\QAS" -ApplicationPool "VentaCatalogoQASApi"
 New-WebApplication -Site "TerbolWeb" -Name "ServicioVPC/QAS"         -PhysicalPath "C:\inetpub\wwwroot\ServicioVPC\QAS"         -ApplicationPool "DefaultAppPool"
 New-WebApplication -Site "TerbolWeb" -Name "ServicioECO/PRD"         -PhysicalPath "C:\inetpub\wwwroot\ServicioECO\PRD"         -ApplicationPool "DefaultAppPool"
 New-WebApplication -Site "TerbolWeb" -Name "ServicioECO/QAS"         -PhysicalPath "C:\inetpub\wwwroot\ServicioECO\QAS"         -ApplicationPool "DefaultAppPool"
@@ -278,7 +313,6 @@ Y los "padres" del árbol, para paridad exacta con lo que hoy resuelve el catch-
 
 ```powershell
 New-WebApplication -Site "TerbolWeb" -Name "VentaPorCatalogo"    -PhysicalPath "C:\inetpub\wwwroot\VentaPorCatalogo"    -ApplicationPool "VentaCatalogoQAS"
-New-WebApplication -Site "TerbolWeb" -Name "VentaPorCatalogoApi" -PhysicalPath "C:\inetpub\wwwroot\VentaPorCatalogoApi" -ApplicationPool "VentaCatalogoQASApi"
 New-WebApplication -Site "TerbolWeb" -Name "ServicioVPC"         -PhysicalPath "C:\inetpub\wwwroot\ServicioVPC"         -ApplicationPool "DefaultAppPool"
 New-WebApplication -Site "TerbolWeb" -Name "ServicioECO"         -PhysicalPath "C:\inetpub\wwwroot\ServicioECO"         -ApplicationPool "DefaultAppPool"
 ```
@@ -305,6 +339,43 @@ Verificar el resultado:
 Get-WebApplication -Site "TerbolWeb" | Select-Object path, applicationPool, physicalPath | Format-Table -AutoSize
 ```
 
+### 3.1-bis La API va reenviada, no replicada
+
+`Makingsoft.WebApi` (`/VentaPorCatalogoApi/*`) declara
+`hostingModel="inprocess"` en su `web.config`. ASP.NET Core con hosting
+**in-process** admite **una sola aplicación por app pool**: el runtime vive dentro
+del `w3wp`. Registrarla también en `TerbolWeb` con el mismo pool hace que la
+segunda instancia no arranque → **HTTP 503**.
+
+> Verificado en la prueba en seco (3.5): con la API registrada, `/api/Auth/login`
+> daba `503` en vez de `405`. La copia del `Default Web Site` siguió sana y los
+> pools nunca se detuvieron, así que producción no se vio afectada — pero en el
+> cutover habría reventado la integración externa.
+>
+> `Terbol.Web` (`/VentaPorCatalogo/*`) sí se puede replicar porque usa
+> `hostingModel="OutOfProcess"`: cada aplicación IIS lanza su propio `dotnet.exe`.
+
+**Solución: no duplicar la app, reenviarla.** Sigue existiendo una sola instancia,
+en el `Default Web Site`, exactamente como hoy. `TerbolWeb` le pasa el request por
+una puerta interna en loopback.
+
+```powershell
+netstat -ano | findstr ":8080"
+New-WebBinding -Name "Default Web Site" -Protocol http -IPAddress "127.0.0.1" -Port 8080
+Get-WebBinding -Name "Default Web Site" | ForEach-Object { $_.bindingInformation }
+```
+
+Es un binding **aditivo** en loopback: no altera cómo responde hoy ese sitio, solo
+le agrega una entrada interna. Es el **único** cambio que este plan hace sobre el
+`Default Web Site` antes de la Fase 7, y se revierte con `Remove-WebBinding`.
+
+El reenvío lo hace la regla `ProxyVpcApi` del `web.config` (3.2), que va **antes**
+de la regla de exclusiones.
+
+> **Efecto lateral:** en los logs de la API el `c-ip` pasa a ser `127.0.0.1` en vez
+> de la IP de Cloudflare. No es una pérdida real de trazabilidad — ya hoy no ve la
+> IP del cliente final, sino la del edge de Cloudflare.
+
 ### 3.2 `web.config` final del proxy
 
 Cambios respecto del actual: se agrega la regla de **301 de `/qas`**, se completan
@@ -320,6 +391,10 @@ las **exclusiones** y se corrige el patrón a `([/?]|$)` para cubrir el query st
         <rule name="RedirectQasToRoot" stopProcessing="true">
           <match url="^qas(/(.*))?$" />
           <action type="Redirect" url="/{R:2}" redirectType="Permanent" />
+        </rule>
+        <rule name="ProxyVpcApi" stopProcessing="true">
+          <match url="^(VentaPorCatalogoApi(?:/.*)?)$" />
+          <action type="Rewrite" url="http://127.0.0.1:8080/{R:1}" />
         </rule>
         <rule name="ReverseProxyToNext" stopProcessing="true">
           <match url="(.*)" />
@@ -355,6 +430,71 @@ Set-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST" -Filter "system.w
 Add-WebConfiguration -Filter "system.webServer/rewrite/allowedServerVariables" -PSPath "MACHINE/WEBROOT/APPHOST" -AtIndex 0 -Value @{name="HTTP_X_FORWARDED_PROTO"}
 Add-WebConfiguration -Filter "system.webServer/rewrite/allowedServerVariables" -PSPath "MACHINE/WEBROOT/APPHOST" -AtIndex 0 -Value @{name="HTTP_X_FORWARDED_HOST"}
 ```
+
+### 3.5 Prueba en seco del enrutamiento (recomendado)
+
+La parte más riesgosa del cutover es el enrutamiento de las aplicaciones ajenas —
+hay una **integración externa** golpeando `/VentaPorCatalogoApi/PRD` por Cloudflare.
+Conviene validarla antes de exponer el sitio, no durante.
+
+Se puede probar todo sin tocar el dominio: se le quitan a `TerbolWeb` los bindings
+de puerto 80, se le deja uno solo en `127.0.0.1:8081`, se enciende, se prueba y se
+restaura. Durante la prueba el sitio **nunca escucha en el 80**, así que el público
+sigue viendo el Astro y `/qas` sin enterarse.
+
+```powershell
+# 0. Puerto libre y bindings actuales (anotarlos)
+netstat -ano | findstr ":8081"
+Get-WebBinding -Name "TerbolWeb" | ForEach-Object { $_.bindingInformation -replace '\.','_DOT_' }
+```
+
+```powershell
+# 1. Sacar el puerto 80, dejar solo loopback:8081
+Remove-WebBinding -Name "TerbolWeb" -Protocol http -Port 80 -HostHeader "terbolinspira.com"
+Remove-WebBinding -Name "TerbolWeb" -Protocol http -Port 80 -HostHeader "www.terbolinspira.com"
+New-WebBinding    -Name "TerbolWeb" -Protocol http -IPAddress "127.0.0.1" -Port 8081
+Get-WebBinding -Name "TerbolWeb" | ForEach-Object { $_.bindingInformation }
+Start-Website -Name "TerbolWeb"
+```
+
+```powershell
+# 2. Probar el enrutamiento contra el sitio nuevo
+foreach ($p in '/VentaPorCatalogo/PRD','/VentaPorCatalogo/QAS','/VentaPorCatalogoApi/PRD/api/Auth/login','/VentaPorCatalogoApi/QAS/api/Auth/login','/ServicioVPC/PRD','/ServicioVPC/QAS','/ServicioECO/PRD','/ServicioECO/QAS') {
+  $code = curl.exe -s -o NUL -w "%{http_code}" "http://127.0.0.1:8081$p"
+  $body = curl.exe -s "http://127.0.0.1:8081$p"
+  $next = if ($body -match '_next|__NEXT_DATA__') { 'SI' } else { 'no' }
+  "{0,-42} {1}  PorNext={2}" -f $p, $code, $next
+}
+curl.exe -s -o NUL -w "qas -> %{http_code}  %{redirect_url}`n" "http://127.0.0.1:8081/qas/products"
+```
+
+Esperado: **los mismos códigos que la línea base y `PorNext=no` en todas**, más un
+`301` en `/qas`. Ojo: `/` y las rutas de la app van a fallar en esta prueba, porque
+node todavía sirve el build con `basePath=/qas`. Eso es correcto y esperado — acá
+se valida el enrutamiento de lo ajeno, no la app.
+
+```powershell
+# 3. Restaurar y volver a dejar el sitio detenido
+Stop-Website -Name "TerbolWeb"
+Remove-WebBinding -Name "TerbolWeb" -Protocol http -IPAddress "127.0.0.1" -Port 8081
+$apex = "terbolinspira.com"
+$www  = "www." + $apex
+New-WebBinding -Name "TerbolWeb" -Protocol http -Port 80 -HostHeader $apex
+New-WebBinding -Name "TerbolWeb" -Protocol http -Port 80 -HostHeader $www
+Get-WebBinding -Name "TerbolWeb" | ForEach-Object { $_.bindingInformation -replace '\.','_DOT_' }
+(Get-Website -Name "TerbolWeb").State
+```
+
+> ⚠️ **El paso 3 no es opcional.** Si quedan mal los bindings, el sitio no va a
+> atender el dominio en la Fase 4. Verificar que la salida final muestre los dos
+> host headers y `Stopped`.
+>
+> El host `www` se arma con `"www." + $apex` a propósito: escrito literal, muchos
+> terminales y clientes de chat lo convierten en un hipervínculo y se pega con
+> corchetes de markdown. Por lo mismo, los bindings se muestran con
+> `-replace '\.','_DOT_'`.
+
+---
 
 **El sitio sigue detenido. El público ve el Astro en root y la app en `/qas`.**
 
@@ -495,19 +635,28 @@ El binding con host header gana sobre el catch-all: a partir de este comando
 ### 5.1 Comparar contra la línea base — **primero esto**
 
 ```powershell
-$paths = @('/','/VentaPorCatalogo/PRD','/VentaPorCatalogo/QAS','/VentaPorCatalogoApi/PRD','/VentaPorCatalogoApi/QAS','/ServicioVPC/PRD','/ServicioVPC/QAS','/ServicioECO/PRD','/ServicioECO/QAS','/qas')
-$antes = Import-Csv C:\Terbol\baseline-cutover.csv
-foreach ($p in $paths) {
-  $c = curl.exe -s -o NUL -w "%{http_code}" -H "Host: terbolinspira.com" "http://localhost$p"
-  $a = ($antes | Where-Object Path -eq $p).Antes
-  $flag = if ($c -eq $a) { "OK" } elseif ($p -eq '/qas' -and $c -eq '301') { "OK (esperado)" } elseif ($p -eq '/' -and $c -eq '200') { "OK (ahora Next)" } else { "*** REVISAR ***" }
-  "{0,-30} antes={1}  ahora={2}  {3}" -f $p, $a, $c, $flag
+$antes = Import-Csv C:\Terbol\backups\baseline-cutover.csv
+foreach ($r in $antes) {
+  $p = $r.Path
+  $code = curl.exe -s -o NUL -w "%{http_code}" -H "Host: terbolinspira.com" "http://localhost$p"
+  $body = curl.exe -s -H "Host: terbolinspira.com" "http://localhost$p"
+  $next = if ($body -match '_next|__NEXT_DATA__') { 'SI' } else { 'no' }
+  $esperado =
+    if ($p -eq '/qas')   { $code -eq '301' }
+    elseif ($p -eq '/')  { $code -eq '200' -and $next -eq 'SI' }
+    else                 { $code -eq $r.Codigo -and $next -eq $r.PorNext }
+  $flag = if ($esperado) { "OK" } else { "*** REVISAR ***" }
+  "{0,-28} antes={1}/{2,-2}  ahora={3}/{4,-2}  {5}" -f $p, $r.Codigo, $r.PorNext, $code, $next, $flag
 }
 ```
 
-Todo debe dar `OK`. `/qas` pasa a `301`; `/` sigue en `200` pero ahora servido por
-Next. **Cualquier `*** REVISAR ***` se resuelve antes de continuar** (o se hace
-rollback con `Stop-Website`).
+Todo debe dar `OK`. Los dos cambios esperados: `/qas` pasa a `301`, y `/` sigue en
+`200` pero ahora con `PorNext = SI`. **Todas las rutas ajenas deben conservar su
+código y seguir en `PorNext = no`.**
+
+**Cualquier `*** REVISAR ***` se resuelve antes de continuar** (o se hace rollback
+con `Stop-Website`). El caso más traicionero es una ruta que mantiene el código
+pero pasa a `PorNext = SI`: significa que el reverse proxy se la comió.
 
 ### 5.2 La app, por IIS y por Cloudflare
 
@@ -619,9 +768,19 @@ Remove-Item C:\inetpub\wwwroot\qas\qas.rar -Force
 > devuelve 404. Es la deuda que deja tener el dominio en un sitio y los servicios en
 > otro.
 
-### 7.4 Conservar
+### 7.4 Si alguna vez se revierte del todo
 
-`.env.production.qas.bak`, `web.config.bak`, `baseline-cutover.csv` y el backup de
+Además de lo del apartado Rollback, quitar el binding loopback que agregamos:
+
+```powershell
+Remove-WebBinding -Name "Default Web Site" -Protocol http -IPAddress "127.0.0.1" -Port 8080
+```
+
+Mientras `TerbolWeb` esté en uso **no** hay que tocarlo: es por donde pasa la API.
+
+### 7.5 Conservar
+
+`.env.production.qas.bak`, `web.config.bak`, `backups\baseline-cutover.csv` y el backup de
 IIS. No cuestan nada.
 
 ---
