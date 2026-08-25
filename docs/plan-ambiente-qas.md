@@ -157,15 +157,26 @@ mergea `qas` en `main` y ambas ramas vuelven a quedar iguales.
 
 ## Fase 2 — Código en el servidor
 
+Usar la **misma URL de remote con la que ya está clonado producción**: un alias de
+SSH del `~/.ssh/config` de una máquina de desarrollo no existe en el servidor.
+
+```powershell
+cd C:\Terbol\webapp
+git remote -v
+```
+
 ```powershell
 mkdir C:\Terbol\webapp-qas
 cd C:\Terbol\webapp-qas
-git clone <URL-DEL-REPO> .
+git clone <LA-URL-DE-PRODUCCION> .
 git checkout qas
 git branch --show-current
 node -v
 npm ci
 ```
+
+`git branch --show-current` tiene que decir **`qas`**. Si dice `main`, el checkout
+no tomó y el ambiente correría la rama equivocada.
 
 Es un clone independiente del de producción: cada uno en su rama, sin
 interferencia. `git branch --show-current` tiene que decir `qas`.
@@ -174,14 +185,25 @@ interferencia. `git branch --show-current` tiene que decir `qas`.
 
 ## Fase 3 — Variables de entorno
 
-Crear `C:\Terbol\webapp-qas\.env.production`. Generar un secret propio primero:
+Crear `C:\Terbol\webapp-qas\.env.production`.
+
+**`REVALIDATE_SECRET`:** lo ideal es un secret propio por ambiente, pero tiene que
+**coincidir con el que ya tiene configurado el CMS**. Hoy ambos CMS usan
+`clave_test_123`, así que QAS lo mantiene hasta que se acuerde una rotación con el
+equipo del CMS. Si vas a generar uno nuevo, primero confirmá que lo van a cargar
+del otro lado; si no, el webhook rebota con 401 y el contenido solo se refresca por
+el fallback de `CMS_REVALIDATE_SECONDS`.
 
 ```powershell
+# Solo si se acordo rotar el secret con el equipo del CMS:
 $revalidateQas = -join ((48..57)+(65..90)+(97..122) | Get-Random -Count 40 | ForEach-Object {[char]$_})
 $revalidateQas
 ```
 
-Anotalo: hay que cargarlo también en el CMS de QA (Fase 7).
+> Mientras el secret sea compartido entre ambientes, quien lo tenga puede disparar
+> revalidaciones sobre producción y no solo sobre QAS — lo único que hoy los separa
+> es la URL a la que apunta cada CMS. El impacto se limita a purgar caché (no
+> expone ni modifica datos), pero es el argumento para rotarlos por separado.
 
 ```powershell
 $lines = @(
@@ -189,7 +211,7 @@ $lines = @(
   'NEXT_PUBLIC_API_URL=https://cmsqas.terbolinspira.com/api'
   'NEXT_PUBLIC_STORAGE_URL=https://cmsqas.terbolinspira.com/storage'
   'NEXT_PUBLIC_ASESOR_URL=https://www.terbolinspira.com/VentaPorCatalogo/QAS'
-  ('REVALIDATE_SECRET=' + $revalidateQas)
+  'REVALIDATE_SECRET=clave_test_123'
   'CMS_REVALIDATE_SECONDS=3600'
   ''
   '# SMTP vacio a proposito: POST /api/contact responde un 500 controlado'
@@ -213,7 +235,7 @@ Diferencias deliberadas con producción:
 |---|---|
 | `NEXT_PUBLIC_ASESOR_URL` → `/QAS` | Los CTAs de asesores apuntan al entorno de pruebas de Venta por Catálogo, no al real. |
 | `CMS_REVALIDATE_SECONDS=3600` | Fallback de 1 hora en vez de 1 día: en QA conviene que el contenido refresque rápido aunque el webhook falle. |
-| `REVALIDATE_SECRET` propio | Un secret por ambiente. El de producción nunca debe viajar acá. |
+| `REVALIDATE_SECRET` | Hoy compartido con producción (`clave_test_123`) porque es lo que tienen cargado ambos CMS. Pendiente de rotar por ambiente cuando se acuerde con ese equipo. |
 | SMTP vacío | Ver el comentario embebido. |
 | **Sin `NEXT_PUBLIC_BASE_PATH`** | La app corre en la raíz de su subdominio. |
 
@@ -280,7 +302,15 @@ curl.exe -s -o NUL -w "api:      %{http_code}`n" http://localhost:3002/api/produ
 
 ## Fase 5 — Servicio de Windows
 
-Mismo `node.exe` versionado que usa producción (no el symlink de nvm):
+Mismo `node.exe` versionado que usa producción (no el symlink de nvm).
+
+**Crear primero la carpeta de logs:** nssm crea el archivo pero **no** el
+directorio. Si no existe, el servicio arranca igual pero no escribe nada, y el
+ambiente queda sin diagnóstico hasta que alguien lo note.
+
+```powershell
+New-Item -ItemType Directory -Force C:\Terbol\webapp-qas\logs | Out-Null
+```
 
 ```powershell
 C:\Tools\nssm.exe install TerbolWebQas "C:\Users\Administrator\AppData\Local\nvm\v24.16.0\node.exe" "C:\Terbol\webapp-qas\.next\standalone\server.js"
@@ -296,9 +326,11 @@ C:\Tools\nssm.exe status TerbolWebQas
 ```powershell
 netstat -ano | findstr ":3002"
 curl.exe -s -o NUL -w "%{http_code}`n" http://localhost:3002/
+Get-ChildItem C:\Terbol\webapp-qas\logs
 ```
 
-`SERVICE_RUNNING`, el puerto en `LISTENING` y `200`.
+`SERVICE_RUNNING`, el puerto en `LISTENING`, `200`, y `out.log` existiendo. Si la
+carpeta de logs está vacía, crearla y reiniciar el servicio.
 
 ---
 
@@ -344,9 +376,14 @@ New-Item -ItemType Directory -Force C:\Terbol\webapp-qas-proxy | Out-Null
 
 ```powershell
 New-Website -Name "TerbolWebQas" -Port 80 -HostHeader "qas.terbolinspira.com" -PhysicalPath "C:\Terbol\webapp-qas-proxy"
-Set-ItemProperty "IIS:\AppPools\TerbolWebQas" -Name managedRuntimeVersion -Value ""
-Get-Website | Format-Table Name, State, PhysicalPath -AutoSize
+Get-Website | Format-Table Name, ID, State, PhysicalPath -AutoSize
+Get-Website -Name "TerbolWebQas" | Select-Object Name, applicationPool
 ```
+
+> `New-Website` no crea un app pool dedicado en este servidor: reusa uno
+> existente, igual que `TerbolWeb`. Es indistinto — el sitio solo hace rewrites,
+> sin código administrado. Un `Set-ItemProperty` sobre `IIS:\AppPools\TerbolWebQas`
+> falla con `PathNotFound` justamente por eso, y no hay nada que corregir.
 
 ARR y las server variables ya están habilitadas a nivel servidor desde el cutover
 de producción; no hay que volver a configurarlas.
@@ -381,6 +418,13 @@ curl.exe -s https://qas.terbolinspira.com/sitemap.xml | Select-Object -First 5
 ```
 
 Las URLs del sitemap tienen que ser de `qas.terbolinspira.com`.
+
+> **El `robots.txt` dice `Allow: /` y está bien.** Cloudflare antepone su bloque
+> gestionado (`Content-Signal`, bloqueo de bots de IA) al robots.txt de la app.
+> Lo que mantiene el ambiente fuera del índice es el header
+> `X-Robots-Tag: noindex, nofollow`, no el robots.txt — y esa es la combinación
+> correcta: el crawler entra, lee el header y no indexa. Bloquearlo por robots.txt
+> sería peor, porque nunca llegaría a leer el header.
 
 ### Que producción no se movió
 
@@ -420,7 +464,36 @@ foreach ($r in $antes) {
 En el CMS `cmsqas` apuntar la revalidación a:
 
 - URL: `https://qas.terbolinspira.com/api/revalidate`
-- Header: `x-revalidate-secret` = el `REVALIDATE_SECRET` **de QAS**
+- Header: `x-revalidate-secret` = el `REVALIDATE_SECRET` del `.env.production` de QAS
+
+Probar el endpoint antes de tocar el CMS, con un control negativo:
+
+```powershell
+# Control negativo: debe dar 401 "Token invalido"
+Invoke-RestMethod -Method Post -Uri "https://qas.terbolinspira.com/api/revalidate" -Headers @{ "x-revalidate-secret" = "no-es-el-secret" } -ContentType "application/json" -Body '{"tag":"home"}'
+```
+
+```powershell
+Invoke-RestMethod -Method Post -Uri "https://qas.terbolinspira.com/api/revalidate" -Headers @{ "x-revalidate-secret" = "clave_test_123" } -ContentType "application/json" -Body '{"tag":"home"}'
+```
+
+Esperado: `success: True` con `Tag 'home' marcado para revalidación.`
+
+> **No usar `curl.exe -d "{\"tag\":\"home\"}"` desde PowerShell 5.1:** mastica las
+> comillas al pasar el argumento al ejecutable nativo y el body llega malformado.
+> Como `await request.json()` está dentro del `try` de la ruta, el fallo de parseo
+> cae en el `catch` genérico y devuelve un **500 "Error interno del servidor al
+> revalidar"** que parece un bug de la app y no lo es. Síntoma delator: curl
+> imprime el `%{http_code}` dos veces, una de ellas `000`.
+>
+> `Invoke-RestMethod` con el body entre comillas simples no tiene ese problema.
+> Alternativa con curl: volcar el JSON a un archivo y usar `--data-binary "@archivo"`. Tags válidos: `home`, `footer`, `about`,
+`success-plan`, `learn`, `help`, `promoter`, `science`, `products`, `blog`,
+`sitemap`, `advisor-registration`.
+
+> Cambiar `REVALIDATE_SECRET` **no exige rebuild**: no lleva prefijo
+> `NEXT_PUBLIC_`, así que se lee en runtime. Alcanza con editar el archivo,
+> copiarlo al standalone y `nssm restart TerbolWebQas`.
 
 Publicar contenido en el CMS de QA y confirmar que se refleja en el próximo
 request. Si no aparece, revisar `C:\Terbol\webapp-qas\logs\err.log`.
