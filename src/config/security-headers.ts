@@ -1,8 +1,45 @@
 interface ContentSecurityPolicyOptions {
   isDevelopment?: boolean;
+  cmsOrigins?: string[];
 }
 
-const CMS_ORIGIN = "https://cms.terbolinspira.com";
+// Origen del CMS de produccion. Solo se usa como fallback cuando el entorno no
+// define las URLs del CMS (ej. tests, o un build sin .env).
+const FALLBACK_CMS_ORIGIN = "https://cms.terbolinspira.com";
+
+function readOrigin(rawUrl: string | undefined): string | null {
+  const value = rawUrl?.trim();
+  if (!value) return null;
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Origenes del CMS que el CSP debe permitir, derivados del entorno.
+ *
+ * Cada ambiente apunta a su propio CMS (produccion a `cms.`, QAS a `cmsqas.`),
+ * asi que hardcodear el origen rompe el CSP en cualquier ambiente que no sea
+ * produccion. Se derivan de las mismas variables que ya usan las rutas de
+ * imagenes remotas, y se deduplican porque storage y api suelen compartir host.
+ */
+export function getCmsOrigins(
+  urls: Array<string | undefined> = [
+    process.env.NEXT_PUBLIC_STORAGE_URL,
+    process.env.NEXT_PUBLIC_API_URL,
+  ],
+): string[] {
+  const origins = urls
+    .map(readOrigin)
+    .filter((origin): origin is string => origin !== null);
+
+  return origins.length > 0
+    ? Array.from(new Set(origins))
+    : [FALLBACK_CMS_ORIGIN];
+}
 const UNSPLASH_ORIGIN = "https://images.unsplash.com";
 const LOCAL_HTTP_SOURCES = [
   "http://localhost:*",
@@ -52,6 +89,7 @@ function createDirective(name: string, values: string[]) {
 
 export function createContentSecurityPolicy({
   isDevelopment = process.env.NODE_ENV !== "production",
+  cmsOrigins = getCmsOrigins(),
 }: ContentSecurityPolicyOptions = {}) {
   const scriptSources = [
     "'self'",
@@ -60,7 +98,7 @@ export function createContentSecurityPolicy({
   ];
   const connectSources = [
     "'self'",
-    CMS_ORIGIN,
+    ...cmsOrigins,
     ...GOOGLE_TAG_CONNECT_SOURCES,
     ...LOCAL_HTTP_SOURCES,
   ];
@@ -82,7 +120,7 @@ export function createContentSecurityPolicy({
       "'self'",
       "data:",
       "blob:",
-      CMS_ORIGIN,
+      ...cmsOrigins,
       UNSPLASH_ORIGIN,
       VIDEO_THUMBNAIL_ORIGIN,
       ...GOOGLE_TAG_IMG_SOURCES,
@@ -90,7 +128,7 @@ export function createContentSecurityPolicy({
     ]),
     createDirective("font-src", ["'self'", "data:"]),
     createDirective("connect-src", connectSources),
-    createDirective("media-src", ["'self'", "data:", "blob:", CMS_ORIGIN]),
+    createDirective("media-src", ["'self'", "data:", "blob:", ...cmsOrigins]),
     createDirective("frame-src", [
       "'self'",
       ...VIDEO_FRAME_SOURCES,

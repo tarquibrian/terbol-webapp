@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createContentSecurityPolicy, securityHeaders } from "./security-headers";
+import {
+  createContentSecurityPolicy,
+  getCmsOrigins,
+  securityHeaders,
+} from "./security-headers";
 
 test("securityHeaders incluye headers base de endurecimiento", () => {
   const headers = new Map(
@@ -37,4 +41,33 @@ test("createContentSecurityPolicy habilita unsafe-eval solo en desarrollo", () =
 
   assert.ok(csp.includes("'unsafe-eval'"));
   assert.ok(csp.includes("ws:"));
+});
+
+test("getCmsOrigins deriva los origenes del CMS del entorno sin duplicar", () => {
+  assert.deepEqual(
+    getCmsOrigins([
+      "https://cmsqas.terbolinspira.com/storage",
+      "https://cmsqas.terbolinspira.com/api",
+    ]),
+    ["https://cmsqas.terbolinspira.com"],
+  );
+});
+
+test("getCmsOrigins cae al CMS de produccion cuando el entorno no define nada", () => {
+  assert.deepEqual(getCmsOrigins([undefined, "   "]), [
+    "https://cms.terbolinspira.com",
+  ]);
+  assert.deepEqual(getCmsOrigins(["no-es-una-url"]), [
+    "https://cms.terbolinspira.com",
+  ]);
+});
+
+test("createContentSecurityPolicy usa el CMS del ambiente, no uno fijo", () => {
+  const csp = createContentSecurityPolicy({
+    isDevelopment: false,
+    cmsOrigins: ["https://cmsqas.terbolinspira.com"],
+  });
+
+  assert.ok(csp.includes("https://cmsqas.terbolinspira.com"));
+  assert.equal(csp.includes("https://cms.terbolinspira.com"), false);
 });

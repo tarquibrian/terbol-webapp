@@ -166,6 +166,13 @@ Agregar dentro de `nextConfig`, junto a `headers()`:
 Es redundante con la regla de IIS (Fase 3) a propósito: la de IIS responde aunque
 node esté caído; la de Next sobrevive a cualquier reconfiguración del proxy.
 
+> **Por qué la URL absoluta con `https://`:** con una ruta relativa (`/{R:2}`),
+> IIS arma el `Location` usando el esquema del request — que en el origen es HTTP,
+> porque Cloudflare termina el TLS. El redirect quedaba apuntando a `http://`, con
+> un salto extra y el riesgo de que un visitante navegue en texto plano si
+> "Always Use HTTPS" no está activo. `{HTTP_HOST}` conserva el host original, así
+> que quien entra por `www` se queda en `www`.
+>
 > **301 vs 308:** la regla de IIS emite un **301** y la de Next un **308**
 > (`permanent: true` en Next siempre genera 308, que conserva el método HTTP).
 > Los buscadores tratan ambos igual. Como IIS resuelve primero, lo que se observa
@@ -390,7 +397,7 @@ las **exclusiones** y se corrige el patrón a `([/?]|$)` para cubrir el query st
       <rules>
         <rule name="RedirectQasToRoot" stopProcessing="true">
           <match url="^qas(/(.*))?$" />
-          <action type="Redirect" url="/{R:2}" redirectType="Permanent" />
+          <action type="Redirect" url="https://{HTTP_HOST}/{R:2}" redirectType="Permanent" />
         </rule>
         <rule name="ProxyVpcApi" stopProcessing="true">
           <match url="^(VentaPorCatalogoApi(?:/.*)?)$" />
@@ -607,14 +614,30 @@ curl.exe -s -o NUL -w "home:     %{http_code}`n" http://localhost:3001/; curl.ex
 Los cuatro deben dar `200`. Confirmar que no quedó rastro de `/qas`:
 
 ```powershell
-curl.exe -s http://localhost:3001/ | findstr /I "/qas"
+$html = (curl.exe -s http://localhost:3001/) -join "`n"
+if ($html -match '/qas') { "ATENCION: hay rastro de /qas" } else { "ok: sin rastro de /qas" }
 ```
 
-No debe devolver nada. Y que el optimizador de imágenes responde:
+Y que el CSS, el optimizador de imágenes y los links de asesores están bien:
 
 ```powershell
-$html = curl.exe -s http://localhost:3001/; if ($html -match '/_next/image\?url=([^"&]+)') { curl.exe -s -o NUL -w "image: %{http_code}`n" "http://localhost:3001/_next/image?url=$($Matches[1])&w=640&q=75" } else { "sin /_next/image en el HTML" }
+if ($html -match '(/_next/static/[^"]+\.css)') { curl.exe -s -o NUL -w "css: %{http_code}`n" "http://localhost:3001$($Matches[1])" } else { "no se encontro css en el HTML" }
+if ($html -match '/_next/image\?url=([^"&]+)') { curl.exe -s -o NUL -w "optimizador: %{http_code}`n" "http://localhost:3001/_next/image?url=$($Matches[1])&w=640&q=75" } else { "sin /_next/image en el HTML" }
+$prom = (curl.exe -s http://localhost:3001/promoter) -join "`n"
+if ($prom -match 'VentaPorCatalogo/(PRD|QAS)') { "asesores -> $($Matches[1])" } else { "no se encontro el link en /promoter" }
 ```
+
+Esperado: `css: 200`, `optimizador: 200`, `asesores -> PRD`.
+
+> ### Dos trampas de PowerShell en estas verificaciones
+>
+> **`curl.exe` devuelve un array de líneas.** Con un array, `-match` no evalúa un
+> booleano ni llena `$Matches`: filtra y devuelve las líneas que matchean. El `if`
+> entra igual (array no vacío = verdadero) y `$Matches` queda nulo. Por eso todas
+> las capturas usan `(curl.exe ...) -join "`n"` para trabajar sobre un solo string.
+>
+> **`findstr /I "/qas"`** no sirve: interpreta `/q`, `/a` y `/s` como switches y
+> falla con `Bad command line`. Usar `-match` de PowerShell, o `findstr /I /C:"/qas"`.
 
 > Si algo falla, **detener acá**. El público sigue intacto (Astro en root).
 
