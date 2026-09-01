@@ -43,10 +43,11 @@ cd C:\Terbol\webapp
 Stop-Website -Name "TerbolWeb"
 
 # 2. Traer cambios
+$before = git rev-parse HEAD
 git pull
 
 # 3. Instalar dependencias solo si cambió package.json / package-lock
-git diff HEAD@{1} --name-only | findstr package
+git diff $before HEAD --name-only | findstr package
 # Si lista package.json/package-lock.json:
 # npm ci
 

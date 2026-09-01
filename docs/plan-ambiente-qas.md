@@ -139,6 +139,7 @@ necesitaron cambios.
 
 ```bash
 git checkout main
+$before = git rev-parse HEAD
 git pull
 git checkout -b qas
 git push -u origin qas
@@ -509,8 +510,10 @@ request. Si no aparece, revisar `C:\Terbol\webapp-qas\logs\err.log`.
 
 ```powershell
 cd C:\Terbol\webapp-qas
+git branch --show-current                           # debe decir: qas
+$before = git rev-parse HEAD
 git pull
-git diff HEAD@{1} --name-only | findstr package     # si lista package*, npm ci
+git diff $before HEAD --name-only | findstr package     # si lista package*, npm ci
 
 C:\Tools\nssm.exe stop TerbolWebQas
 $env:NEXT_DEPLOYMENT_ID = git rev-parse --short HEAD
@@ -527,11 +530,42 @@ Copy-Item -Force          "C:\Terbol\webapp-qas\.env.production" "$std\.env.prod
 
 C:\Tools\nssm.exe start TerbolWebQas
 Start-Sleep -Seconds 3
+C:\Tools\nssm.exe status TerbolWebQas
 curl.exe -s -o NUL -w "%{http_code}`n" http://localhost:3002/
 ```
 
+Confirmar que salió el build nuevo y no quedó el anterior:
+
+```powershell
+$qas = (curl.exe -s https://qas.terbolinspira.com/) -join "`n"
+if ($qas -match 'data-dpl-id="([^"]+)"') { "publicado: $($Matches[1])" }
+"esperado:  $(git rev-parse --short HEAD)"
+```
+
+Los dos valores tienen que coincidir. Si no, la copia al standalone no se completó
+o el servicio no llegó a reiniciar.
+
+### Por qué el `stop` va exactamente ahí
+
+El proceso node corre desde `.next\standalone` y mantiene esa carpeta bloqueada.
+`next build` la borra y la recrea, así que con el servicio vivo falla con
+`EBUSY: resource busy or locked, rmdir '...\.next\standalone'`. Tampoco sirve
+detenerlo después: para entonces el build ya falló.
+
+El `git pull` y el `npm ci` sí pueden ir **antes** del stop. El pull toca el código
+fuente y `npm ci` reescribe el `node_modules` de la raíz, ninguno de los cuales
+usa el proceso en ejecución — el bundle standalone tiene su propio `node_modules`.
+
 **No hace falta parar el sitio IIS**: QAS es un ambiente de pruebas, un 502 de unos
 minutos no molesta a nadie. Y producción no se entera de nada.
+
+### Cuándo NO hace falta desplegar
+
+| Qué cambió | Acción |
+|---|---|
+| Contenido en el CMS de QA | Nada. El webhook lo refresca en el siguiente acceso. |
+| Una variable **sin** prefijo `NEXT_PUBLIC_` | Copiar el `.env.production` al standalone y `nssm restart TerbolWebQas`. Sin build. |
+| Una variable `NEXT_PUBLIC_` o cualquier código | Deploy completo, con el `stop` antes del build. |
 
 ### Promover a producción
 
