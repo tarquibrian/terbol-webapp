@@ -552,8 +552,9 @@ CONTACT_FROM=info@terbolinspira.com
 
 ```powershell
 cd C:\Terbol\webapp
+$before = git rev-parse HEAD
 git pull
-git diff HEAD@{1} --name-only | findstr package
+git diff $before HEAD --name-only | findstr package
 ```
 
 Si listó `package.json` / `package-lock.json`, correr `npm ci`.
@@ -849,8 +850,9 @@ cd C:\Terbol\webapp
 Stop-Website -Name "TerbolWeb"
 
 # 2. Traer cambios
+$before = git rev-parse HEAD
 git pull
-git diff HEAD@{1} --name-only | findstr package     # si lista package*, correr npm ci
+git diff $before HEAD --name-only | findstr package     # si lista package*, correr npm ci
 
 # 3. Parar el servicio (libera el lock de .next\standalone) y buildear
 C:\Tools\nssm.exe stop TerbolWeb

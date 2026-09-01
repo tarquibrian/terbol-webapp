@@ -38,7 +38,7 @@ export function ProductFeaturesSection({ product }: ProductFeaturesSectionProps)
           <p className="text-body-medium text-gray-500 text-wrap">Calidad estricta, ingredientes certificados y respaldo científico.</p>
         </AnimateOnScroll>
         <div className="max-w-[1024px] w-full rounded-lg bg-primary-soft-gray-balance p-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3">
-          <AnimateOnScroll variant="fade" delay={0.2} className="relative w-full aspect-video md:aspect-square rounded-md overflow-hidden">
+          <AnimateOnScroll variant="fade" delay={0.2} className="relative w-full aspect-[3/4] rounded-md overflow-hidden">
             <Image src={resolveImageAsset(product?.whyChooseImage, "/images/productextra2.png") ?? ""} alt={productName ? `Por qué elegir ${productName}` : "Por qué elegir producto"} width={800} height={800} className="w-full h-full object-cover" />
           </AnimateOnScroll>
           <div className="w-full p-4 lg:p-6 flex flex-col justify-between gap-6">
