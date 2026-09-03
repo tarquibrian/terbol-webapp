@@ -52,7 +52,7 @@ export function Navbar() {
     //const ctaHref = isPromoterPage ? env.ASESOR_URL : "/promoter"; //-20260902
   const ctaHref = env.ASESOR_URL;//+20260902
   //const ctaIcon = isPromoterPage ? <ArrowUpRight /> : <ArrowRight />;
-  const ctaIcon = <ArrowUpRight />;//+20260902
+  const ctaIcon = <ArrowUpRight />;//+20260902.
 
   return (
     // <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
